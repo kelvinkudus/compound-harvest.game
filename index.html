@@ -3,16 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.9</title>
+  <title>Compound Harvest 1 · v0.9.1</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-    body { background: #1b3b1b; background-image: radial-gradient(circle at 20% 30%, #2e5e2e, #0f1f0f);
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      margin: 0; overflow: hidden; user-select: none; }
-    .game-container { width: 100%; max-width: 500px; height: 100vh; height: 100dvh;
-      background: #1e2b1e; display: flex; flex-direction: column;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); overflow: hidden; position: relative; }
+
+    /* Body: tidak pakai flex center, biar tidak ada offset */
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: #1b3b1b;
+      background-image: radial-gradient(circle at 20% 30%, #2e5e2e, #0f1f0f);
+      user-select: none;
+    }
+
+    /* Game container: full layar, biar tidak ada scroll aneh */
+    .game-container {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      background: #1e2b1e;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      z-index: 1;
+    }
 
     /* LOGIN */
     .login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -51,9 +70,12 @@
       font-size: 0.85rem; text-align: center; border: 1px solid #a04040; }
     .error-msg.hidden { display: none; }
 
-    /* GAME UI */
-    .status-bar { background: #0f1a0f; padding: 10px 14px; display: flex; justify-content: space-between;
-      align-items: center; color: #e0f0d0; border-bottom: 2px solid #3a6b3a; flex-wrap: wrap; gap: 6px; }
+    /* STATUS BAR - di atas, sticky */
+    .status-bar { background: #0f1a0f; padding: 10px 14px;
+      display: flex; justify-content: space-between;
+      align-items: center; color: #e0f0d0;
+      border-bottom: 2px solid #3a6b3a; flex-wrap: wrap; gap: 6px;
+      flex-shrink: 0; }
     .currency { display: flex; gap: 10px; font-weight: 600; font-size: 0.95rem; }
     .currency span { background: #1d2e1d; padding: 5px 10px; border-radius: 30px;
       border: 1px solid #4f7a4f; display: flex; align-items: center; gap: 4px; }
@@ -64,11 +86,16 @@
     .cloud-status.saved { color: #a0f0a0; }
     .cloud-status.offline { color: #ff9090; }
 
-    /* ===== MAIN CONTENT ===== */
-    /* Padding bawah diperbesar jadi 120px supaya tidak ketutup nav */
-    main { flex: 1; overflow-y: auto; padding: 16px 16px 120px;
-      display: flex; flex-direction: column; scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch; }
+    /* ===== MAIN CONTENT (scroll) ===== */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 16px 100px;  /* 100px untuk nav fixed */
+      display: flex;
+      flex-direction: column;
+      scroll-behavior: smooth;
+    }
     .page { display: none; flex-direction: column; gap: 16px; }
     .page.active { display: flex; }
 
@@ -193,32 +220,36 @@
       border-radius: 50px; justify-content: space-around; font-weight: 600;
       color: #d0e8c0; border: 1px solid #527a52; }
 
-    /* ===== BOTTOM NAV (DIPERBAIKI) ===== */
+    /* ============================================ */
+    /* ===== BOTTOM NAV - FIXED (NEMPEL DI LAYAR) ===== */
+    /* ============================================ */
     .bottom-nav {
-      position: absolute;
+      position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
       background: #0f1a0f;
       display: flex;
       border-top: 2px solid #3f6b3f;
       padding: 6px 0;
       /* Safe area untuk gesture bar HP */
       padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
-      z-index: 20;
-      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.7);
     }
 
     .nav-item {
       flex: 1 1 0;
-      min-width: 0;          /* penting: biar flex bisa menyusut */
+      min-width: 0;
       background: transparent;
       border: none;
       color: #8aa88a;
       font-weight: 600;
       padding: 6px 2px;
-      font-size: 0.65rem;    /* diperkecil dari 0.75 */
+      font-size: 0.65rem;
       line-height: 1.1;
       display: flex;
       flex-direction: column;
@@ -253,6 +284,7 @@
       text-overflow: ellipsis;
     }
 
+    /* Profile & region */
     .profile-card { background: #1e2f1e; border-radius: 24px; padding: 16px;
       border: 1px solid #5b875b; display: flex; flex-direction: column; gap: 10px; }
     .profile-row { display: flex; justify-content: space-between; align-items: center;
@@ -375,20 +407,12 @@
     main::-webkit-scrollbar { width: 4px; }
     main::-webkit-scrollbar-thumb { background: #4a704a; border-radius: 10px; }
 
-    /* HP sangat kecil */
     @media (max-width: 380px) {
       .inv-grid { grid-template-columns: repeat(2, 1fr); }
       .inv-icon { font-size: 1.8rem; }
       .inv-amount { font-size: 1.1rem; }
       .nav-item { font-size: 0.6rem; padding: 5px 1px; }
       .nav-icon { font-size: 1.25rem; }
-    }
-
-    /* HP tinggi (iPhone X+ dsb) */
-    @supports (padding: max(0px)) {
-      .bottom-nav {
-        padding-bottom: max(6px, env(safe-area-inset-bottom));
-      }
     }
   </style>
 </head>
@@ -399,7 +423,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v0.9 · UI Fix</p>
+    <p>v0.9.1 · Nav Fixed</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -553,7 +577,7 @@
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.9</div>
+      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.9.1</div>
     </div>
   </main>
 
@@ -706,7 +730,7 @@
   let saveTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v09_state';
+  const LOCAL_KEY = 'compoundHarvest_v091_state';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
@@ -862,7 +886,6 @@
     hideDailyRewardModal();
     showToast(`🎁 +$${formatNumber(DAILY_REWARD_AMOUNT)} Daily Reward!`, 2500, true);
   }
-
   function checkAndShowDailyReward() {
     if (hasClaimedDailyToday()) return;
     showDailyRewardModal();
@@ -1231,7 +1254,6 @@
     if (!key) return null;
     return `leaderboard/${lbView.region}/${key}/${cat}`;
   }
-
   function getLbRegionLabel() {
     const r = lbView.region;
     if (r === 'global') return '🌍 Menampilkan peringkat global';
@@ -1239,7 +1261,6 @@
     const label = { negara: 'Negara', provinsi: 'Provinsi', kabupaten: 'Kabupaten', kecamatan: 'Kecamatan' }[r];
     return `${label}: ${val || '(belum diatur)'}`;
   }
-
   async function loadLeaderboard() {
     if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
     lbList.innerHTML = `<div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat peringkat...</div></div>`;
@@ -1274,7 +1295,6 @@
       lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${e.message}</div>`;
     }
   }
-
   function renderLeaderboard(rows) {
     if (!rows || rows.length === 0) {
       lbList.innerHTML = `<div class="lb-empty">📭 Belum ada data. Jadilah yang pertama! 🌱</div>`;
@@ -1325,7 +1345,6 @@
     updateUI();
     debouncedSave();
   }
-
   function waterTree() {
     if (state.water < 1) { showToast('💧 Air habis! Beli di toko.'); return; }
     if (state.level === 5) { showToast('Pohon sudah dewasa, panen dulu!'); return; }
@@ -1337,7 +1356,6 @@
     debouncedSave();
     showToast(`💧 +${expGain} Exp (${state.waterSinceFertilizer}/10)`);
   }
-
   function fertilizeTree() {
     if (state.fertilizer < 1) { showToast('🧪 Pupuk habis! Beli di toko.'); return; }
     if (state.level === 5) { showToast('Pohon sudah dewasa.'); return; }
@@ -1348,7 +1366,6 @@
     debouncedSave();
     showToast('🧪 +5 Exp, efek air kembali normal');
   }
-
   function harvest() {
     if (state.level !== 5) { showToast('Pohon belum siap panen.'); return; }
     state.money += 5000; state.water += 1000; state.diamond += 30;
@@ -1466,7 +1483,6 @@
     lbView.category = chip.dataset.cat;
     loadLeaderboard();
   });
-
   lbRegionChips.addEventListener('click', e => {
     const chip = e.target.closest('.chip');
     if (!chip) return;
@@ -2022,7 +2038,7 @@
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v0.9 ready');
+  console.log('🌳 Compound Harvest v0.9.1 ready');
 </script>
 </body>
 </html>
