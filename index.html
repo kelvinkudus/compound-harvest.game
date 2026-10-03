@@ -3,289 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.02</title>
+  <title>Compound Harvest 1 · v0.03</title>
   <style>
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
       background: #1b3b1b;
       background-image: radial-gradient(circle at 20% 30%, #2e5e2e, #0f1f0f);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      margin: 0;
-      overflow: hidden;
-      user-select: none;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0; overflow: hidden; user-select: none;
     }
 
     .game-container {
-      width: 100%;
-      max-width: 500px;
-      height: 100vh;
-      max-height: 100dvh;
+      width: 100%; max-width: 500px;
+      height: 100vh; max-height: 100dvh;
       background: #1e2b1e;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
-      border-radius: 0;
-      overflow: hidden;
-      position: relative;
+      overflow: hidden; position: relative;
     }
 
-    /* ===== LOGIN SCREEN ===== */
+    /* ===== LOGIN ===== */
     .login-screen {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
       background: linear-gradient(160deg, #0f1f0f, #1b3b1b);
       z-index: 100;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       padding: 24px 20px;
       overflow-y: auto;
-      transition: opacity 0.3s;
     }
+    .login-screen.hidden { display: none; }
 
-    .login-screen.hidden {
-      display: none;
-    }
-
-    .login-logo {
-      text-align: center;
-      margin: 20px 0 30px;
-    }
-
-    .login-logo .icon {
-      font-size: 5rem;
-      filter: drop-shadow(0 8px 8px rgba(0,0,0,0.5));
-    }
-
-    .login-logo h1 {
-      color: #d4f0b0;
-      font-size: 1.8rem;
-      margin-top: 8px;
-      text-shadow: 0 2px 4px black;
-    }
-
-    .login-logo p {
-      color: #8fa88f;
-      font-size: 0.9rem;
-      margin-top: 4px;
-    }
+    .login-logo { text-align: center; margin: 20px 0 30px; }
+    .login-logo .icon { font-size: 5rem; filter: drop-shadow(0 8px 8px rgba(0,0,0,0.5)); }
+    .login-logo h1 { color: #d4f0b0; font-size: 1.8rem; margin-top: 8px; text-shadow: 0 2px 4px black; }
+    .login-logo p { color: #8fa88f; font-size: 0.9rem; margin-top: 4px; }
 
     .login-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      background: #162316;
-      padding: 20px 16px;
-      border-radius: 24px;
-      border: 1px solid #3a613a;
+      display: flex; flex-direction: column; gap: 12px;
+      background: #162316; padding: 20px 16px;
+      border-radius: 24px; border: 1px solid #3a613a;
     }
-
-    .login-form h2 {
-      color: #d4f0b0;
-      font-size: 1.2rem;
-      margin-bottom: 4px;
-      text-align: center;
-    }
+    .login-form h2 { color: #d4f0b0; font-size: 1.2rem; margin-bottom: 4px; text-align: center; }
 
     .form-input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 40px;
-      border: 1px solid #4a704a;
-      background: #0c180c;
-      color: #e0f0d0;
-      font-size: 1rem;
-      outline: none;
+      width: 100%; padding: 14px 16px; border-radius: 40px;
+      border: 1px solid #4a704a; background: #0c180c;
+      color: #e0f0d0; font-size: 1rem; outline: none;
       transition: border 0.2s;
     }
-
-    .form-input:focus {
-      border-color: #a0d0a0;
-    }
-
-    .form-input::placeholder {
-      color: #6a8a6a;
-    }
+    .form-input:focus { border-color: #a0d0a0; }
+    .form-input::placeholder { color: #6a8a6a; }
 
     .btn-login {
-      padding: 14px;
-      border-radius: 40px;
-      border: none;
-      background: #4a7a4a;
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.05rem;
-      box-shadow: 0 5px 0 #1e3a1e;
-      cursor: pointer;
-      transition: transform 0.05s;
-      touch-action: manipulation;
-      margin-top: 4px;
+      padding: 14px; border-radius: 40px; border: none;
+      background: #4a7a4a; color: #fff; font-weight: 700;
+      font-size: 1.05rem; box-shadow: 0 5px 0 #1e3a1e;
+      cursor: pointer; transition: transform 0.05s;
+      touch-action: manipulation; margin-top: 4px;
     }
-
-    .btn-login:active {
-      transform: translateY(5px);
-      box-shadow: 0 0 0 #1e3a1e;
-    }
-
-    .btn-login:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-      box-shadow: 0 3px 0 #1e3a1e;
-    }
-
-    .btn-guest {
-      background: #6a5a2a;
-      box-shadow: 0 5px 0 #3a2f10;
-    }
-
-    .btn-guest:active {
-      box-shadow: 0 0 0 #3a2f10;
-    }
-
+    .btn-login:active { transform: translateY(5px); box-shadow: 0 0 0 #1e3a1e; }
+    .btn-login:disabled { opacity: 0.5; pointer-events: none; box-shadow: 0 3px 0 #1e3a1e; }
+    .btn-guest { background: #6a5a2a; box-shadow: 0 5px 0 #3a2f10; }
+    .btn-guest:active { box-shadow: 0 0 0 #3a2f10; }
     .btn-link {
-      background: transparent;
-      border: none;
-      color: #a0d0a0;
-      text-decoration: underline;
-      font-size: 0.95rem;
-      cursor: pointer;
-      padding: 8px;
-      touch-action: manipulation;
+      background: transparent; border: none; color: #a0d0a0;
+      text-decoration: underline; font-size: 0.95rem;
+      cursor: pointer; padding: 8px; touch-action: manipulation;
     }
 
     .divider {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #6a8a6a;
-      font-size: 0.85rem;
-      margin: 4px 0;
+      display: flex; align-items: center; gap: 8px;
+      color: #6a8a6a; font-size: 0.85rem; margin: 4px 0;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: #3a5a3a;
     }
 
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #3a5a3a;
-    }
-
-    .tab-switch {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
+    .tab-switch { display: flex; gap: 8px; margin-bottom: 8px; }
     .tab-switch button {
-      flex: 1;
-      padding: 10px;
-      border-radius: 40px;
-      border: 1px solid #4a704a;
-      background: #0c180c;
-      color: #8fa88f;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.15s;
-      touch-action: manipulation;
+      flex: 1; padding: 10px; border-radius: 40px;
+      border: 1px solid #4a704a; background: #0c180c;
+      color: #8fa88f; font-weight: 600; cursor: pointer;
+      transition: 0.15s; touch-action: manipulation;
     }
-
-    .tab-switch button.active {
-      background: #4a7a4a;
-      color: #fff;
-      border-color: #a0d0a0;
-    }
+    .tab-switch button.active { background: #4a7a4a; color: #fff; border-color: #a0d0a0; }
 
     .error-msg {
-      background: #5a1e1e;
-      color: #ffd0d0;
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      text-align: center;
+      background: #5a1e1e; color: #ffd0d0;
+      padding: 10px 14px; border-radius: 12px;
+      font-size: 0.85rem; text-align: center;
       border: 1px solid #a04040;
     }
-
-    .error-msg.hidden {
-      display: none;
-    }
+    .error-msg.hidden { display: none; }
 
     /* ===== GAME UI ===== */
     .status-bar {
-      background: #0f1a0f;
-      padding: 10px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #e0f0d0;
+      background: #0f1a0f; padding: 10px 14px;
+      display: flex; justify-content: space-between;
+      align-items: center; color: #e0f0d0;
       border-bottom: 2px solid #3a6b3a;
-      flex-wrap: wrap;
-      gap: 6px;
+      flex-wrap: wrap; gap: 6px;
     }
-
-    .currency {
-      display: flex;
-      gap: 10px;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
+    .currency { display: flex; gap: 10px; font-weight: 600; font-size: 0.95rem; }
     .currency span {
-      background: #1d2e1d;
-      padding: 5px 10px;
-      border-radius: 30px;
-      border: 1px solid #4f7a4f;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      background: #1d2e1d; padding: 5px 10px;
+      border-radius: 30px; border: 1px solid #4f7a4f;
+      display: flex; align-items: center; gap: 4px;
     }
-
     .points {
-      background: #2a3f2a;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      background: #2a3f2a; padding: 4px 10px;
+      border-radius: 20px; font-size: 0.85rem;
       border: 1px solid #6f9e6f;
     }
-
     .cloud-status {
-      font-size: 0.75rem;
-      padding: 3px 10px;
-      border-radius: 20px;
-      background: #1d2e1d;
-      color: #8fa88f;
-      border: 1px solid #3a5a3a;
+      font-size: 0.75rem; padding: 3px 10px;
+      border-radius: 20px; background: #1d2e1d;
+      color: #8fa88f; border: 1px solid #3a5a3a;
     }
-
-    .cloud-status.saving {
-      color: #ffe08a;
-    }
-
-    .cloud-status.saved {
-      color: #a0f0a0;
-    }
-
-    .cloud-status.offline {
-      color: #ff9090;
-    }
+    .cloud-status.saving { color: #ffe08a; }
+    .cloud-status.saved { color: #a0f0a0; }
+    .cloud-status.offline { color: #ff9090; }
 
     main {
-      flex: 1;
-      overflow-y: auto;
+      flex: 1; overflow-y: auto;
       padding: 16px 16px 80px;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       scroll-behavior: smooth;
     }
 
@@ -293,315 +142,296 @@
     .page.active { display: flex; }
 
     .tree-card {
-      background: #1b2e1b;
-      border-radius: 32px;
+      background: #1b2e1b; border-radius: 32px;
       padding: 24px 16px;
       box-shadow: inset 0 0 0 2px #3a613a, 0 12px 20px -8px black;
       text-align: center;
     }
-
     .tree-icon {
-      font-size: 4.2rem;
-      line-height: 1;
+      font-size: 4.2rem; line-height: 1;
       filter: drop-shadow(0 8px 8px rgba(0,0,0,0.5));
       margin-bottom: 8px;
     }
-
     .level-badge {
-      background: #2c4a2c;
-      padding: 6px 16px;
-      border-radius: 40px;
-      display: inline-block;
-      font-weight: 700;
-      color: #d4f0c0;
-      margin-bottom: 8px;
-      border: 1px solid #7fb07f;
+      background: #2c4a2c; padding: 6px 16px;
+      border-radius: 40px; display: inline-block;
+      font-weight: 700; color: #d4f0c0;
+      margin-bottom: 8px; border: 1px solid #7fb07f;
       font-size: 1.1rem;
     }
-
     .exp-bar-container {
-      width: 100%;
-      background: #0c180c;
-      height: 20px;
-      border-radius: 30px;
-      margin: 12px 0 8px;
-      overflow: hidden;
+      width: 100%; background: #0c180c;
+      height: 20px; border-radius: 30px;
+      margin: 12px 0 8px; overflow: hidden;
       border: 1px solid #4a704a;
     }
-
     .exp-fill {
-      height: 100%;
-      width: 0%;
+      height: 100%; width: 0%;
       background: linear-gradient(90deg, #9fdf4f, #4caf50);
-      border-radius: 30px;
-      transition: width 0.2s ease;
+      border-radius: 30px; transition: width 0.2s ease;
     }
-
-    .exp-text {
-      font-size: 0.9rem;
-      color: #b0d0a0;
-    }
-
+    .exp-text { font-size: 0.9rem; color: #b0d0a0; }
     .reward-badge {
-      background: #3d5e3d;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      color: #ffffc0;
-      margin-top: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      background: #3d5e3d; padding: 6px 12px;
+      border-radius: 20px; font-size: 0.85rem;
+      color: #ffffc0; margin-top: 10px;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .total-exp-badge {
+      display: inline-block; background: #4a3d2a;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 0.8rem; color: #ffd980;
+      border: 1px solid #a08050; margin-top: 6px;
     }
 
     .action-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 6px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; margin-top: 6px;
     }
-
     .btn {
-      background: #2d4a2d;
-      border: none;
-      padding: 16px 8px;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: #ecffe2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: #2d4a2d; border: none;
+      padding: 16px 8px; border-radius: 30px;
+      font-weight: 700; font-size: 1.05rem;
+      color: #ecffe2; display: flex;
+      align-items: center; justify-content: center;
       gap: 8px;
       box-shadow: 0 6px 0 #0f1f0f, 0 6px 12px rgba(0, 0, 0, 0.5);
       transition: all 0.05s ease;
-      cursor: pointer;
-      border: 1px solid #6a9e6a;
+      cursor: pointer; border: 1px solid #6a9e6a;
       touch-action: manipulation;
     }
-
-    .btn:active {
-      transform: translateY(6px);
-      box-shadow: 0 0 0 #0f1f0f;
-    }
-
+    .btn:active { transform: translateY(6px); box-shadow: 0 0 0 #0f1f0f; }
     .btn:disabled {
-      opacity: 0.4;
-      transform: translateY(4px);
+      opacity: 0.4; transform: translateY(4px);
       box-shadow: 0 2px 0 #0f1f0f;
       pointer-events: none;
     }
-
     .btn-harvest {
-      background: #c9a23f;
-      color: #1e2b0e;
-      border-color: #f5e56b;
-      grid-column: span 2;
-      font-size: 1.3rem;
-      box-shadow: 0 6px 0 #7a5e1e;
+      background: #c9a23f; color: #1e2b0e;
+      border-color: #f5e56b; grid-column: span 2;
+      font-size: 1.3rem; box-shadow: 0 6px 0 #7a5e1e;
     }
 
+    /* ===== LEADERBOARD ===== */
+    .lb-controls {
+      background: #162316; border-radius: 20px;
+      padding: 12px; border: 1px solid #3a5a3a;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .lb-section-label {
+      font-size: 0.75rem; color: #8fa88f;
+      font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .lb-chips {
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+
+    .chip {
+      background: #0c180c; border: 1px solid #4a704a;
+      color: #8fa88f; padding: 8px 14px;
+      border-radius: 30px; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer;
+      transition: 0.15s; touch-action: manipulation;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      background: #4a7a4a; color: #fff;
+      border-color: #a0d0a0;
+      box-shadow: 0 0 8px rgba(160, 208, 160, 0.4);
+    }
+
+    .lb-list {
+      background: #162316; border-radius: 20px;
+      border: 1px solid #3a5a3a;
+      padding: 8px; min-height: 100px;
+    }
+
+    .lb-row {
+      display: flex; align-items: center;
+      gap: 10px; padding: 10px 12px;
+      border-radius: 12px;
+      border-bottom: 1px solid #1f2f1f;
+    }
+    .lb-row:last-child { border-bottom: none; }
+
+    .lb-row.me {
+      background: #2a4a2a;
+      border: 1px solid #7fb07f;
+    }
+
+    .lb-rank {
+      min-width: 36px; text-align: center;
+      font-weight: 800; font-size: 1.05rem;
+      color: #a0d0a0;
+    }
+
+    .lb-rank.gold { color: #ffd700; text-shadow: 0 0 6px #ffd70080; }
+    .lb-rank.silver { color: #c0c0c0; }
+    .lb-rank.bronze { color: #cd7f32; }
+
+    .lb-info { flex: 1; min-width: 0; }
+
+    .lb-name {
+      color: #e0f0d0; font-weight: 700;
+      font-size: 0.95rem;
+      white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lb-name.me { color: #ffe08a; }
+
+    .lb-sub {
+      color: #8fa88f; font-size: 0.72rem;
+      white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lb-value {
+      font-weight: 800; color: #d4f0b0;
+      font-size: 1rem; white-space: nowrap;
+      text-align: right;
+    }
+    .lb-value.exp { color: #9fdf4f; }
+    .lb-value.points { color: #ffd980; }
+
+    .lb-empty {
+      text-align: center; padding: 30px 16px;
+      color: #6a8a6a; font-size: 0.9rem;
+    }
+
+    .lb-loading {
+      text-align: center; padding: 30px 16px;
+      color: #8fa88f;
+    }
+
+    .lb-loading .loading-spinner { width: 24px; height: 24px; border-width: 3px; }
+
+    .lb-region-info {
+      background: #0c180c; border-radius: 12px;
+      padding: 8px 12px; font-size: 0.75rem;
+      color: #8fa88f; border: 1px dashed #3a5a3a;
+      text-align: center;
+    }
+
+    /* ===== SHOP & PROFILE ===== */
     .shop-item {
-      background: #1e2f1e;
-      border-radius: 20px;
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: #1e2f1e; border-radius: 20px;
+      padding: 14px 16px; display: flex;
+      justify-content: space-between; align-items: center;
       border: 1px solid #497049;
       box-shadow: 0 4px 0 #0a130a;
       margin-bottom: 10px;
     }
-
     .item-info { display: flex; flex-direction: column; gap: 4px; }
-
-    .item-name {
-      font-weight: 700;
-      color: #e0f0d0;
-      font-size: 1rem;
-    }
-
-    .item-price {
-      font-size: 0.9rem;
-      color: #b8d8a8;
-    }
-
+    .item-name { font-weight: 700; color: #e0f0d0; font-size: 1rem; }
+    .item-price { font-size: 0.9rem; color: #b8d8a8; }
     .buy-btn {
-      background: #426842;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 40px;
-      font-weight: 700;
-      color: #e9ffe0;
+      background: #426842; border: none;
+      padding: 10px 18px; border-radius: 40px;
+      font-weight: 700; color: #e9ffe0;
       box-shadow: 0 4px 0 #183018;
       border: 1px solid #84b084;
-      cursor: pointer;
-      touch-action: manipulation;
+      cursor: pointer; touch-action: manipulation;
       font-size: 0.95rem;
     }
-
-    .buy-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 0 0 #183018;
-    }
-
+    .buy-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #183018; }
     .buy-btn:disabled {
-      opacity: 0.4;
-      transform: translateY(2px);
+      opacity: 0.4; transform: translateY(2px);
       box-shadow: 0 2px 0 #183018;
       pointer-events: none;
     }
 
     .inventory-row {
-      display: flex;
-      gap: 12px;
-      background: #162316;
-      padding: 10px 16px;
-      border-radius: 50px;
-      justify-content: space-around;
-      font-weight: 600;
-      color: #d0e8c0;
+      display: flex; gap: 12px;
+      background: #162316; padding: 10px 16px;
+      border-radius: 50px; justify-content: space-around;
+      font-weight: 600; color: #d0e8c0;
       border: 1px solid #527a52;
     }
 
     .bottom-nav {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #0f1a0f;
-      display: flex;
-      border-top: 2px solid #3f6b3f;
+      position: absolute; bottom: 0; left: 0;
+      width: 100%; background: #0f1a0f;
+      display: flex; border-top: 2px solid #3f6b3f;
       padding: 6px 0;
       padding-bottom: max(6px, env(safe-area-inset-bottom));
       z-index: 10;
     }
-
     .nav-item {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: #8aa88a;
-      font-weight: 600;
-      padding: 12px 0;
-      font-size: 0.95rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      cursor: pointer;
-      transition: 0.1s;
+      flex: 1; background: transparent; border: none;
+      color: #8aa88a; font-weight: 600;
+      padding: 10px 0; font-size: 0.85rem;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 2px;
+      cursor: pointer; transition: 0.1s;
       touch-action: manipulation;
     }
-
     .nav-item.active {
-      color: #d4f0b0;
-      background: #1e2f1e;
-      border-radius: 20px;
-      margin: 0 4px;
+      color: #d4f0b0; background: #1e2f1e;
+      border-radius: 20px; margin: 0 3px;
     }
-
     .nav-icon { font-size: 1.4rem; }
 
     .profile-card {
-      background: #1e2f1e;
-      border-radius: 24px;
-      padding: 16px;
-      border: 1px solid #5b875b;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      background: #1e2f1e; border-radius: 24px;
+      padding: 16px; border: 1px solid #5b875b;
+      display: flex; flex-direction: column; gap: 10px;
     }
-
     .profile-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #162316;
-      border-radius: 50px;
-      padding: 10px 16px;
+      display: flex; justify-content: space-between;
+      align-items: center; background: #162316;
+      border-radius: 50px; padding: 10px 16px;
       border: 1px solid #3f5f3f;
     }
-
-    .profile-label {
-      color: #8fa88f;
-      font-size: 0.85rem;
-    }
-
+    .profile-label { color: #8fa88f; font-size: 0.85rem; }
     .profile-value {
-      color: #e0f0d0;
-      font-weight: 700;
-      font-size: 0.95rem;
-      word-break: break-all;
-      text-align: right;
+      color: #e0f0d0; font-weight: 700; font-size: 0.9rem;
+      word-break: break-word; text-align: right;
       max-width: 60%;
     }
-
     .edit-btn {
-      background: #3b5e3b;
-      border: none;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 40px;
-      font-weight: 600;
-      cursor: pointer;
+      background: #3b5e3b; border: none; color: white;
+      padding: 10px 16px; border-radius: 40px;
+      font-weight: 600; cursor: pointer;
       touch-action: manipulation;
-      border: 1px solid #7fa07f;
-      font-size: 0.9rem;
+      border: 1px solid #7fa07f; font-size: 0.9rem;
     }
-
-    .danger-btn {
-      background: #5e3b3b;
-      border-color: #a07a7a;
-    }
+    .danger-btn { background: #5e3b3b; border-color: #a07a7a; }
 
     .toast {
-      position: fixed;
-      top: 20px;
-      left: 50%;
+      position: fixed; top: 20px; left: 50%;
       transform: translateX(-50%);
-      background: #2d4a2d;
-      color: #f0ffe0;
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-weight: 600;
-      box-shadow: 0 8px 20px black;
+      background: #2d4a2d; color: #f0ffe0;
+      padding: 12px 24px; border-radius: 50px;
+      font-weight: 600; box-shadow: 0 8px 20px black;
       border: 1px solid #a0d0a0;
-      z-index: 999;
-      opacity: 0;
+      z-index: 9999; opacity: 0;
       transition: opacity 0.2s;
-      pointer-events: none;
-      white-space: nowrap;
-      font-size: 0.9rem;
-      max-width: 90%;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      pointer-events: none; white-space: nowrap;
+      font-size: 0.9rem; max-width: 90%;
+      overflow: hidden; text-overflow: ellipsis;
     }
-
     .toast.show { opacity: 1; }
 
     .hidden { display: none !important; }
-
     .small-note {
-      font-size: 0.75rem;
-      color: #8fa88f;
-      text-align: center;
-      margin-top: 6px;
+      font-size: 0.75rem; color: #8fa88f;
+      text-align: center; margin-top: 6px;
     }
 
     .loading-spinner {
       display: inline-block;
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       border: 2px solid #a0d0a0;
       border-radius: 50%;
       border-top-color: transparent;
       animation: spin 0.8s linear infinite;
     }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     main::-webkit-scrollbar { width: 4px; }
     main::-webkit-scrollbar-thumb { background: #4a704a; border-radius: 10px; }
@@ -614,7 +444,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v0.02 · Cloud Save</p>
+    <p>v0.03 · Leaderboard</p>
   </div>
 
   <div class="login-form">
@@ -625,7 +455,6 @@
 
     <div id="errorMsg" class="error-msg hidden"></div>
 
-    <!-- Login form -->
     <div id="loginForm">
       <input type="email" class="form-input" id="loginEmail" placeholder="📧 Email" autocomplete="email">
       <input type="password" class="form-input" id="loginPassword" placeholder="🔒 Password" autocomplete="current-password" style="margin-top: 12px;">
@@ -633,7 +462,6 @@
       <button class="btn-link" id="forgotBtn" style="margin-top: 4px;">Lupa password?</button>
     </div>
 
-    <!-- Register form -->
     <div id="registerForm" class="hidden">
       <input type="text" class="form-input" id="regName" placeholder="👤 Nama Petani" maxlength="15">
       <input type="email" class="form-input" id="regEmail" placeholder="📧 Email" autocomplete="email" style="margin-top: 12px;">
@@ -671,6 +499,7 @@
         </div>
         <div class="exp-text" id="expText">0 / 499 Exp</div>
         <div class="reward-badge" id="rewardPreview">🎁 $5.000 · 💧1000 · 💎30 · 50 PP</div>
+        <div><span class="total-exp-badge" id="totalExpBadge">🌟 Total Exp: 0</span></div>
       </div>
 
       <div class="inventory-row">
@@ -684,6 +513,36 @@
         <button class="btn btn-harvest hidden" id="harvestBtn" style="grid-column: span 2;">🎁 PANEN</button>
       </div>
       <div class="small-note" id="pupukNote">Beri pupuk tiap 10 siram agar efek tetap 10 exp/L</div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="pageLeaderboard" class="page">
+      <div class="lb-controls">
+        <div>
+          <div class="lb-section-label">📊 Kategori</div>
+          <div class="lb-chips" id="lbCategoryChips">
+            <div class="chip active" data-cat="exp">🌟 Exp</div>
+            <div class="chip" data-cat="points">🌱 Planter Points</div>
+          </div>
+        </div>
+        <div>
+          <div class="lb-section-label">🌍 Wilayah</div>
+          <div class="lb-chips" id="lbRegionChips">
+            <div class="chip active" data-region="global">🌍 Global</div>
+            <div class="chip" data-region="negara">🇮🇩 Negara</div>
+            <div class="chip" data-region="provinsi">🏙️ Provinsi</div>
+            <div class="chip" data-region="kabupaten">🏘️ Kabupaten</div>
+            <div class="chip" data-region="kecamatan">🏡 Kecamatan</div>
+          </div>
+        </div>
+        <div class="lb-region-info" id="lbRegionInfo">🌍 Menampilkan peringkat global (semua pemain)</div>
+      </div>
+
+      <div class="lb-list" id="lbList">
+        <div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat peringkat...</div></div>
+      </div>
+
+      <div class="small-note">Top 100 pemain · Diurutkan dari tertinggi</div>
     </div>
 
     <!-- TOKO -->
@@ -711,18 +570,24 @@
           <span class="profile-label">🏷️ Tipe</span>
           <span class="profile-value" id="profileType">Guest</span>
         </div>
+        <div class="profile-row">
+          <span class="profile-label">🌟 Total Exp</span>
+          <span class="profile-value" id="profileTotalExp">0</span>
+        </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button class="edit-btn" id="editNameBtn" style="flex:1;">✏️ Edit Nama</button>
-          <button class="edit-btn" id="upgradeBtn" style="flex:1;">🔗 Upgrade ke Email</button>
+          <button class="edit-btn" id="upgradeBtn" style="flex:1;">🔗 Upgrade</button>
         </div>
+        <button class="edit-btn" id="editRegionBtn" style="width:100%;">🌍 Atur Wilayah</button>
         <button class="edit-btn danger-btn" id="logoutBtn" style="width:100%;">🚪 Logout</button>
       </div>
-      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.02</div>
+      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.03</div>
     </div>
   </main>
 
   <div class="bottom-nav">
     <button class="nav-item active" data-page="tanam"><span class="nav-icon">🌳</span>Tanam</button>
+    <button class="nav-item" data-page="leaderboard"><span class="nav-icon">🥇</span>Leaderboard</button>
     <button class="nav-item" data-page="toko"><span class="nav-icon">🛒</span>Toko</button>
     <button class="nav-item" data-page="akun"><span class="nav-icon">👤</span>Akun</button>
   </div>
@@ -730,17 +595,16 @@
 
 <div id="toast" class="toast"></div>
 
-<!-- ===== FIREBASE SDK ===== -->
+<!-- ===== FIREBASE ===== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, get, set, onValue, serverTimestamp }
+  import { getDatabase, ref, get, set, update, query, orderByChild, limitToLast, onValue }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
   import { getAuth, signInAnonymously, createUserWithEmailAndPassword,
     signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile,
     linkWithCredential, EmailAuthProvider, sendPasswordResetEmail }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  // ===== FIREBASE CONFIG =====
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
     authDomain: "compound-harvest.firebaseapp.com",
@@ -761,6 +625,7 @@
     money: 1500,
     diamond: 0,
     planterPoints: 0,
+    totalExp: 0,          // ← BARU: exp kumulatif
     water: 0,
     fertilizer: 0,
     exp: 0,
@@ -771,13 +636,20 @@
     uid: null,
     email: null,
     isAnonymous: true,
+    region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
   };
 
   let dbRef = null;
   let saveTimer = null;
-  let isSaving = false;
   let isOnline = navigator.onLine;
-  const LOCAL_KEY = 'compoundHarvest_v02_state';
+  const LOCAL_KEY = 'compoundHarvest_v03_state';
+
+  // leaderboard view state
+  const lbView = {
+    category: 'exp',    // 'exp' | 'points'
+    region: 'global',   // global|negara|provinsi|kabupaten|kecamatan
+    unsubscribe: null,
+  };
 
   const LEVELS = [
     { level: 1, name: 'Benih', min: 0, max: 499 },
@@ -799,6 +671,7 @@
   const levelBadge = $('levelBadge');
   const expFill = $('expFill');
   const expText = $('expText');
+  const totalExpBadge = $('totalExpBadge');
   const waterDisplay = $('waterDisplay');
   const fertilizerDisplay = $('fertilizerDisplay');
   const waterBtn = $('waterBtn');
@@ -810,17 +683,23 @@
   const profileEmail = $('profileEmail');
   const profileUid = $('profileUid');
   const profileType = $('profileType');
+  const profileTotalExp = $('profileTotalExp');
   const editNameBtn = $('editNameBtn');
   const upgradeBtn = $('upgradeBtn');
+  const editRegionBtn = $('editRegionBtn');
   const logoutBtn = $('logoutBtn');
   const pageTanam = $('pageTanam');
+  const pageLeaderboard = $('pageLeaderboard');
   const pageToko = $('pageToko');
   const pageAkun = $('pageAkun');
   const navItems = document.querySelectorAll('.nav-item');
   const toastEl = $('toast');
   const errorMsg = $('errorMsg');
+  const lbList = $('lbList');
+  const lbCategoryChips = $('lbCategoryChips');
+  const lbRegionChips = $('lbRegionChips');
+  const lbRegionInfo = $('lbRegionInfo');
 
-  // Login screen elements
   const tabLoginBtn = $('tabLoginBtn');
   const tabRegisterBtn = $('tabRegisterBtn');
   const loginForm = $('loginForm');
@@ -845,7 +724,7 @@
   }
 
   function formatNumber(num) {
-    return Number(num).toLocaleString('id-ID');
+    return Number(num || 0).toLocaleString('id-ID');
   }
 
   function getLevelData(exp) {
@@ -872,6 +751,15 @@
     }
   }
 
+  // Sanitize string untuk dijadikan key Firebase (region)
+  function sanitizeKey(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/[.#$\[\]\/]/g, '_')
+      .trim()
+      .substring(0, 40);
+  }
+
   // ===== UI UPDATE =====
   function updateUI() {
     moneyDisplay.textContent = formatNumber(state.money);
@@ -880,6 +768,7 @@
 
     waterDisplay.textContent = state.water;
     fertilizerDisplay.textContent = state.fertilizer;
+    totalExpBadge.textContent = `🌟 Total Exp: ${formatNumber(state.totalExp)}`;
 
     const currentLevelData = getLevelData(state.exp);
     state.level = currentLevelData.level;
@@ -918,30 +807,25 @@
       pupukNote.style.color = '#8fa88f';
     }
 
-    // Profile
     profileName.textContent = state.name;
     profileEmail.textContent = state.email || '-';
     profileUid.textContent = state.uid ? state.uid.substring(0, 20) + '...' : '-';
     profileType.textContent = state.isAnonymous ? 'Guest' : 'Email';
+    profileTotalExp.textContent = formatNumber(state.totalExp);
 
-    // Upgrade button
-    if (state.isAnonymous) {
-      upgradeBtn.style.display = 'block';
-    } else {
-      upgradeBtn.style.display = 'none';
-    }
+    if (state.isAnonymous) upgradeBtn.style.display = 'block';
+    else upgradeBtn.style.display = 'none';
 
     renderShop();
   }
 
-  // ===== FIREBASE SAVE/LOAD =====
+  // ===== SAVE / LOAD =====
   function getLocalState() {
     try {
       const raw = localStorage.getItem(LOCAL_KEY);
       return raw ? JSON.parse(raw) : null;
     } catch { return null; }
   }
-
   function setLocalState(s) {
     try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {}
   }
@@ -956,7 +840,6 @@
     if (!dbRef || !state.uid) return;
     if (!isOnline) { setCloudStatus('offline'); return; }
     try {
-      isSaving = true;
       setCloudStatus('saving');
       const payload = {
         name: state.name,
@@ -967,6 +850,8 @@
         exp: state.exp,
         level: state.level,
         planterPoints: state.planterPoints,
+        totalExp: state.totalExp,         // ← baru
+        region: state.region,             // ← baru
         waterSinceFertilizer: state.waterSinceFertilizer,
         skipUsedThisLevel: state.skipUsedThisLevel,
         email: state.email || null,
@@ -975,11 +860,12 @@
       };
       await set(dbRef, payload);
       setCloudStatus('saved');
+
+      // Update leaderboard (fire and forget)
+      updateLeaderboardEntries().catch(e => console.warn('LB update error:', e));
     } catch (e) {
       console.error('Save error:', e);
       setCloudStatus('offline');
-    } finally {
-      isSaving = false;
     }
   }
 
@@ -998,17 +884,20 @@
           exp: data.exp ?? 0,
           level: data.level ?? 1,
           planterPoints: data.planterPoints ?? 0,
+          totalExp: data.totalExp ?? 0,          // ← baru
           name: data.name ?? 'Petani',
           waterSinceFertilizer: data.waterSinceFertilizer ?? 0,
           skipUsedThisLevel: data.skipUsedThisLevel ?? false,
+          region: data.region || { negara: '', provinsi: '', kabupaten: '', kecamatan: '' }, // ← baru
         });
         showToast('☁️ Data dimuat dari cloud');
       } else {
-        // user baru
         await saveToCloud();
         showToast('🌱 Selamat datang! Akun baru dibuat.');
       }
       updateUI();
+      // Ensure leaderboard entry terupdate
+      updateLeaderboardEntries().catch(() => {});
     } catch (e) {
       console.error('Load error:', e);
       const local = getLocalState();
@@ -1020,10 +909,145 @@
     }
   }
 
+  // ===== LEADERBOARD LOGIC =====
+  // Update entry di leaderboard untuk semua wilayah yang diisi user
+  async function updateLeaderboardEntries() {
+    if (!state.uid) return;
+    const entryExp = {
+      uid: state.uid,
+      name: state.name || 'Petani',
+      value: state.totalExp || 0,
+      region: state.region,
+    };
+    const entryPts = {
+      uid: state.uid,
+      name: state.name || 'Petani',
+      value: state.planterPoints || 0,
+      region: state.region,
+    };
+
+    const updates = {};
+
+    // Global
+    updates[`leaderboard/global/exp/${state.uid}`] = entryExp;
+    updates[`leaderboard/global/points/${state.uid}`] = entryPts;
+
+    // Wilayah (kalau diisi)
+    const regions = ['negara', 'provinsi', 'kabupaten', 'kecamatan'];
+    for (const r of regions) {
+      const key = sanitizeKey(state.region[r]);
+      if (!key) continue;
+      updates[`leaderboard/${r}/${key}/exp/${state.uid}`] = entryExp;
+      updates[`leaderboard/${r}/${key}/points/${state.uid}`] = entryPts;
+    }
+
+    await update(ref(db), updates);
+  }
+
+  // Ambil path leaderboard berdasarkan view
+  function getLbPath() {
+    const cat = lbView.category; // exp | points
+    if (lbView.region === 'global') {
+      return `leaderboard/global/${cat}`;
+    }
+    const key = sanitizeKey(state.region[lbView.region]);
+    if (!key) return null;
+    return `leaderboard/${lbView.region}/${key}/${cat}`;
+  }
+
+  function getLbRegionLabel() {
+    const r = lbView.region;
+    if (r === 'global') return '🌍 Menampilkan peringkat global (semua pemain)';
+    const val = state.region[r] || '(belum diatur)';
+    const label = { negara: 'Negara', provinsi: 'Provinsi', kabupaten: 'Kabupaten', kecamatan: 'Kecamatan' }[r];
+    return `${label}: ${val || '(belum diatur)'}`;
+  }
+
+  async function loadLeaderboard() {
+    // Unsubscribe dari listener sebelumnya
+    if (lbView.unsubscribe) {
+      lbView.unsubscribe();
+      lbView.unsubscribe = null;
+    }
+
+    lbList.innerHTML = `<div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat peringkat...</div></div>`;
+    lbRegionInfo.textContent = getLbRegionLabel();
+
+    const path = getLbPath();
+    if (!path) {
+      lbList.innerHTML = `<div class="lb-empty">🌍 Atur wilayah Anda di halaman <b>Akun → Atur Wilayah</b> untuk melihat peringkat ${lbView.region}.</div>`;
+      return;
+    }
+
+    try {
+      const q = query(ref(db, path), orderByChild('value'), limitToLast(100));
+      const unsubscribe = onValue(q, (snapshot) => {
+        const rows = [];
+        snapshot.forEach(child => {
+          const v = child.val() || {};
+          rows.push({
+            uid: child.key,
+            name: v.name || 'Petani',
+            value: v.value || 0,
+          });
+        });
+        // Sort desc (limitToLast ambil dari terkecil, kita balik)
+        rows.sort((a, b) => b.value - a.value);
+        renderLeaderboard(rows);
+      }, (err) => {
+        console.error('LB listen error:', err);
+        lbList.innerHTML = `<div class="lb-empty">❌ Gagal memuat leaderboard: ${err.message}</div>`;
+      });
+      lbView.unsubscribe = unsubscribe;
+    } catch (e) {
+      console.error('LB query error:', e);
+      lbList.innerHTML = `<div class="lb-empty">❌ Gagal memuat: ${e.message}</div>`;
+    }
+  }
+
+  function renderLeaderboard(rows) {
+    if (!rows || rows.length === 0) {
+      lbList.innerHTML = `<div class="lb-empty">📭 Belum ada data untuk wilayah ini. Jadilah yang pertama! 🌱</div>`;
+      return;
+    }
+
+    const cat = lbView.category;
+    const unit = cat === 'exp' ? 'Exp' : 'PP';
+
+    let html = '';
+    rows.forEach((row, idx) => {
+      const rank = idx + 1;
+      let rankClass = '';
+      let rankIcon = rank;
+      if (rank === 1) { rankClass = 'gold'; rankIcon = '🥇'; }
+      else if (rank === 2) { rankClass = 'silver'; rankIcon = '🥈'; }
+      else if (rank === 3) { rankClass = 'bronze'; rankIcon = '🥉'; }
+
+      const isMe = row.uid === state.uid;
+      html += `
+        <div class="lb-row ${isMe ? 'me' : ''}">
+          <div class="lb-rank ${rankClass}">${rankIcon}</div>
+          <div class="lb-info">
+            <div class="lb-name ${isMe ? 'me' : ''}">${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}</div>
+            <div class="lb-sub">#${rank} · ${escapeHtml(getLbRegionLabel())}</div>
+          </div>
+          <div class="lb-value ${cat}">${formatNumber(row.value)} ${unit}</div>
+        </div>`;
+    });
+    lbList.innerHTML = html;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
   // ===== GAME LOGIC =====
   function addExp(amount) {
     if (state.level === 5) return;
     state.exp = Math.min(state.exp + amount, 3000);
+    state.totalExp += amount;   // ← BARU: kumulatif
     const newLevel = getLevelData(state.exp).level;
     if (newLevel > state.level) {
       state.level = newLevel;
@@ -1132,21 +1156,13 @@
     } else if (item.priceDiamond !== undefined && state.diamond >= item.priceDiamond) {
       state.diamond -= item.priceDiamond; paid = true;
     } else { showToast('❌ Saldo tidak cukup!'); return; }
-
     if (!paid) return;
 
     switch (item.type) {
-      case 'water':
-        state.water += item.amount;
-        showToast(`💧 +${item.amount} Liter air`); break;
-      case 'fertilizer':
-        state.fertilizer += item.amount;
-        showToast(`🧪 +${item.amount} Kg pupuk`); break;
+      case 'water': state.water += item.amount; showToast(`💧 +${item.amount} Liter air`); break;
+      case 'fertilizer': state.fertilizer += item.amount; showToast(`🧪 +${item.amount} Kg pupuk`); break;
       case 'instant':
-        if (state.level >= 5) {
-          state.diamond += 25;
-          showToast('Pohon sudah dewasa, refund 💎25'); return;
-        }
+        if (state.level >= 5) { state.diamond += 25; showToast('Pohon sudah dewasa, refund 💎25'); return; }
         addExp(500); showToast('✨ +500 Exp'); break;
       case 'skip':
         const nextLevel = Math.min(state.level + 1, 5);
@@ -1166,18 +1182,45 @@
   // ===== NAVIGATION =====
   function switchPage(pageId) {
     pageTanam.classList.remove('active');
+    pageLeaderboard.classList.remove('active');
     pageToko.classList.remove('active');
     pageAkun.classList.remove('active');
     if (pageId === 'tanam') pageTanam.classList.add('active');
+    else if (pageId === 'leaderboard') pageLeaderboard.classList.add('active');
     else if (pageId === 'toko') pageToko.classList.add('active');
     else if (pageId === 'akun') pageAkun.classList.add('active');
     navItems.forEach(item => {
       item.classList.toggle('active', item.dataset.page === pageId);
     });
     if (pageId === 'toko') renderShop();
+    if (pageId === 'leaderboard') loadLeaderboard();
+    // Kalau pindah dari leaderboard, unsubscribe
+    if (pageId !== 'leaderboard' && lbView.unsubscribe) {
+      lbView.unsubscribe();
+      lbView.unsubscribe = null;
+    }
   }
 
-  // ===== AUTH HANDLERS =====
+  // ===== LEADERBOARD CHIP HANDLERS =====
+  lbCategoryChips.addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    lbCategoryChips.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    lbView.category = chip.dataset.cat;
+    loadLeaderboard();
+  });
+
+  lbRegionChips.addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    lbRegionChips.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    lbView.region = chip.dataset.region;
+    loadLeaderboard();
+  });
+
+  // ===== AUTH =====
   function switchLoginTab(tab) {
     if (tab === 'login') {
       tabLoginBtn.classList.add('active');
@@ -1196,9 +1239,8 @@
   async function handleGuest() {
     guestBtn.disabled = true;
     guestBtn.innerHTML = '<span class="loading-spinner"></span> Memuat...';
-    try {
-      await signInAnonymously(auth);
-    } catch (e) {
+    try { await signInAnonymously(auth); }
+    catch (e) {
       showError('Gagal login guest: ' + e.message);
       guestBtn.disabled = false;
       guestBtn.textContent = '🎮 Main sebagai Guest';
@@ -1211,9 +1253,8 @@
     if (!email || !pw) { showError('Email dan password wajib diisi'); return; }
     loginSubmitBtn.disabled = true;
     loginSubmitBtn.innerHTML = '<span class="loading-spinner"></span> Masuk...';
-    try {
-      await signInWithEmailAndPassword(auth, email, pw);
-    } catch (e) {
+    try { await signInWithEmailAndPassword(auth, email, pw); }
+    catch (e) {
       let msg = e.message;
       if (e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') msg = 'Email atau password salah';
       else if (e.code === 'auth/user-not-found') msg = 'Akun tidak ditemukan. Daftar dulu?';
@@ -1240,7 +1281,6 @@
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, pw);
       await updateProfile(cred.user, { displayName: name });
-      // state.name akan di-set di onAuthStateChanged
     } catch (e) {
       let msg = e.message;
       if (e.code === 'auth/email-already-in-use') msg = 'Email sudah terdaftar';
@@ -1258,9 +1298,7 @@
     try {
       await sendPasswordResetEmail(auth, email);
       showToast('📧 Email reset terkirim!');
-    } catch (e) {
-      showError('Gagal kirim reset: ' + e.message);
-    }
+    } catch (e) { showError('Gagal: ' + e.message); }
   }
 
   async function handleUpgrade() {
@@ -1271,9 +1309,8 @@
     if (!pw || pw.length < 6) { showToast('Password minimal 6 karakter'); return; }
     try {
       const cred = EmailAuthProvider.credential(email, pw);
-      const result = await linkWithCredential(auth.currentUser, cred);
-      showToast('🔗 Akun berhasil di-upgrade ke Email!');
-      // onAuthStateChanged akan handle
+      await linkWithCredential(auth.currentUser, cred);
+      showToast('🔗 Akun di-upgrade ke Email!');
     } catch (e) {
       let msg = e.message;
       if (e.code === 'auth/email-already-in-use') msg = 'Email sudah dipakai akun lain';
@@ -1282,11 +1319,36 @@
     }
   }
 
+  async function handleEditRegion() {
+    const current = state.region;
+    const negara = prompt('Negara:', current.negara || 'Indonesia');
+    if (negara === null) return;
+    const provinsi = prompt('Provinsi:', current.provinsi || '');
+    if (provinsi === null) return;
+    const kabupaten = prompt('Kabupaten/Kota:', current.kabupaten || '');
+    if (kabupaten === null) return;
+    const kecamatan = prompt('Kecamatan:', current.kecamatan || '');
+    if (kecamatan === null) return;
+    state.region = {
+      negara: (negara || '').trim(),
+      provinsi: (provinsi || '').trim(),
+      kabupaten: (kabupaten || '').trim(),
+      kecamatan: (kecamatan || '').trim(),
+    };
+    debouncedSave();
+    updateUI();
+    // refresh leaderboard info
+    lbRegionInfo.textContent = getLbRegionLabel();
+    showToast('🌍 Wilayah tersimpan');
+    // Re-update leaderboard entries
+    updateLeaderboardEntries().catch(() => {});
+  }
+
   async function handleLogout() {
     if (!confirm('Yakin logout? Pastikan sudah tersimpan.')) return;
-    // Force save dulu
     if (saveTimer) clearTimeout(saveTimer);
     await saveToCloud();
+    if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
     await signOut(auth);
   }
 
@@ -1297,21 +1359,15 @@
       state.email = user.email || null;
       state.isAnonymous = user.isAnonymous;
       if (user.displayName && !state.name) state.name = user.displayName;
-
-      // Load data
       loginScreen.classList.add('hidden');
       gameContainer.style.display = 'flex';
       await loadFromCloud(user.uid);
       updateUI();
     } else {
-      // Logout / belum login
       loginScreen.classList.remove('hidden');
       gameContainer.style.display = 'none';
-      state.uid = null;
-      state.email = null;
-      state.isAnonymous = true;
+      state.uid = null; state.email = null; state.isAnonymous = true;
       dbRef = null;
-      // Reset buttons
       guestBtn.disabled = false;
       guestBtn.textContent = '🎮 Main sebagai Guest';
       loginSubmitBtn.disabled = false;
@@ -1321,7 +1377,7 @@
     }
   });
 
-  // ===== EVENT LISTENERS =====
+  // ===== EVENTS =====
   waterBtn.addEventListener('click', waterTree);
   fertilizeBtn.addEventListener('click', fertilizeTree);
   harvestBtn.addEventListener('click', harvest);
@@ -1349,19 +1405,17 @@
   });
 
   upgradeBtn.addEventListener('click', handleUpgrade);
+  editRegionBtn.addEventListener('click', handleEditRegion);
   logoutBtn.addEventListener('click', handleLogout);
 
-  // Enter key shortcuts
   $('loginPassword').addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
   $('regPassword2').addEventListener('keypress', e => { if (e.key === 'Enter') handleRegister(); });
 
-  // Online/offline
   window.addEventListener('online', () => { isOnline = true; setCloudStatus('saved'); saveToCloud(); });
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
 
-  // ===== INIT =====
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v0.02 ready');
+  console.log('🌳 Compound Harvest v0.03 ready');
 </script>
 </body>
 </html>
