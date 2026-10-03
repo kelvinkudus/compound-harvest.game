@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.6</title>
+  <title>Compound Harvest 1 · v0.7</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
@@ -126,6 +126,95 @@
     .lb-region-info { background: #0c180c; border-radius: 12px; padding: 8px 12px;
       font-size: 0.75rem; color: #8fa88f; border: 1px dashed #3a5a3a; text-align: center; }
 
+    /* ===== INVENTORI ===== */
+    .inv-header {
+      background: #162316; border-radius: 20px; padding: 14px 16px;
+      border: 1px solid #3a5a3a; display: flex; justify-content: space-between;
+      align-items: center; gap: 10px;
+    }
+    .inv-header .title {
+      color: #d4f0b0; font-weight: 700; font-size: 1.05rem;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .inv-header .count {
+      background: #0c180c; color: #a0d0a0;
+      padding: 4px 12px; border-radius: 30px;
+      font-size: 0.8rem; font-weight: 600;
+      border: 1px solid #4a704a;
+    }
+    .inv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+    .inv-card {
+      background: #162316; border-radius: 18px;
+      padding: 14px 12px; border: 1px solid #3a5a3a;
+      display: flex; flex-direction: column;
+      gap: 6px; transition: 0.15s; position: relative;
+      overflow: hidden;
+    }
+    .inv-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+    }
+    .inv-card.water::before { background: linear-gradient(90deg, #4fa8ff, #80d0ff); }
+    .inv-card.fertilizer::before { background: linear-gradient(90deg, #9fdf4f, #4caf50); }
+    .inv-card.diamond::before { background: linear-gradient(90deg, #a0e0ff, #60c0f0); }
+    .inv-card.money::before { background: linear-gradient(90deg, #ffd980, #c9a23f); }
+    .inv-card.points::before { background: linear-gradient(90deg, #ffb060, #e08040); }
+
+    .inv-icon {
+      font-size: 2.2rem; line-height: 1;
+      text-align: center; margin-bottom: 2px;
+    }
+    .inv-name {
+      color: #e0f0d0; font-weight: 700; font-size: 0.95rem;
+      text-align: center;
+    }
+    .inv-amount {
+      text-align: center; font-weight: 800; font-size: 1.3rem;
+      padding: 4px 0;
+    }
+    .inv-amount.water { color: #80d0ff; }
+    .inv-amount.fertilizer { color: #9fdf4f; }
+    .inv-amount.diamond { color: #a0e0ff; }
+    .inv-amount.money { color: #ffd980; }
+    .inv-amount.points { color: #ffb060; }
+    .inv-unit {
+      font-size: 0.75rem; font-weight: 500;
+      color: #8fa88f; margin-left: 2px;
+    }
+    .inv-desc {
+      font-size: 0.72rem; color: #8fa88f;
+      text-align: center; line-height: 1.35;
+      border-top: 1px dashed #2a3a2a;
+      padding-top: 6px; margin-top: 2px;
+    }
+    .inv-bar {
+      width: 100%; height: 6px;
+      background: #0c180c; border-radius: 10px;
+      overflow: hidden; margin-top: 2px;
+    }
+    .inv-bar-fill {
+      height: 100%; width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 10px;
+    }
+    .inv-bar-fill.water { background: linear-gradient(90deg, #4fa8ff, #80d0ff); }
+    .inv-bar-fill.fertilizer { background: linear-gradient(90deg, #9fdf4f, #4caf50); }
+    .inv-tip {
+      text-align: center; font-size: 0.72rem;
+      color: #6a8a6a; margin-top: 8px;
+      padding: 0 8px;
+    }
+    .inv-section-title {
+      color: #8fa88f; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 1px;
+      font-weight: 600; padding-left: 4px;
+      margin-top: 4px;
+    }
+
     /* SHOP & PROFILE */
     .shop-item { background: #1e2f1e; border-radius: 20px; padding: 14px 16px;
       display: flex; justify-content: space-between; align-items: center;
@@ -147,11 +236,11 @@
       display: flex; border-top: 2px solid #3f6b3f; padding: 6px 0;
       padding-bottom: max(6px, env(safe-area-inset-bottom)); z-index: 10; }
     .nav-item { flex: 1; background: transparent; border: none; color: #8aa88a;
-      font-weight: 600; padding: 10px 0; font-size: 0.85rem;
+      font-weight: 600; padding: 10px 0; font-size: 0.75rem;
       display: flex; flex-direction: column; align-items: center; gap: 2px;
       cursor: pointer; transition: 0.1s; touch-action: manipulation; }
-    .nav-item.active { color: #d4f0b0; background: #1e2f1e; border-radius: 20px; margin: 0 3px; }
-    .nav-icon { font-size: 1.4rem; }
+    .nav-item.active { color: #d4f0b0; background: #1e2f1e; border-radius: 20px; margin: 0 2px; }
+    .nav-icon { font-size: 1.3rem; }
 
     .profile-card { background: #1e2f1e; border-radius: 24px; padding: 16px;
       border: 1px solid #5b875b; display: flex; flex-direction: column; gap: 10px; }
@@ -178,7 +267,6 @@
     .locked-note { color: #8fa88f; font-size: 0.78rem;
       text-align: center; margin-top: 6px; font-style: italic; }
 
-    /* REGION FORM */
     .region-form { background: #1e2f1e; border: 1px solid #5b875b; border-radius: 24px;
       padding: 16px; display: flex; flex-direction: column; gap: 12px; }
     .region-form .label { color: #8fa88f; font-size: 0.75rem; font-weight: 600;
@@ -203,7 +291,6 @@
       animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* MODAL */
     .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85); z-index: 9998; display: flex;
       align-items: center; justify-content: center; padding: 20px; }
@@ -237,7 +324,6 @@
     .modal-danger:disabled { background: #4a2a2a; color: #888; }
     .modal-danger:active:not(:disabled) { background: #6a1a1a; }
 
-    /* DAILY REWARD MODAL */
     .daily-modal { background: linear-gradient(160deg, #3a2e1e, #1e2f1e);
       border: 2px solid #ffd980; border-radius: 28px; padding: 24px 20px;
       text-align: center; max-width: 360px; width: 100%;
@@ -269,6 +355,13 @@
 
     main::-webkit-scrollbar { width: 4px; }
     main::-webkit-scrollbar-thumb { background: #4a704a; border-radius: 10px; }
+
+    /* Mobile kecil: 2 kolom minimum */
+    @media (max-width: 380px) {
+      .inv-grid { grid-template-columns: repeat(2, 1fr); }
+      .inv-icon { font-size: 1.8rem; }
+      .inv-amount { font-size: 1.1rem; }
+    }
   </style>
 </head>
 <body>
@@ -278,7 +371,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v0.6 · Daily Reward</p>
+    <p>v0.7 · Inventori</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -368,6 +461,21 @@
       <div class="small-note">Top 100 pemain · Diurutkan dari tertinggi</div>
     </div>
 
+    <!-- INVENTORI -->
+    <div id="pageInventori" class="page">
+      <div class="inv-header">
+        <div class="title">🎒 Inventori</div>
+        <div class="count" id="invItemCount">0 item</div>
+      </div>
+
+      <div class="inv-section-title">📦 Item Aktif</div>
+      <div class="inv-grid" id="invGrid"></div>
+
+      <div class="inv-tip">
+        💡 Item bertambah dari pembelian di Toko & hadiah panen
+      </div>
+    </div>
+
     <!-- TOKO -->
     <div id="pageToko" class="page">
       <h3 style="color:#c0e0b0; margin-bottom: 8px;">🛒 Toko</h3>
@@ -412,13 +520,14 @@
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.6</div>
+      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.7</div>
     </div>
   </main>
 
   <div class="bottom-nav">
     <button class="nav-item active" data-page="tanam"><span class="nav-icon">🌳</span>Tanam</button>
-    <button class="nav-item" data-page="leaderboard"><span class="nav-icon">🥇</span>Leaderboard</button>
+    <button class="nav-item" data-page="leaderboard"><span class="nav-icon">🥇</span>Peringkat</button>
+    <button class="nav-item" data-page="inventori"><span class="nav-icon">🎒</span>Inventori</button>
     <button class="nav-item" data-page="toko"><span class="nav-icon">🛒</span>Toko</button>
     <button class="nav-item" data-page="akun"><span class="nav-icon">👤</span>Akun</button>
   </div>
@@ -535,7 +644,7 @@
     uid: null, email: null, isAnonymous: true,
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
     regionLocked: false,
-    lastDailyReward: '',   // ← BARU
+    lastDailyReward: '',
     isOwner: false,
   });
 
@@ -544,7 +653,7 @@
   let saveTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v06_state';
+  const LOCAL_KEY = 'compoundHarvest_v07_state';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
@@ -590,6 +699,7 @@
   const regionSection = $('regionSection');
   const pageTanam = $('pageTanam');
   const pageLeaderboard = $('pageLeaderboard');
+  const pageInventori = $('pageInventori');
   const pageToko = $('pageToko');
   const pageAkun = $('pageAkun');
   const navItems = document.querySelectorAll('.nav-item');
@@ -599,6 +709,10 @@
   const lbCategoryChips = $('lbCategoryChips');
   const lbRegionChips = $('lbRegionChips');
   const lbRegionInfo = $('lbRegionInfo');
+
+  // Inventori
+  const invGrid = $('invGrid');
+  const invItemCount = $('invItemCount');
 
   const tabLoginBtn = $('tabLoginBtn');
   const tabRegisterBtn = $('tabRegisterBtn');
@@ -675,53 +789,37 @@
 
   // ===== DAILY REWARD =====
   function getTodayKey() {
-    // Format: YYYY-MM-DD di timezone lokal device
     const d = new Date();
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   }
-
   function hasClaimedDailyToday() {
     return state.lastDailyReward === getTodayKey();
   }
-
-  function showDailyRewardModal() {
-    dailyRewardBackdrop.classList.remove('hidden');
-  }
-
-  function hideDailyRewardModal() {
-    dailyRewardBackdrop.classList.add('hidden');
-  }
+  function showDailyRewardModal() { dailyRewardBackdrop.classList.remove('hidden'); }
+  function hideDailyRewardModal() { dailyRewardBackdrop.classList.add('hidden'); }
 
   async function claimDailyReward() {
     const today = getTodayKey();
-
-    // Cek lagi untuk safety
     if (state.lastDailyReward === today) {
       hideDailyRewardModal();
       return;
     }
-
-    // Beri reward
     state.money += DAILY_REWARD_AMOUNT;
     state.lastDailyReward = today;
-
     updateUI();
     await saveToCloud();
-
     hideDailyRewardModal();
     showToast(`🎁 +$${formatNumber(DAILY_REWARD_AMOUNT)} Daily Reward!`, 2500, true);
   }
 
   function checkAndShowDailyReward() {
     if (hasClaimedDailyToday()) {
-      // Sudah klaim hari ini
       console.log('✅ Daily reward sudah diklaim hari ini');
       return;
     }
-    // Belum klaim → tampilkan modal
     console.log('🎁 Daily reward tersedia!');
     showDailyRewardModal();
   }
@@ -754,6 +852,64 @@
     return true;
   }
 
+  // ===== INVENTORY DATA =====
+  // Daftar item yang tampil di inventori.
+  // Tambah entry di sini kalau mau tambah item baru.
+  function getInventoryItems() {
+    return [
+      {
+        id: 'water',
+        icon: '💧',
+        name: 'Air',
+        amount: state.water,
+        unit: 'L',
+        desc: 'Untuk menyiram pohon. 1L = +10 Exp',
+        className: 'water',
+        max: 5000,
+      },
+      {
+        id: 'fertilizer',
+        icon: '🧪',
+        name: 'Pupuk',
+        amount: state.fertilizer,
+        unit: 'Kg',
+        desc: 'Beri tiap 10 siram agar efek air tetap 10/L',
+        className: 'fertilizer',
+        max: 100,
+      },
+    ];
+  }
+
+  function renderInventory() {
+    if (!invGrid) return;
+    const items = getInventoryItems();
+
+    // Filter: hanya tampil item yang jumlahnya > 0? Atau tampil semua?
+    // Kita tampil semua biar user tahu kapasitas (termasuk 0)
+    const html = items.map(item => {
+      const pct = Math.min(100, (item.amount / item.max) * 100);
+      return `
+        <div class="inv-card ${item.className}">
+          <div class="inv-icon">${item.icon}</div>
+          <div class="inv-name">${escapeHtml(item.name)}</div>
+          <div class="inv-amount ${item.className}">
+            ${formatNumber(item.amount)}<span class="inv-unit">${item.unit}</span>
+          </div>
+          <div class="inv-bar">
+            <div class="inv-bar-fill ${item.className}" style="width: ${pct}%;"></div>
+          </div>
+          <div class="inv-desc">${escapeHtml(item.desc)}</div>
+        </div>
+      `;
+    }).join('');
+
+    invGrid.innerHTML = html;
+
+    // Update counter
+    const totalItems = items.filter(i => i.amount > 0).length;
+    invItemCount.textContent = `${totalItems} item`;
+  }
+
   // ===== UI =====
   function updateUI() {
     moneyDisplay.textContent = formatNumber(state.money);
@@ -763,7 +919,6 @@
     fertilizerDisplay.textContent = state.fertilizer;
     totalExpBadge.textContent = `🌟 Total Exp: ${formatNumber(state.totalExp)}`;
 
-    // Daily badge
     if (state.lastDailyReward) {
       dailyBadge.textContent = `🎁 Daily: terakhir ${state.lastDailyReward}`;
     } else {
@@ -812,7 +967,6 @@
     profileType.textContent = state.isAnonymous ? 'Guest' : 'Email';
     profileTotalExp.textContent = formatNumber(state.totalExp);
 
-    // Daily info di profile
     if (state.lastDailyReward) {
       const today = getTodayKey();
       if (state.lastDailyReward === today) {
@@ -838,6 +992,7 @@
 
     renderRegionSection();
     renderShop();
+    renderInventory();   // ← BARU
   }
 
   // ===== RENDER REGION =====
@@ -893,7 +1048,7 @@
         planterPoints: state.planterPoints, totalExp: state.totalExp,
         region: state.region,
         regionLocked: state.regionLocked,
-        lastDailyReward: state.lastDailyReward,   // ← BARU
+        lastDailyReward: state.lastDailyReward,
         waterSinceFertilizer: state.waterSinceFertilizer,
         skipUsedThisLevel: state.skipUsedThisLevel,
         email: state.email || null, isAnonymous: state.isAnonymous,
@@ -942,7 +1097,6 @@
         });
         showToast('☁️ Data dimuat');
       } else {
-        // Akun benar-benar baru
         isNewAccount = true;
         if (state.isAnonymous && !isValidName(state.name)) {
           state.name = await generateUniqueGuestName();
@@ -950,15 +1104,13 @@
         }
         state.money = 1500;
         state.regionLocked = false;
-        state.lastDailyReward = '';   // belum pernah klaim
+        state.lastDailyReward = '';
         await saveToCloud();
         showToast(`🌱 Selamat datang, ${state.name}!`);
       }
       updateUI();
       updateLeaderboardEntries().catch(() => {});
 
-      // Cek daily reward setelah UI siap
-      // (Delay sedikit biar toast selamat datang selesai dulu)
       setTimeout(() => {
         checkAndShowDailyReward();
       }, isNewAccount ? 800 : 500);
@@ -1198,10 +1350,12 @@
   function switchPage(pageId) {
     pageTanam.classList.remove('active');
     pageLeaderboard.classList.remove('active');
+    pageInventori.classList.remove('active');
     pageToko.classList.remove('active');
     pageAkun.classList.remove('active');
     if (pageId === 'tanam') pageTanam.classList.add('active');
     else if (pageId === 'leaderboard') pageLeaderboard.classList.add('active');
+    else if (pageId === 'inventori') { pageInventori.classList.add('active'); renderInventory(); }
     else if (pageId === 'toko') pageToko.classList.add('active');
     else if (pageId === 'akun') pageAkun.classList.add('active');
     navItems.forEach(item => item.classList.toggle('active', item.dataset.page === pageId));
@@ -1230,7 +1384,7 @@
     loadLeaderboard();
   });
 
-  // ===== GENERIC MODAL =====
+  // ===== MODAL =====
   let modalCallback = null;
   function showModal(title, message, confirmText, callback, requireWord, danger) {
     modalTitle.textContent = title;
@@ -1372,10 +1526,8 @@
 
   // ===== DAILY REWARD EVENTS =====
   dailyClaimBtn.addEventListener('click', claimDailyReward);
-  // Prevent close by clicking backdrop (wajib klik klaim)
   dailyRewardBackdrop.addEventListener('click', e => {
     if (e.target === dailyRewardBackdrop) {
-      // Tidak menutup — user harus klik tombol
       showToast('Klik "Klaim & Lanjut" untuk lanjut');
     }
   });
@@ -1495,7 +1647,6 @@
     await signOut(auth);
   }
 
-  // ===== HAPUS AKUN =====
   async function handleDeleteAccount() {
     if (!state.isAnonymous) { showToast('Hanya untuk Guest.'); return; }
     const uidToDelete = state.uid;
@@ -1547,7 +1698,6 @@
     );
   }
 
-  // ===== ADMIN CLEANUP =====
   function isBotName(name) {
     if (!name) return false;
     const lower = name.toLowerCase().trim();
@@ -1609,7 +1759,6 @@
     );
   }
 
-  // ===== EDIT NAME =====
   function handleEditName() {
     const newName = prompt('Nama baru (jangan "Petani" saja):', state.name);
     if (newName === null) return;
@@ -1704,7 +1853,7 @@
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v0.6 ready');
+  console.log('🌳 Compound Harvest v0.7 ready');
 </script>
 </body>
 </html>
