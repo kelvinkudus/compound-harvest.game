@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.01</title>
+  <title>Compound Harvest 1 · v0.02</title>
   <style>
     * {
       margin: 0;
@@ -40,45 +40,246 @@
       position: relative;
     }
 
-    /* header / status */
+    /* ===== LOGIN SCREEN ===== */
+    .login-screen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #0f1f0f, #1b3b1b);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px;
+      overflow-y: auto;
+      transition: opacity 0.3s;
+    }
+
+    .login-screen.hidden {
+      display: none;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin: 20px 0 30px;
+    }
+
+    .login-logo .icon {
+      font-size: 5rem;
+      filter: drop-shadow(0 8px 8px rgba(0,0,0,0.5));
+    }
+
+    .login-logo h1 {
+      color: #d4f0b0;
+      font-size: 1.8rem;
+      margin-top: 8px;
+      text-shadow: 0 2px 4px black;
+    }
+
+    .login-logo p {
+      color: #8fa88f;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #162316;
+      padding: 20px 16px;
+      border-radius: 24px;
+      border: 1px solid #3a613a;
+    }
+
+    .login-form h2 {
+      color: #d4f0b0;
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 40px;
+      border: 1px solid #4a704a;
+      background: #0c180c;
+      color: #e0f0d0;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: #a0d0a0;
+    }
+
+    .form-input::placeholder {
+      color: #6a8a6a;
+    }
+
+    .btn-login {
+      padding: 14px;
+      border-radius: 40px;
+      border: none;
+      background: #4a7a4a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      box-shadow: 0 5px 0 #1e3a1e;
+      cursor: pointer;
+      transition: transform 0.05s;
+      touch-action: manipulation;
+      margin-top: 4px;
+    }
+
+    .btn-login:active {
+      transform: translateY(5px);
+      box-shadow: 0 0 0 #1e3a1e;
+    }
+
+    .btn-login:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      box-shadow: 0 3px 0 #1e3a1e;
+    }
+
+    .btn-guest {
+      background: #6a5a2a;
+      box-shadow: 0 5px 0 #3a2f10;
+    }
+
+    .btn-guest:active {
+      box-shadow: 0 0 0 #3a2f10;
+    }
+
+    .btn-link {
+      background: transparent;
+      border: none;
+      color: #a0d0a0;
+      text-decoration: underline;
+      font-size: 0.95rem;
+      cursor: pointer;
+      padding: 8px;
+      touch-action: manipulation;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #6a8a6a;
+      font-size: 0.85rem;
+      margin: 4px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #3a5a3a;
+    }
+
+    .tab-switch {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .tab-switch button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 40px;
+      border: 1px solid #4a704a;
+      background: #0c180c;
+      color: #8fa88f;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+      touch-action: manipulation;
+    }
+
+    .tab-switch button.active {
+      background: #4a7a4a;
+      color: #fff;
+      border-color: #a0d0a0;
+    }
+
+    .error-msg {
+      background: #5a1e1e;
+      color: #ffd0d0;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      text-align: center;
+      border: 1px solid #a04040;
+    }
+
+    .error-msg.hidden {
+      display: none;
+    }
+
+    /* ===== GAME UI ===== */
     .status-bar {
       background: #0f1a0f;
-      padding: 12px 16px;
+      padding: 10px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: #e0f0d0;
       border-bottom: 2px solid #3a6b3a;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
 
     .currency {
       display: flex;
-      gap: 16px;
+      gap: 10px;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 0.95rem;
     }
 
     .currency span {
       background: #1d2e1d;
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 30px;
       border: 1px solid #4f7a4f;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .points {
       background: #2a3f2a;
-      padding: 4px 12px;
+      padding: 4px 10px;
       border-radius: 20px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       border: 1px solid #6f9e6f;
     }
 
-    /* Main content */
+    .cloud-status {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: #1d2e1d;
+      color: #8fa88f;
+      border: 1px solid #3a5a3a;
+    }
+
+    .cloud-status.saving {
+      color: #ffe08a;
+    }
+
+    .cloud-status.saved {
+      color: #a0f0a0;
+    }
+
+    .cloud-status.offline {
+      color: #ff9090;
+    }
+
     main {
       flex: 1;
       overflow-y: auto;
@@ -88,17 +289,9 @@
       scroll-behavior: smooth;
     }
 
-    .page {
-      display: none;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .page { display: none; flex-direction: column; gap: 16px; }
+    .page.active { display: flex; }
 
-    .page.active {
-      display: flex;
-    }
-
-    /* Kartu pohon */
     .tree-card {
       background: #1b2e1b;
       border-radius: 32px;
@@ -161,7 +354,6 @@
       gap: 6px;
     }
 
-    /* Tombol aksi */
     .action-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -175,7 +367,7 @@
       padding: 16px 8px;
       border-radius: 30px;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: #ecffe2;
       display: flex;
       align-items: center;
@@ -190,7 +382,7 @@
 
     .btn:active {
       transform: translateY(6px);
-      box-shadow: 0 0 0 #0f1f0f, 0 6px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 0 #0f1f0f;
     }
 
     .btn:disabled {
@@ -198,11 +390,6 @@
       transform: translateY(4px);
       box-shadow: 0 2px 0 #0f1f0f;
       pointer-events: none;
-    }
-
-    .btn-primary {
-      background: #4a7a4a;
-      box-shadow: 0 6px 0 #1e3a1e, 0 6px 12px black;
     }
 
     .btn-harvest {
@@ -214,7 +401,6 @@
       box-shadow: 0 6px 0 #7a5e1e;
     }
 
-    /* Toko */
     .shop-item {
       background: #1e2f1e;
       border-radius: 20px;
@@ -227,24 +413,17 @@
       margin-bottom: 10px;
     }
 
-    .item-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .item-info { display: flex; flex-direction: column; gap: 4px; }
 
     .item-name {
       font-weight: 700;
       color: #e0f0d0;
-      font-size: 1.05rem;
+      font-size: 1rem;
     }
 
     .item-price {
       font-size: 0.9rem;
       color: #b8d8a8;
-      display: flex;
-      gap: 8px;
-      align-items: center;
     }
 
     .buy-btn {
@@ -273,7 +452,6 @@
       pointer-events: none;
     }
 
-    /* Inventory mini */
     .inventory-row {
       display: flex;
       gap: 12px;
@@ -286,7 +464,6 @@
       border: 1px solid #527a52;
     }
 
-    /* Navigasi bawah */
     .bottom-nav {
       position: absolute;
       bottom: 0;
@@ -307,7 +484,7 @@
       color: #8aa88a;
       font-weight: 600;
       padding: 12px 0;
-      font-size: 1rem;
+      font-size: 0.95rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -324,28 +501,40 @@
       margin: 0 4px;
     }
 
-    .nav-icon {
-      font-size: 1.5rem;
+    .nav-icon { font-size: 1.4rem; }
+
+    .profile-card {
+      background: #1e2f1e;
+      border-radius: 24px;
+      padding: 16px;
+      border: 1px solid #5b875b;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    /* Modal & profile */
     .profile-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #1e2f1e;
+      background: #162316;
       border-radius: 50px;
-      padding: 8px 16px;
-      border: 1px solid #5b875b;
-      margin-bottom: 8px;
+      padding: 10px 16px;
+      border: 1px solid #3f5f3f;
     }
 
-    .profile-name {
+    .profile-label {
+      color: #8fa88f;
+      font-size: 0.85rem;
+    }
+
+    .profile-value {
       color: #e0f0d0;
       font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-size: 0.95rem;
+      word-break: break-all;
+      text-align: right;
+      max-width: 60%;
     }
 
     .edit-btn {
@@ -358,9 +547,14 @@
       cursor: pointer;
       touch-action: manipulation;
       border: 1px solid #7fa07f;
+      font-size: 0.9rem;
     }
 
-    /* notifikasi toast */
+    .danger-btn {
+      background: #5e3b3b;
+      border-color: #a07a7a;
+    }
+
     .toast {
       position: fixed;
       top: 20px;
@@ -378,25 +572,15 @@
       transition: opacity 0.2s;
       pointer-events: none;
       white-space: nowrap;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .toast.show {
-      opacity: 1;
-    }
+    .toast.show { opacity: 1; }
 
-    /* util */
-    .hidden {
-      display: none !important;
-    }
-
-    .text-gold {
-      color: #ffd966;
-    }
-
-    .text-diamond {
-      color: #a0e0ff;
-    }
+    .hidden { display: none !important; }
 
     .small-note {
       font-size: 0.75rem;
@@ -405,31 +589,79 @@
       margin-top: 6px;
     }
 
-    /* scrollbar */
-    main::-webkit-scrollbar {
-      width: 4px;
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #a0d0a0;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.8s linear infinite;
     }
 
-    main::-webkit-scrollbar-thumb {
-      background: #4a704a;
-      border-radius: 10px;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
+
+    main::-webkit-scrollbar { width: 4px; }
+    main::-webkit-scrollbar-thumb { background: #4a704a; border-radius: 10px; }
   </style>
 </head>
 <body>
-<div class="game-container" id="gameContainer">
-  <!-- Status bar -->
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-logo">
+    <div class="icon">🌳</div>
+    <h1>Compound Harvest</h1>
+    <p>v0.02 · Cloud Save</p>
+  </div>
+
+  <div class="login-form">
+    <div class="tab-switch">
+      <button class="active" id="tabLoginBtn">🔑 Login</button>
+      <button id="tabRegisterBtn">📝 Daftar</button>
+    </div>
+
+    <div id="errorMsg" class="error-msg hidden"></div>
+
+    <!-- Login form -->
+    <div id="loginForm">
+      <input type="email" class="form-input" id="loginEmail" placeholder="📧 Email" autocomplete="email">
+      <input type="password" class="form-input" id="loginPassword" placeholder="🔒 Password" autocomplete="current-password" style="margin-top: 12px;">
+      <button class="btn-login" id="loginSubmitBtn" style="margin-top: 16px;">🔑 Masuk</button>
+      <button class="btn-link" id="forgotBtn" style="margin-top: 4px;">Lupa password?</button>
+    </div>
+
+    <!-- Register form -->
+    <div id="registerForm" class="hidden">
+      <input type="text" class="form-input" id="regName" placeholder="👤 Nama Petani" maxlength="15">
+      <input type="email" class="form-input" id="regEmail" placeholder="📧 Email" autocomplete="email" style="margin-top: 12px;">
+      <input type="password" class="form-input" id="regPassword" placeholder="🔒 Password (min 6)" autocomplete="new-password" style="margin-top: 12px;">
+      <input type="password" class="form-input" id="regPassword2" placeholder="🔒 Ulangi Password" autocomplete="new-password" style="margin-top: 12px;">
+      <button class="btn-login" id="registerSubmitBtn" style="margin-top: 16px;">📝 Daftar</button>
+    </div>
+
+    <div class="divider">atau</div>
+
+    <button class="btn-login btn-guest" id="guestBtn">🎮 Main sebagai Guest</button>
+    <div class="small-note">Guest: langsung main, bisa upgrade ke Email nanti</div>
+  </div>
+</div>
+
+<!-- ===== GAME UI ===== -->
+<div class="game-container" id="gameContainer" style="display:none;">
   <div class="status-bar">
     <div class="currency">
       <span>💰 $<span id="moneyDisplay">1500</span></span>
       <span>💎 <span id="diamondDisplay">0</span></span>
     </div>
     <div class="points" id="planterPointsDisplay">🌱 0 PP</div>
+    <div class="cloud-status" id="cloudStatus">☁️ Sync</div>
   </div>
 
-  <!-- MAIN -->
   <main id="mainContent">
-    <!-- TANAM PAGE -->
+    <!-- TANAM -->
     <div id="pageTanam" class="page active">
       <div class="tree-card">
         <div class="tree-icon" id="treeIcon">🌰</div>
@@ -454,23 +686,41 @@
       <div class="small-note" id="pupukNote">Beri pupuk tiap 10 siram agar efek tetap 10 exp/L</div>
     </div>
 
-    <!-- TOKO PAGE -->
+    <!-- TOKO -->
     <div id="pageToko" class="page">
       <h3 style="color:#c0e0b0; margin-bottom: 8px;">🛒 Toko</h3>
       <div id="shopItemsContainer"></div>
     </div>
 
-    <!-- AKUN PAGE -->
+    <!-- AKUN -->
     <div id="pageAkun" class="page">
-      <div class="profile-row">
-        <div class="profile-name">👤 <span id="profileName">Petani</span></div>
-        <button class="edit-btn" id="editNameBtn">✏️ Edit</button>
+      <div class="profile-card">
+        <div class="profile-row">
+          <span class="profile-label">👤 Nama</span>
+          <span class="profile-value" id="profileName">Petani</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">📧 Email</span>
+          <span class="profile-value" id="profileEmail">-</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">🆔 User ID</span>
+          <span class="profile-value" id="profileUid" style="font-size: 0.7rem;">-</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">🏷️ Tipe</span>
+          <span class="profile-value" id="profileType">Guest</span>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="edit-btn" id="editNameBtn" style="flex:1;">✏️ Edit Nama</button>
+          <button class="edit-btn" id="upgradeBtn" style="flex:1;">🔗 Upgrade ke Email</button>
+        </div>
+        <button class="edit-btn danger-btn" id="logoutBtn" style="width:100%;">🚪 Logout</button>
       </div>
-      <div class="small-note" style="margin-top: 20px;">Compound Harvest 1 · v0.01</div>
+      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.02</div>
     </div>
   </main>
 
-  <!-- BOTTOM NAV -->
   <div class="bottom-nav">
     <button class="nav-item active" data-page="tanam"><span class="nav-icon">🌳</span>Tanam</button>
     <button class="nav-item" data-page="toko"><span class="nav-icon">🛒</span>Toko</button>
@@ -478,442 +728,640 @@
   </div>
 </div>
 
-<!-- Toast -->
 <div id="toast" class="toast"></div>
 
-<script>
-  (function() {
-    // ========== STATE ==========
-    const state = {
-      money: 1500,
-      diamond: 0,
-      planterPoints: 0,
-      water: 0,          // liter
-      fertilizer: 0,     // kg
-      exp: 0,
-      level: 1,          // 1-5
-      name: 'Petani',
-      // mekanisme pupuk: penghitung siram sejak pupuk terakhir
-      waterSinceFertilizer: 0,
-      skipUsedThisLevel: false,   // batas skip 1x per level
-    };
+<!-- ===== FIREBASE SDK ===== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, get, set, onValue, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getAuth, signInAnonymously, createUserWithEmailAndPassword,
+    signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile,
+    linkWithCredential, EmailAuthProvider, sendPasswordResetEmail }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    // Level thresholds
-    const LEVELS = [
-      { level: 1, name: 'Benih', min: 0, max: 499 },
-      { level: 2, name: 'Kecambah', min: 500, max: 1499 },
-      { level: 3, name: 'Semai', min: 1500, max: 2499 },
-      { level: 4, name: 'Pohon Muda', min: 2500, max: 2999 },
-      { level: 5, name: 'Pohon Dewasa', min: 3000, max: 3000 } // max sama utk panen
-    ];
+  // ===== FIREBASE CONFIG =====
+  const firebaseConfig = {
+    apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
+    authDomain: "compound-harvest.firebaseapp.com",
+    databaseURL: "https://compound-harvest-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "compound-harvest",
+    storageBucket: "compound-harvest.firebasestorage.app",
+    messagingSenderId: "72375854823",
+    appId: "1:72375854823:web:5ff63e62a1159829156442",
+    measurementId: "G-75PBLM4RSR"
+  };
 
-    // ========== DOM ==========
-    const moneyDisplay = document.getElementById('moneyDisplay');
-    const diamondDisplay = document.getElementById('diamondDisplay');
-    const planterPointsDisplay = document.getElementById('planterPointsDisplay');
-    const treeIcon = document.getElementById('treeIcon');
-    const levelBadge = document.getElementById('levelBadge');
-    const expFill = document.getElementById('expFill');
-    const expText = document.getElementById('expText');
-    const waterDisplay = document.getElementById('waterDisplay');
-    const fertilizerDisplay = document.getElementById('fertilizerDisplay');
-    const waterBtn = document.getElementById('waterBtn');
-    const fertilizeBtn = document.getElementById('fertilizeBtn');
-    const harvestBtn = document.getElementById('harvestBtn');
-    const rewardPreview = document.getElementById('rewardPreview');
-    const pupukNote = document.getElementById('pupukNote');
-    const shopItemsContainer = document.getElementById('shopItemsContainer');
-    const profileName = document.getElementById('profileName');
-    const editNameBtn = document.getElementById('editNameBtn');
-    const pageTanam = document.getElementById('pageTanam');
-    const pageToko = document.getElementById('pageToko');
-    const pageAkun = document.getElementById('pageAkun');
-    const navItems = document.querySelectorAll('.nav-item');
-    const toastEl = document.getElementById('toast');
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const auth = getAuth(app);
 
-    // ========== UTILS ==========
-    function showToast(msg, duration = 1800) {
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      clearTimeout(window.toastTimeout);
-      window.toastTimeout = setTimeout(() => toastEl.classList.remove('show'), duration);
+  // ===== STATE =====
+  const state = {
+    money: 1500,
+    diamond: 0,
+    planterPoints: 0,
+    water: 0,
+    fertilizer: 0,
+    exp: 0,
+    level: 1,
+    name: 'Petani',
+    waterSinceFertilizer: 0,
+    skipUsedThisLevel: false,
+    uid: null,
+    email: null,
+    isAnonymous: true,
+  };
+
+  let dbRef = null;
+  let saveTimer = null;
+  let isSaving = false;
+  let isOnline = navigator.onLine;
+  const LOCAL_KEY = 'compoundHarvest_v02_state';
+
+  const LEVELS = [
+    { level: 1, name: 'Benih', min: 0, max: 499 },
+    { level: 2, name: 'Kecambah', min: 500, max: 1499 },
+    { level: 3, name: 'Semai', min: 1500, max: 2499 },
+    { level: 4, name: 'Pohon Muda', min: 2500, max: 2999 },
+    { level: 5, name: 'Pohon Dewasa', min: 3000, max: 3000 }
+  ];
+
+  // ===== DOM =====
+  const $ = id => document.getElementById(id);
+  const loginScreen = $('loginScreen');
+  const gameContainer = $('gameContainer');
+  const moneyDisplay = $('moneyDisplay');
+  const diamondDisplay = $('diamondDisplay');
+  const planterPointsDisplay = $('planterPointsDisplay');
+  const cloudStatus = $('cloudStatus');
+  const treeIcon = $('treeIcon');
+  const levelBadge = $('levelBadge');
+  const expFill = $('expFill');
+  const expText = $('expText');
+  const waterDisplay = $('waterDisplay');
+  const fertilizerDisplay = $('fertilizerDisplay');
+  const waterBtn = $('waterBtn');
+  const fertilizeBtn = $('fertilizeBtn');
+  const harvestBtn = $('harvestBtn');
+  const pupukNote = $('pupukNote');
+  const shopItemsContainer = $('shopItemsContainer');
+  const profileName = $('profileName');
+  const profileEmail = $('profileEmail');
+  const profileUid = $('profileUid');
+  const profileType = $('profileType');
+  const editNameBtn = $('editNameBtn');
+  const upgradeBtn = $('upgradeBtn');
+  const logoutBtn = $('logoutBtn');
+  const pageTanam = $('pageTanam');
+  const pageToko = $('pageToko');
+  const pageAkun = $('pageAkun');
+  const navItems = document.querySelectorAll('.nav-item');
+  const toastEl = $('toast');
+  const errorMsg = $('errorMsg');
+
+  // Login screen elements
+  const tabLoginBtn = $('tabLoginBtn');
+  const tabRegisterBtn = $('tabRegisterBtn');
+  const loginForm = $('loginForm');
+  const registerForm = $('registerForm');
+  const guestBtn = $('guestBtn');
+  const loginSubmitBtn = $('loginSubmitBtn');
+  const registerSubmitBtn = $('registerSubmitBtn');
+  const forgotBtn = $('forgotBtn');
+
+  // ===== UTILS =====
+  function showToast(msg, duration = 1800) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(window.toastTimeout);
+    window.toastTimeout = setTimeout(() => toastEl.classList.remove('show'), duration);
+  }
+
+  function showError(msg) {
+    errorMsg.textContent = msg;
+    errorMsg.classList.remove('hidden');
+    setTimeout(() => errorMsg.classList.add('hidden'), 5000);
+  }
+
+  function formatNumber(num) {
+    return Number(num).toLocaleString('id-ID');
+  }
+
+  function getLevelData(exp) {
+    if (exp >= 3000) return LEVELS[4];
+    for (let i = LEVELS.length - 1; i >= 0; i--) {
+      if (exp >= LEVELS[i].min) return LEVELS[i];
+    }
+    return LEVELS[0];
+  }
+
+  function setCloudStatus(status) {
+    if (status === 'saving') {
+      cloudStatus.textContent = '⏳ Menyimpan...';
+      cloudStatus.className = 'cloud-status saving';
+    } else if (status === 'saved') {
+      cloudStatus.textContent = '☁️ Tersimpan';
+      cloudStatus.className = 'cloud-status saved';
+    } else if (status === 'offline') {
+      cloudStatus.textContent = '⚠️ Offline';
+      cloudStatus.className = 'cloud-status offline';
+    } else {
+      cloudStatus.textContent = '☁️ Sync';
+      cloudStatus.className = 'cloud-status';
+    }
+  }
+
+  // ===== UI UPDATE =====
+  function updateUI() {
+    moneyDisplay.textContent = formatNumber(state.money);
+    diamondDisplay.textContent = state.diamond;
+    planterPointsDisplay.textContent = `🌱 ${formatNumber(state.planterPoints)} PP`;
+
+    waterDisplay.textContent = state.water;
+    fertilizerDisplay.textContent = state.fertilizer;
+
+    const currentLevelData = getLevelData(state.exp);
+    state.level = currentLevelData.level;
+
+    if (state.level === 5) state.exp = Math.min(state.exp, 3000);
+
+    const icons = ['🌰', '🌱', '🌿', '🌳', '🌲'];
+    treeIcon.textContent = icons[state.level - 1] || '🌰';
+    levelBadge.textContent = `Lv.${state.level} ${currentLevelData.name}`;
+
+    let percentage = 0;
+    if (state.level === 5) {
+      percentage = 100;
+      expText.textContent = `3000 / 3000 Exp (Siap panen)`;
+    } else {
+      const min = currentLevelData.min;
+      const max = currentLevelData.max;
+      const range = max - min + 1;
+      const currentInLevel = state.exp - min;
+      percentage = Math.min(100, (currentInLevel / range) * 100);
+      expText.textContent = `${state.exp} / ${max} Exp`;
+    }
+    expFill.style.width = percentage + '%';
+
+    if (state.level === 5) harvestBtn.classList.remove('hidden');
+    else harvestBtn.classList.add('hidden');
+
+    waterBtn.disabled = state.water < 1;
+    fertilizeBtn.disabled = state.fertilizer < 1;
+
+    if (state.waterSinceFertilizer >= 10) {
+      pupukNote.textContent = '⚠️ Pupuk habis! Efek air hanya +5 exp/L. Beri pupuk!';
+      pupukNote.style.color = '#f0b060';
+    } else {
+      pupukNote.textContent = `Beri pupuk tiap 10 siram (${state.waterSinceFertilizer}/10)`;
+      pupukNote.style.color = '#8fa88f';
     }
 
-    // Format angka
-    function formatNumber(num) {
-      return num.toLocaleString('id-ID');
+    // Profile
+    profileName.textContent = state.name;
+    profileEmail.textContent = state.email || '-';
+    profileUid.textContent = state.uid ? state.uid.substring(0, 20) + '...' : '-';
+    profileType.textContent = state.isAnonymous ? 'Guest' : 'Email';
+
+    // Upgrade button
+    if (state.isAnonymous) {
+      upgradeBtn.style.display = 'block';
+    } else {
+      upgradeBtn.style.display = 'none';
     }
 
-    // Dapatkan data level berdasarkan exp
-    function getLevelData(exp) {
-      if (exp >= 3000) return LEVELS[4];
-      for (let i = LEVELS.length - 1; i >= 0; i--) {
-        if (exp >= LEVELS[i].min) return LEVELS[i];
-      }
-      return LEVELS[0];
+    renderShop();
+  }
+
+  // ===== FIREBASE SAVE/LOAD =====
+  function getLocalState() {
+    try {
+      const raw = localStorage.getItem(LOCAL_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  }
+
+  function setLocalState(s) {
+    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {}
+  }
+
+  function debouncedSave() {
+    setLocalState(state);
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => { saveToCloud(); }, 800);
+  }
+
+  async function saveToCloud() {
+    if (!dbRef || !state.uid) return;
+    if (!isOnline) { setCloudStatus('offline'); return; }
+    try {
+      isSaving = true;
+      setCloudStatus('saving');
+      const payload = {
+        name: state.name,
+        money: state.money,
+        diamond: state.diamond,
+        water: state.water,
+        fertilizer: state.fertilizer,
+        exp: state.exp,
+        level: state.level,
+        planterPoints: state.planterPoints,
+        waterSinceFertilizer: state.waterSinceFertilizer,
+        skipUsedThisLevel: state.skipUsedThisLevel,
+        email: state.email || null,
+        isAnonymous: state.isAnonymous,
+        lastUpdated: Date.now(),
+      };
+      await set(dbRef, payload);
+      setCloudStatus('saved');
+    } catch (e) {
+      console.error('Save error:', e);
+      setCloudStatus('offline');
+    } finally {
+      isSaving = false;
     }
+  }
 
-    // Update UI berdasarkan state
-    function updateUI() {
-      // currencies
-      moneyDisplay.textContent = formatNumber(state.money);
-      diamondDisplay.textContent = state.diamond;
-      planterPointsDisplay.textContent = `🌱 ${formatNumber(state.planterPoints)} PP`;
-
-      // inventory
-      waterDisplay.textContent = state.water;
-      fertilizerDisplay.textContent = state.fertilizer;
-
-      // level & exp
-      const currentLevelData = getLevelData(state.exp);
-      state.level = currentLevelData.level;
-
-      // jika level 5, exp mentok 3000
-      if (state.level === 5) {
-        state.exp = Math.min(state.exp, 3000);
-      }
-
-      // tree icon & badge
-      const icons = ['🌰', '🌱', '🌿', '🌳', '🌲'];
-      treeIcon.textContent = icons[state.level - 1] || '🌰';
-
-      levelBadge.textContent = `Lv.${state.level} ${currentLevelData.name}`;
-
-      // progress bar
-      let percentage = 0;
-      if (state.level === 5) {
-        percentage = 100;
-        expText.textContent = `3000 / 3000 Exp (Siap panen)`;
-      } else {
-        const min = currentLevelData.min;
-        const max = currentLevelData.max;
-        const range = max - min + 1;
-        const currentInLevel = state.exp - min;
-        percentage = Math.min(100, (currentInLevel / range) * 100);
-        expText.textContent = `${state.exp} / ${max} Exp`;
-      }
-      expFill.style.width = percentage + '%';
-
-      // tombol panen: hanya muncul jika level 5
-      if (state.level === 5) {
-        harvestBtn.classList.remove('hidden');
-      } else {
-        harvestBtn.classList.add('hidden');
-      }
-
-      // disable tombol jika tidak punya item
-      waterBtn.disabled = state.water < 1;
-      fertilizeBtn.disabled = state.fertilizer < 1;
-
-      // note pupuk
-      if (state.waterSinceFertilizer >= 10) {
-        pupukNote.textContent = '⚠️ Pupuk habis! Efek air hanya +5 exp/L. Beri pupuk!';
-        pupukNote.style.color = '#f0b060';
-      } else {
-        pupukNote.textContent = `Beri pupuk tiap 10 siram (${state.waterSinceFertilizer}/10)`;
-        pupukNote.style.color = '#8fa88f';
-      }
-
-      // Refresh toko (untuk disabled / harga diamond dll)
-      renderShop();
-
-      // Update profile name
-      profileName.textContent = state.name;
-    }
-
-    // ========== TREE MECHANICS ==========
-    function addExp(amount) {
-      if (state.level === 5) {
-        // sudah panen, tidak bisa tambah exp
-        return;
-      }
-      const maxExp = 3000;
-      state.exp = Math.min(state.exp + amount, maxExp);
-      // cek level up
-      const newLevel = getLevelData(state.exp).level;
-      if (newLevel > state.level) {
-        state.level = newLevel;
-        state.skipUsedThisLevel = false; // reset batas skip per level
-        showToast(`🌟 Naik ke Lv.${state.level} ${getLevelData(state.exp).name}!`);
-      }
-      updateUI();
-    }
-
-    // Watering
-    function waterTree() {
-      if (state.water < 1) {
-        showToast('💧 Air habis! Beli di toko.');
-        return;
-      }
-      if (state.level === 5) {
-        showToast('Pohon sudah dewasa, panen dulu!');
-        return;
-      }
-
-      // konsumsi 1 liter
-      state.water -= 1;
-
-      // hitung exp: dasar 10, tapi jika waterSinceFertilizer >= 10 maka hanya 5
-      let expGain = 10;
-      if (state.waterSinceFertilizer >= 10) {
-        expGain = 5; // efek pupuk hilang
-      }
-      // tambah exp
-      addExp(expGain);
-
-      // increment waterSinceFertilizer (hanya jika belum mencapai 10? kita biarkan naik, tapi efeknya tetap 10/5)
-      // pupuk akan mereset menjadi 0
-      if (state.waterSinceFertilizer < 10) {
-        state.waterSinceFertilizer += 1;
-      } else {
-        // tetap 10, tidak perlu naik terus
-        state.waterSinceFertilizer = 10;
-      }
-
-      updateUI();
-      showToast(`💧 +${expGain} Exp (${state.waterSinceFertilizer}/10)`);
-    }
-
-    // Fertilize
-    function fertilizeTree() {
-      if (state.fertilizer < 1) {
-        showToast('🧪 Pupuk habis! Beli di toko.');
-        return;
-      }
-      if (state.level === 5) {
-        showToast('Pohon sudah dewasa, tidak perlu pupuk.');
-        return;
-      }
-
-      state.fertilizer -= 1;
-      // efek pupuk: +5 exp langsung dan reset hitungan siram
-      addExp(5);
-      state.waterSinceFertilizer = 0; // reset, efek air kembali 10
-      updateUI();
-      showToast('🧪 +5 Exp, efek air kembali normal (10/L)');
-    }
-
-    // Harvest
-    function harvest() {
-      if (state.level !== 5) {
-        showToast('Pohon belum siap panen.');
-        return;
-      }
-      // Beri hadiah
-      state.money += 5000;
-      state.water += 1000;
-      state.diamond += 30;
-      state.planterPoints += 50;
-
-      // Reset pohon ke level 1
-      state.exp = 0;
-      state.level = 1;
-      state.waterSinceFertilizer = 0;
-      state.skipUsedThisLevel = false;
-
-      updateUI();
-      showToast('🎉 Panen berhasil! +$5.000, +1000L air, +30💎, +50PP');
-    }
-
-    // ========== SHOP ==========
-    const shopCatalog = [
-      { id: 'water5', name: '💧 Air 5 Liter', priceMoney: 250, priceDiamond: null, type: 'water', amount: 5 },
-      { id: 'water10', name: '💧 Air 10 Liter', priceMoney: 400, priceDiamond: null, type: 'water', amount: 10 },
-      { id: 'water20', name: '💧 Air 20 Liter', priceMoney: 1000, priceDiamond: 5, type: 'water', amount: 20 },
-      { id: 'fert1', name: '🧪 Pupuk 1 Kg', priceMoney: 300, priceDiamond: null, type: 'fertilizer', amount: 1 },
-      { id: 'fert5', name: '🧪 Pupuk 5 Kg', priceMoney: 900, priceDiamond: 5, type: 'fertilizer', amount: 5 },
-      { id: 'fert12', name: '🧪 Pupuk 12 Kg', priceMoney: 1400, priceDiamond: 10, type: 'fertilizer', amount: 12 },
-      { id: 'fert20', name: '🧪 Pupuk 20 Kg', priceMoney: 6000, priceDiamond: 15, type: 'fertilizer', amount: 20 },
-      { id: 'instant', name: '✨ Instant Grow (+500 exp)', priceDiamond: 25, type: 'instant' },
-      { id: 'skip', name: '⏩ Skip Level (naik 1 level)', priceDiamond: 100, type: 'skip', limitPerLevel: true },
-    ];
-
-    function renderShop() {
-      let html = '';
-      shopCatalog.forEach(item => {
-        const canBuyMoney = item.priceMoney !== undefined && state.money >= item.priceMoney;
-        const canBuyDiamond = item.priceDiamond !== undefined && state.diamond >= item.priceDiamond;
-
-        // Skip level hanya bisa jika belum digunakan di level ini dan level <5
-        let skipDisabled = false;
-        if (item.type === 'skip') {
-          skipDisabled = state.skipUsedThisLevel || state.level >= 5;
-        }
-
-        const disabled = (item.priceMoney !== undefined && item.priceDiamond !== undefined)
-          ? (!canBuyMoney && !canBuyDiamond) || skipDisabled
-          : (item.priceMoney !== undefined ? !canBuyMoney : !canBuyDiamond) || skipDisabled;
-
-        // Format harga
-        let priceHtml = '';
-        if (item.priceMoney && item.priceDiamond) {
-          priceHtml = `$${formatNumber(item.priceMoney)} / 💎${item.priceDiamond}`;
-        } else if (item.priceMoney) {
-          priceHtml = `$${formatNumber(item.priceMoney)}`;
-        } else if (item.priceDiamond) {
-          priceHtml = `💎${item.priceDiamond}`;
-        }
-
-        html += `
-          <div class="shop-item">
-            <div class="item-info">
-              <div class="item-name">${item.name}</div>
-              <div class="item-price">${priceHtml}</div>
-            </div>
-            <button class="buy-btn" data-id="${item.id}" ${disabled ? 'disabled' : ''}>Beli</button>
-          </div>
-        `;
-      });
-      shopItemsContainer.innerHTML = html;
-
-      // Event listener untuk tombol beli
-      document.querySelectorAll('.buy-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const id = e.currentTarget.dataset.id;
-          buyItem(id);
+  async function loadFromCloud(uid) {
+    const userRef = ref(db, 'users/' + uid);
+    dbRef = userRef;
+    try {
+      const snap = await get(userRef);
+      if (snap.exists()) {
+        const data = snap.val();
+        Object.assign(state, {
+          money: data.money ?? 1500,
+          diamond: data.diamond ?? 0,
+          water: data.water ?? 0,
+          fertilizer: data.fertilizer ?? 0,
+          exp: data.exp ?? 0,
+          level: data.level ?? 1,
+          planterPoints: data.planterPoints ?? 0,
+          name: data.name ?? 'Petani',
+          waterSinceFertilizer: data.waterSinceFertilizer ?? 0,
+          skipUsedThisLevel: data.skipUsedThisLevel ?? false,
         });
-      });
-    }
-
-    function buyItem(id) {
-      const item = shopCatalog.find(i => i.id === id);
-      if (!item) return;
-
-      // Cek batasan skip
-      if (item.type === 'skip') {
-        if (state.skipUsedThisLevel) {
-          showToast('⏩ Skip level sudah dipakai di level ini.');
-          return;
-        }
-        if (state.level >= 5) {
-          showToast('Pohon sudah dewasa, tidak bisa skip.');
-          return;
-        }
-      }
-
-      // Tentukan mata uang: prioritas money jika ada dan cukup? Kita buat pemain pilih? di sini kita pakai money dulu jika ada
-      let paid = false;
-      if (item.priceMoney !== undefined && state.money >= item.priceMoney) {
-        state.money -= item.priceMoney;
-        paid = true;
-      } else if (item.priceDiamond !== undefined && state.diamond >= item.priceDiamond) {
-        state.diamond -= item.priceDiamond;
-        paid = true;
+        showToast('☁️ Data dimuat dari cloud');
       } else {
-        showToast('❌ Saldo tidak cukup!');
-        return;
+        // user baru
+        await saveToCloud();
+        showToast('🌱 Selamat datang! Akun baru dibuat.');
       }
-
-      if (!paid) return;
-
-      // Efek item
-      switch (item.type) {
-        case 'water':
-          state.water += item.amount;
-          showToast(`💧 +${item.amount} Liter air`);
-          break;
-        case 'fertilizer':
-          state.fertilizer += item.amount;
-          showToast(`🧪 +${item.amount} Kg pupuk`);
-          break;
-        case 'instant':
-          if (state.level >= 5) {
-            showToast('Pohon sudah dewasa, tidak bisa instant.');
-            // refund? kita batalkan saja
-            state.diamond += 25;
-            updateUI();
-            return;
-          }
-          addExp(500);
-          showToast(`✨ +500 Exp`);
-          break;
-        case 'skip':
-          if (state.level >= 5) {
-            showToast('Tidak bisa skip.');
-            return;
-          }
-          // Naik satu level: set exp ke min level berikutnya
-          const nextLevel = Math.min(state.level + 1, 5);
-          const targetLevelData = LEVELS.find(l => l.level === nextLevel);
-          if (targetLevelData) {
-            state.exp = targetLevelData.min; // langsung ke batas bawah level berikutnya
-            state.level = nextLevel;
-            state.skipUsedThisLevel = true;
-            // reset hitungan pupuk? tidak harus, biarkan
-            showToast(`⏩ Skip ke Lv.${nextLevel} ${targetLevelData.name}`);
-          }
-          break;
-      }
-
       updateUI();
-    }
-
-    // ========== NAVIGATION ==========
-    function switchPage(pageId) {
-      pageTanam.classList.remove('active');
-      pageToko.classList.remove('active');
-      pageAkun.classList.remove('active');
-
-      if (pageId === 'tanam') pageTanam.classList.add('active');
-      else if (pageId === 'toko') pageToko.classList.add('active');
-      else if (pageId === 'akun') pageAkun.classList.add('active');
-
-      navItems.forEach(item => {
-        if (item.dataset.page === pageId) item.classList.add('active');
-        else item.classList.remove('active');
-      });
-
-      // Refresh shop saat pindah ke toko
-      if (pageId === 'toko') renderShop();
-    }
-
-    // ========== EDIT NAME ==========
-    function editName() {
-      const newName = prompt('Masukkan nama petani:', state.name);
-      if (newName && newName.trim() !== '') {
-        state.name = newName.trim().substring(0, 15);
+    } catch (e) {
+      console.error('Load error:', e);
+      const local = getLocalState();
+      if (local) {
+        Object.assign(state, local);
         updateUI();
-        showToast(`Nama diubah menjadi ${state.name}`);
+        showToast('⚠️ Mode offline — data lokal dipakai');
       }
     }
+  }
 
-    // ========== INIT ==========
-    function init() {
-      // Set data awal
-      state.water = 0;
-      state.fertilizer = 0;
-      state.money = 1500;
-      state.diamond = 0;
-      state.exp = 0;
-      state.level = 1;
-      state.waterSinceFertilizer = 0;
+  // ===== GAME LOGIC =====
+  function addExp(amount) {
+    if (state.level === 5) return;
+    state.exp = Math.min(state.exp + amount, 3000);
+    const newLevel = getLevelData(state.exp).level;
+    if (newLevel > state.level) {
+      state.level = newLevel;
       state.skipUsedThisLevel = false;
-
-      // Render toko pertama kali
-      renderShop();
-      updateUI();
-
-      // Event listener
-      waterBtn.addEventListener('click', waterTree);
-      fertilizeBtn.addEventListener('click', fertilizeTree);
-      harvestBtn.addEventListener('click', harvest);
-      editNameBtn.addEventListener('click', editName);
-
-      navItems.forEach(item => {
-        item.addEventListener('click', () => {
-          switchPage(item.dataset.page);
-        });
-      });
-
-      // Cegah zoom / scroll aneh di mobile
-      document.addEventListener('touchmove', (e) => {
-        if (e.target.closest('main')) return;
-        e.preventDefault();
-      }, { passive: false });
+      showToast(`🌟 Naik ke Lv.${state.level} ${getLevelData(state.exp).name}!`);
     }
+    updateUI();
+    debouncedSave();
+  }
 
-    init();
-  })();
+  function waterTree() {
+    if (state.water < 1) { showToast('💧 Air habis! Beli di toko.'); return; }
+    if (state.level === 5) { showToast('Pohon sudah dewasa, panen dulu!'); return; }
+    state.water -= 1;
+    let expGain = state.waterSinceFertilizer >= 10 ? 5 : 10;
+    addExp(expGain);
+    if (state.waterSinceFertilizer < 10) state.waterSinceFertilizer += 1;
+    updateUI();
+    debouncedSave();
+    showToast(`💧 +${expGain} Exp (${state.waterSinceFertilizer}/10)`);
+  }
+
+  function fertilizeTree() {
+    if (state.fertilizer < 1) { showToast('🧪 Pupuk habis! Beli di toko.'); return; }
+    if (state.level === 5) { showToast('Pohon sudah dewasa, tidak perlu pupuk.'); return; }
+    state.fertilizer -= 1;
+    addExp(5);
+    state.waterSinceFertilizer = 0;
+    updateUI();
+    debouncedSave();
+    showToast('🧪 +5 Exp, efek air kembali normal (10/L)');
+  }
+
+  function harvest() {
+    if (state.level !== 5) { showToast('Pohon belum siap panen.'); return; }
+    state.money += 5000;
+    state.water += 1000;
+    state.diamond += 30;
+    state.planterPoints += 50;
+    state.exp = 0;
+    state.level = 1;
+    state.waterSinceFertilizer = 0;
+    state.skipUsedThisLevel = false;
+    updateUI();
+    debouncedSave();
+    showToast('🎉 Panen! +$5.000 · +1000L · +30💎 · +50PP');
+  }
+
+  // ===== SHOP =====
+  const shopCatalog = [
+    { id: 'water5', name: '💧 Air 5 Liter', priceMoney: 250, type: 'water', amount: 5 },
+    { id: 'water10', name: '💧 Air 10 Liter', priceMoney: 400, type: 'water', amount: 10 },
+    { id: 'water20', name: '💧 Air 20 Liter', priceMoney: 1000, priceDiamond: 5, type: 'water', amount: 20 },
+    { id: 'fert1', name: '🧪 Pupuk 1 Kg', priceMoney: 300, type: 'fertilizer', amount: 1 },
+    { id: 'fert5', name: '🧪 Pupuk 5 Kg', priceMoney: 900, priceDiamond: 5, type: 'fertilizer', amount: 5 },
+    { id: 'fert12', name: '🧪 Pupuk 12 Kg', priceMoney: 1400, priceDiamond: 10, type: 'fertilizer', amount: 12 },
+    { id: 'fert20', name: '🧪 Pupuk 20 Kg', priceMoney: 6000, priceDiamond: 15, type: 'fertilizer', amount: 20 },
+    { id: 'instant', name: '✨ Instant Grow (+500 exp)', priceDiamond: 25, type: 'instant' },
+    { id: 'skip', name: '⏩ Skip Level (naik 1 level)', priceDiamond: 100, type: 'skip', limitPerLevel: true },
+  ];
+
+  function renderShop() {
+    if (!shopItemsContainer) return;
+    let html = '';
+    shopCatalog.forEach(item => {
+      const canBuyMoney = item.priceMoney !== undefined && state.money >= item.priceMoney;
+      const canBuyDiamond = item.priceDiamond !== undefined && state.diamond >= item.priceDiamond;
+      let skipDisabled = false;
+      if (item.type === 'skip') {
+        skipDisabled = state.skipUsedThisLevel || state.level >= 5;
+      }
+      const disabled = (item.priceMoney !== undefined && item.priceDiamond !== undefined)
+        ? (!canBuyMoney && !canBuyDiamond) || skipDisabled
+        : (item.priceMoney !== undefined ? !canBuyMoney : !canBuyDiamond) || skipDisabled;
+
+      let priceHtml = '';
+      if (item.priceMoney && item.priceDiamond) priceHtml = `$${formatNumber(item.priceMoney)} / 💎${item.priceDiamond}`;
+      else if (item.priceMoney) priceHtml = `$${formatNumber(item.priceMoney)}`;
+      else if (item.priceDiamond) priceHtml = `💎${item.priceDiamond}`;
+
+      html += `
+        <div class="shop-item">
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-price">${priceHtml}</div>
+          </div>
+          <button class="buy-btn" data-id="${item.id}" ${disabled ? 'disabled' : ''}>Beli</button>
+        </div>`;
+    });
+    shopItemsContainer.innerHTML = html;
+    document.querySelectorAll('.buy-btn').forEach(btn => {
+      btn.addEventListener('click', e => buyItem(e.currentTarget.dataset.id));
+    });
+  }
+
+  function buyItem(id) {
+    const item = shopCatalog.find(i => i.id === id);
+    if (!item) return;
+    if (item.type === 'skip') {
+      if (state.skipUsedThisLevel) { showToast('⏩ Skip sudah dipakai di level ini.'); return; }
+      if (state.level >= 5) { showToast('Pohon sudah dewasa, tidak bisa skip.'); return; }
+    }
+    let paid = false;
+    if (item.priceMoney !== undefined && state.money >= item.priceMoney) {
+      state.money -= item.priceMoney; paid = true;
+    } else if (item.priceDiamond !== undefined && state.diamond >= item.priceDiamond) {
+      state.diamond -= item.priceDiamond; paid = true;
+    } else { showToast('❌ Saldo tidak cukup!'); return; }
+
+    if (!paid) return;
+
+    switch (item.type) {
+      case 'water':
+        state.water += item.amount;
+        showToast(`💧 +${item.amount} Liter air`); break;
+      case 'fertilizer':
+        state.fertilizer += item.amount;
+        showToast(`🧪 +${item.amount} Kg pupuk`); break;
+      case 'instant':
+        if (state.level >= 5) {
+          state.diamond += 25;
+          showToast('Pohon sudah dewasa, refund 💎25'); return;
+        }
+        addExp(500); showToast('✨ +500 Exp'); break;
+      case 'skip':
+        const nextLevel = Math.min(state.level + 1, 5);
+        const target = LEVELS.find(l => l.level === nextLevel);
+        if (target) {
+          state.exp = target.min;
+          state.level = nextLevel;
+          state.skipUsedThisLevel = true;
+          showToast(`⏩ Skip ke Lv.${nextLevel} ${target.name}`);
+        }
+        break;
+    }
+    updateUI();
+    debouncedSave();
+  }
+
+  // ===== NAVIGATION =====
+  function switchPage(pageId) {
+    pageTanam.classList.remove('active');
+    pageToko.classList.remove('active');
+    pageAkun.classList.remove('active');
+    if (pageId === 'tanam') pageTanam.classList.add('active');
+    else if (pageId === 'toko') pageToko.classList.add('active');
+    else if (pageId === 'akun') pageAkun.classList.add('active');
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.dataset.page === pageId);
+    });
+    if (pageId === 'toko') renderShop();
+  }
+
+  // ===== AUTH HANDLERS =====
+  function switchLoginTab(tab) {
+    if (tab === 'login') {
+      tabLoginBtn.classList.add('active');
+      tabRegisterBtn.classList.remove('active');
+      loginForm.classList.remove('hidden');
+      registerForm.classList.add('hidden');
+    } else {
+      tabRegisterBtn.classList.add('active');
+      tabLoginBtn.classList.remove('active');
+      registerForm.classList.remove('hidden');
+      loginForm.classList.add('hidden');
+    }
+    errorMsg.classList.add('hidden');
+  }
+
+  async function handleGuest() {
+    guestBtn.disabled = true;
+    guestBtn.innerHTML = '<span class="loading-spinner"></span> Memuat...';
+    try {
+      await signInAnonymously(auth);
+    } catch (e) {
+      showError('Gagal login guest: ' + e.message);
+      guestBtn.disabled = false;
+      guestBtn.textContent = '🎮 Main sebagai Guest';
+    }
+  }
+
+  async function handleLogin() {
+    const email = $('loginEmail').value.trim();
+    const pw = $('loginPassword').value;
+    if (!email || !pw) { showError('Email dan password wajib diisi'); return; }
+    loginSubmitBtn.disabled = true;
+    loginSubmitBtn.innerHTML = '<span class="loading-spinner"></span> Masuk...';
+    try {
+      await signInWithEmailAndPassword(auth, email, pw);
+    } catch (e) {
+      let msg = e.message;
+      if (e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') msg = 'Email atau password salah';
+      else if (e.code === 'auth/user-not-found') msg = 'Akun tidak ditemukan. Daftar dulu?';
+      else if (e.code === 'auth/invalid-email') msg = 'Format email tidak valid';
+      showError(msg);
+      loginSubmitBtn.disabled = false;
+      loginSubmitBtn.textContent = '🔑 Masuk';
+    }
+  }
+
+  async function handleRegister() {
+    const name = $('regName').value.trim();
+    const email = $('regEmail').value.trim();
+    const pw = $('regPassword').value;
+    const pw2 = $('regPassword2').value;
+    if (!name) { showError('Nama wajib diisi'); return; }
+    if (name.length < 2) { showError('Nama minimal 2 karakter'); return; }
+    if (!email || !pw) { showError('Email dan password wajib diisi'); return; }
+    if (pw.length < 6) { showError('Password minimal 6 karakter'); return; }
+    if (pw !== pw2) { showError('Password tidak sama'); return; }
+
+    registerSubmitBtn.disabled = true;
+    registerSubmitBtn.innerHTML = '<span class="loading-spinner"></span> Mendaftar...';
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pw);
+      await updateProfile(cred.user, { displayName: name });
+      // state.name akan di-set di onAuthStateChanged
+    } catch (e) {
+      let msg = e.message;
+      if (e.code === 'auth/email-already-in-use') msg = 'Email sudah terdaftar';
+      else if (e.code === 'auth/invalid-email') msg = 'Format email tidak valid';
+      else if (e.code === 'auth/weak-password') msg = 'Password terlalu lemah';
+      showError(msg);
+      registerSubmitBtn.disabled = false;
+      registerSubmitBtn.textContent = '📝 Daftar';
+    }
+  }
+
+  async function handleForgot() {
+    const email = prompt('Masukkan email untuk reset password:');
+    if (!email) return;
+    try {
+      await sendPasswordResetEmail(auth, email);
+      showToast('📧 Email reset terkirim!');
+    } catch (e) {
+      showError('Gagal kirim reset: ' + e.message);
+    }
+  }
+
+  async function handleUpgrade() {
+    if (!state.isAnonymous) { showToast('Akun sudah Email.'); return; }
+    const email = prompt('Email baru:');
+    if (!email) return;
+    const pw = prompt('Password (min 6 karakter):');
+    if (!pw || pw.length < 6) { showToast('Password minimal 6 karakter'); return; }
+    try {
+      const cred = EmailAuthProvider.credential(email, pw);
+      const result = await linkWithCredential(auth.currentUser, cred);
+      showToast('🔗 Akun berhasil di-upgrade ke Email!');
+      // onAuthStateChanged akan handle
+    } catch (e) {
+      let msg = e.message;
+      if (e.code === 'auth/email-already-in-use') msg = 'Email sudah dipakai akun lain';
+      else if (e.code === 'auth/credential-already-in-use') msg = 'Email sudah terdaftar';
+      showToast('❌ ' + msg);
+    }
+  }
+
+  async function handleLogout() {
+    if (!confirm('Yakin logout? Pastikan sudah tersimpan.')) return;
+    // Force save dulu
+    if (saveTimer) clearTimeout(saveTimer);
+    await saveToCloud();
+    await signOut(auth);
+  }
+
+  // ===== AUTH STATE =====
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      state.uid = user.uid;
+      state.email = user.email || null;
+      state.isAnonymous = user.isAnonymous;
+      if (user.displayName && !state.name) state.name = user.displayName;
+
+      // Load data
+      loginScreen.classList.add('hidden');
+      gameContainer.style.display = 'flex';
+      await loadFromCloud(user.uid);
+      updateUI();
+    } else {
+      // Logout / belum login
+      loginScreen.classList.remove('hidden');
+      gameContainer.style.display = 'none';
+      state.uid = null;
+      state.email = null;
+      state.isAnonymous = true;
+      dbRef = null;
+      // Reset buttons
+      guestBtn.disabled = false;
+      guestBtn.textContent = '🎮 Main sebagai Guest';
+      loginSubmitBtn.disabled = false;
+      loginSubmitBtn.textContent = '🔑 Masuk';
+      registerSubmitBtn.disabled = false;
+      registerSubmitBtn.textContent = '📝 Daftar';
+    }
+  });
+
+  // ===== EVENT LISTENERS =====
+  waterBtn.addEventListener('click', waterTree);
+  fertilizeBtn.addEventListener('click', fertilizeTree);
+  harvestBtn.addEventListener('click', harvest);
+
+  navItems.forEach(item => item.addEventListener('click', () => switchPage(item.dataset.page)));
+
+  tabLoginBtn.addEventListener('click', () => switchLoginTab('login'));
+  tabRegisterBtn.addEventListener('click', () => switchLoginTab('register'));
+  guestBtn.addEventListener('click', handleGuest);
+  loginSubmitBtn.addEventListener('click', handleLogin);
+  registerSubmitBtn.addEventListener('click', handleRegister);
+  forgotBtn.addEventListener('click', handleForgot);
+
+  editNameBtn.addEventListener('click', () => {
+    const newName = prompt('Nama baru:', state.name);
+    if (newName && newName.trim()) {
+      state.name = newName.trim().substring(0, 15);
+      if (auth.currentUser && !auth.currentUser.isAnonymous) {
+        updateProfile(auth.currentUser, { displayName: state.name }).catch(() => {});
+      }
+      updateUI();
+      debouncedSave();
+      showToast('✏️ Nama diubah: ' + state.name);
+    }
+  });
+
+  upgradeBtn.addEventListener('click', handleUpgrade);
+  logoutBtn.addEventListener('click', handleLogout);
+
+  // Enter key shortcuts
+  $('loginPassword').addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
+  $('regPassword2').addEventListener('keypress', e => { if (e.key === 'Enter') handleRegister(); });
+
+  // Online/offline
+  window.addEventListener('online', () => { isOnline = true; setCloudStatus('saved'); saveToCloud(); });
+  window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
+
+  // ===== INIT =====
+  setCloudStatus('saved');
+  console.log('🌳 Compound Harvest v0.02 ready');
 </script>
 </body>
 </html>
