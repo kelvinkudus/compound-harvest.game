@@ -3,242 +3,316 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.9.1</title>
+  <meta name="theme-color" content="#1e2b1e">
+  <title>Compound Harvest 1 · v0.9.2</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    /* ===== RESET ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    /* Body: tidak pakai flex center, biar tidak ada offset */
-    html, body {
+    html {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
       height: 100%;
       width: 100%;
       overflow: hidden;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       background: #1b3b1b;
       background-image: radial-gradient(circle at 20% 30%, #2e5e2e, #0f1f0f);
       user-select: none;
+      -webkit-user-select: none;
+      position: relative;
     }
 
-    /* Game container: full layar, biar tidak ada scroll aneh */
-    .game-container {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+    /* ===== GAME WRAPPER ===== */
+    /* Struktur: header (fixed height) - main (flex 1, scroll) - nav (fixed height) */
+    #gameContainer {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
       width: 100%;
       max-width: 500px;
-      margin: 0 auto;
+      height: 100%;
       background: #1e2b1e;
-      display: flex;
-      flex-direction: column;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+      flex-direction: column;
       overflow: hidden;
-      z-index: 1;
     }
 
-    /* LOGIN */
-    .login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(160deg, #0f1f0f, #1b3b1b); z-index: 100;
-      display: flex; flex-direction: column; padding: 24px 20px; overflow-y: auto; }
-    .login-screen.hidden { display: none; }
-    .login-logo { text-align: center; margin: 20px 0 30px; }
-    .login-logo .icon { font-size: 5rem; filter: drop-shadow(0 8px 8px rgba(0,0,0,0.5)); }
-    .login-logo h1 { color: #d4f0b0; font-size: 1.8rem; margin-top: 8px; text-shadow: 0 2px 4px black; }
-    .login-logo p { color: #8fa88f; font-size: 0.9rem; margin-top: 4px; }
-    .login-form { display: flex; flex-direction: column; gap: 12px; background: #162316;
-      padding: 20px 16px; border-radius: 24px; border: 1px solid #3a613a; }
-    .form-input { width: 100%; padding: 14px 16px; border-radius: 40px; border: 1px solid #4a704a;
-      background: #0c180c; color: #e0f0d0; font-size: 1rem; outline: none; transition: border 0.2s; }
-    .form-input:focus { border-color: #a0d0a0; }
-    .form-input::placeholder { color: #6a8a6a; }
-    .btn-login { padding: 14px; border-radius: 40px; border: none; background: #4a7a4a;
-      color: #fff; font-weight: 700; font-size: 1.05rem; box-shadow: 0 5px 0 #1e3a1e;
-      cursor: pointer; transition: transform 0.05s; touch-action: manipulation; margin-top: 4px;
-      display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-login:active { transform: translateY(5px); box-shadow: 0 0 0 #1e3a1e; }
-    .btn-login:disabled { opacity: 0.5; pointer-events: none; box-shadow: 0 3px 0 #1e3a1e; }
-    .btn-guest { background: #6a5a2a; box-shadow: 0 5px 0 #3a2f10; }
-    .btn-guest:active { box-shadow: 0 0 0 #3a2f10; }
-    .btn-github { background: #24292e; box-shadow: 0 5px 0 #0d1117; border: 1px solid #444c56; }
-    .btn-github:active { transform: translateY(5px); box-shadow: 0 0 0 #0d1117; }
-    .btn-link { background: transparent; border: none; color: #a0d0a0; text-decoration: underline;
-      font-size: 0.95rem; cursor: pointer; padding: 8px; touch-action: manipulation; }
-    .divider { display: flex; align-items: center; gap: 8px; color: #6a8a6a; font-size: 0.85rem; margin: 4px 0; }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #3a5a3a; }
-    .tab-switch { display: flex; gap: 8px; margin-bottom: 8px; }
-    .tab-switch button { flex: 1; padding: 10px; border-radius: 40px; border: 1px solid #4a704a;
-      background: #0c180c; color: #8fa88f; font-weight: 600; cursor: pointer; transition: 0.15s; touch-action: manipulation; }
-    .tab-switch button.active { background: #4a7a4a; color: #fff; border-color: #a0d0a0; }
-    .error-msg { background: #5a1e1e; color: #ffd0d0; padding: 10px 14px; border-radius: 12px;
-      font-size: 0.85rem; text-align: center; border: 1px solid #a04040; }
-    .error-msg.hidden { display: none; }
+    #gameContainer.active {
+      display: flex;
+    }
 
-    /* STATUS BAR - di atas, sticky */
-    .status-bar { background: #0f1a0f; padding: 10px 14px;
-      display: flex; justify-content: space-between;
-      align-items: center; color: #e0f0d0;
-      border-bottom: 2px solid #3a6b3a; flex-wrap: wrap; gap: 6px;
-      flex-shrink: 0; }
-    .currency { display: flex; gap: 10px; font-weight: 600; font-size: 0.95rem; }
-    .currency span { background: #1d2e1d; padding: 5px 10px; border-radius: 30px;
-      border: 1px solid #4f7a4f; display: flex; align-items: center; gap: 4px; }
-    .points { background: #2a3f2a; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; border: 1px solid #6f9e6f; }
-    .cloud-status { font-size: 0.75rem; padding: 3px 10px; border-radius: 20px;
-      background: #1d2e1d; color: #8fa88f; border: 1px solid #3a5a3a; }
-    .cloud-status.saving { color: #ffe08a; }
-    .cloud-status.saved { color: #a0f0a0; }
-    .cloud-status.offline { color: #ff9090; }
-
-    /* ===== MAIN CONTENT (scroll) ===== */
-    main {
-      flex: 1;
+    /* ===== LOGIN ===== */
+    #loginScreen {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      height: 100%;
+      background: linear-gradient(160deg, #0f1f0f, #1b3b1b);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding: 16px 16px 100px;  /* 100px untuk nav fixed */
+    }
+
+    #loginScreen.hidden {
+      display: none;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin: 20px 0 30px;
+    }
+
+    .login-logo .icon {
+      font-size: 5rem;
+      filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.5));
+    }
+
+    .login-logo h1 {
+      color: #d4f0b0;
+      font-size: 1.8rem;
+      margin-top: 8px;
+      text-shadow: 0 2px 4px black;
+    }
+
+    .login-logo p {
+      color: #8fa88f;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .login-form {
       display: flex;
       flex-direction: column;
-      scroll-behavior: smooth;
+      gap: 12px;
+      background: #162316;
+      padding: 20px 16px;
+      border-radius: 24px;
+      border: 1px solid #3a613a;
     }
-    .page { display: none; flex-direction: column; gap: 16px; }
-    .page.active { display: flex; }
 
-    .tree-card { background: #1b2e1b; border-radius: 32px; padding: 24px 16px;
-      box-shadow: inset 0 0 0 2px #3a613a, 0 12px 20px -8px black; text-align: center; }
-    .tree-icon { font-size: 4.2rem; line-height: 1; filter: drop-shadow(0 8px 8px rgba(0,0,0,0.5)); margin-bottom: 8px; }
-    .level-badge { background: #2c4a2c; padding: 6px 16px; border-radius: 40px; display: inline-block;
-      font-weight: 700; color: #d4f0c0; margin-bottom: 8px; border: 1px solid #7fb07f; font-size: 1.1rem; }
-    .exp-bar-container { width: 100%; background: #0c180c; height: 20px; border-radius: 30px;
-      margin: 12px 0 8px; overflow: hidden; border: 1px solid #4a704a; }
-    .exp-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #9fdf4f, #4caf50);
-      border-radius: 30px; transition: width 0.2s ease; }
-    .exp-text { font-size: 0.9rem; color: #b0d0a0; }
-    .reward-badge { background: #3d5e3d; padding: 6px 12px; border-radius: 20px;
-      font-size: 0.85rem; color: #ffffc0; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; }
-    .total-exp-badge { display: inline-block; background: #4a3d2a; padding: 4px 12px;
-      border-radius: 20px; font-size: 0.8rem; color: #ffd980; border: 1px solid #a08050; margin-top: 6px; }
-    .daily-badge { display: inline-block; background: #3a2e1e; padding: 4px 12px;
-      border-radius: 20px; font-size: 0.78rem; color: #ffb060; border: 1px solid #a07040; margin-top: 6px; }
-
-    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
-    .btn { background: #2d4a2d; border: none; padding: 16px 8px; border-radius: 30px;
-      font-weight: 700; font-size: 1.05rem; color: #ecffe2;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      box-shadow: 0 6px 0 #0f1f0f, 0 6px 12px rgba(0, 0, 0, 0.5); transition: all 0.05s ease;
-      cursor: pointer; border: 1px solid #6a9e6a; touch-action: manipulation; }
-    .btn:active { transform: translateY(6px); box-shadow: 0 0 0 #0f1f0f; }
-    .btn:disabled { opacity: 0.4; transform: translateY(4px); box-shadow: 0 2px 0 #0f1f0f; pointer-events: none; }
-    .btn-harvest { background: #c9a23f; color: #1e2b0e; border-color: #f5e56b;
-      grid-column: span 2; font-size: 1.3rem; box-shadow: 0 6px 0 #7a5e1e; }
-
-    /* LEADERBOARD */
-    .lb-controls { background: #162316; border-radius: 20px; padding: 12px; border: 1px solid #3a5a3a;
-      display: flex; flex-direction: column; gap: 10px; }
-    .lb-section-label { font-size: 0.75rem; color: #8fa88f; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-    .lb-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-    .chip { background: #0c180c; border: 1px solid #4a704a; color: #8fa88f;
-      padding: 8px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 600;
-      cursor: pointer; transition: 0.15s; touch-action: manipulation; white-space: nowrap; }
-    .chip.active { background: #4a7a4a; color: #fff; border-color: #a0d0a0;
-      box-shadow: 0 0 8px rgba(160, 208, 160, 0.4); }
-    .lb-list { background: #162316; border-radius: 20px; border: 1px solid #3a5a3a; padding: 8px; min-height: 100px; }
-    .lb-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-      border-radius: 12px; border-bottom: 1px solid #1f2f1f; }
-    .lb-row:last-child { border-bottom: none; }
-    .lb-row.me { background: #2a4a2a; border: 1px solid #7fb07f; }
-    .lb-rank { min-width: 36px; text-align: center; font-weight: 800; font-size: 1.05rem; color: #a0d0a0; }
-    .lb-rank.gold { color: #ffd700; text-shadow: 0 0 6px #ffd70080; }
-    .lb-rank.silver { color: #c0c0c0; }
-    .lb-rank.bronze { color: #cd7f32; }
-    .lb-info { flex: 1; min-width: 0; }
-    .lb-name { color: #e0f0d0; font-weight: 700; font-size: 0.95rem;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      display: flex; align-items: center; gap: 4px; }
-    .lb-name.me { color: #ffe08a; }
-    .lb-sub { color: #8fa88f; font-size: 0.72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .lb-value { font-weight: 800; color: #d4f0b0; font-size: 1rem; white-space: nowrap; text-align: right; }
-    .lb-value.exp { color: #9fdf4f; }
-    .lb-value.points { color: #ffd980; }
-    .lb-empty { text-align: center; padding: 30px 16px; color: #6a8a6a; font-size: 0.9rem; }
-    .lb-loading { text-align: center; padding: 30px 16px; color: #8fa88f; }
-    .lb-loading .loading-spinner { width: 24px; height: 24px; border-width: 3px; }
-    .lb-region-info { background: #0c180c; border-radius: 12px; padding: 8px 12px;
-      font-size: 0.75rem; color: #8fa88f; border: 1px dashed #3a5a3a; text-align: center; }
-    .lb-badge { display: inline-block; font-size: 0.65rem; padding: 1px 6px;
-      border-radius: 8px; font-weight: 700; vertical-align: middle; }
-    .lb-badge.github { background: #24292e; color: #fff; border: 1px solid #444c56; }
-    .lb-badge.email { background: #3a5a3a; color: #d0f0c0; border: 1px solid #5a8a5a; }
-    .lb-badge.guest { background: #3a3a2a; color: #e0d0a0; border: 1px solid #6a6a4a; }
-
-    /* INVENTORI */
-    .inv-header { background: #162316; border-radius: 20px; padding: 14px 16px;
-      border: 1px solid #3a5a3a; display: flex; justify-content: space-between;
-      align-items: center; gap: 10px; }
-    .inv-header .title { color: #d4f0b0; font-weight: 700; font-size: 1.05rem;
-      display: flex; align-items: center; gap: 6px; }
-    .inv-header .count { background: #0c180c; color: #a0d0a0;
-      padding: 4px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 600;
-      border: 1px solid #4a704a; }
-    .inv-grid { display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-    .inv-card { background: #162316; border-radius: 18px;
-      padding: 14px 12px; border: 1px solid #3a5a3a;
-      display: flex; flex-direction: column; gap: 6px; transition: 0.15s;
-      position: relative; overflow: hidden; }
-    .inv-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-    .inv-card.water::before { background: linear-gradient(90deg, #4fa8ff, #80d0ff); }
-    .inv-card.fertilizer::before { background: linear-gradient(90deg, #9fdf4f, #4caf50); }
-    .inv-icon { font-size: 2.2rem; line-height: 1; text-align: center; margin-bottom: 2px; }
-    .inv-name { color: #e0f0d0; font-weight: 700; font-size: 0.95rem; text-align: center; }
-    .inv-amount { text-align: center; font-weight: 800; font-size: 1.3rem; padding: 4px 0; }
-    .inv-amount.water { color: #80d0ff; }
-    .inv-amount.fertilizer { color: #9fdf4f; }
-    .inv-unit { font-size: 0.75rem; font-weight: 500; color: #8fa88f; margin-left: 2px; }
-    .inv-desc { font-size: 0.72rem; color: #8fa88f; text-align: center; line-height: 1.35;
-      border-top: 1px dashed #2a3a2a; padding-top: 6px; margin-top: 2px; }
-    .inv-bar { width: 100%; height: 6px; background: #0c180c; border-radius: 10px;
-      overflow: hidden; margin-top: 2px; }
-    .inv-bar-fill { height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 10px; }
-    .inv-bar-fill.water { background: linear-gradient(90deg, #4fa8ff, #80d0ff); }
-    .inv-bar-fill.fertilizer { background: linear-gradient(90deg, #9fdf4f, #4caf50); }
-    .inv-tip { text-align: center; font-size: 0.72rem; color: #6a8a6a; margin-top: 8px; padding: 0 8px; }
-    .inv-section-title { color: #8fa88f; font-size: 0.72rem;
-      text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
-      padding-left: 4px; margin-top: 4px; }
-
-    /* SHOP & PROFILE */
-    .shop-item { background: #1e2f1e; border-radius: 20px; padding: 14px 16px;
-      display: flex; justify-content: space-between; align-items: center;
-      border: 1px solid #497049; box-shadow: 0 4px 0 #0a130a; margin-bottom: 10px; }
-    .item-info { display: flex; flex-direction: column; gap: 4px; }
-    .item-name { font-weight: 700; color: #e0f0d0; font-size: 1rem; }
-    .item-price { font-size: 0.9rem; color: #b8d8a8; }
-    .buy-btn { background: #426842; border: none; padding: 10px 18px; border-radius: 40px;
-      font-weight: 700; color: #e9ffe0; box-shadow: 0 4px 0 #183018; border: 1px solid #84b084;
-      cursor: pointer; touch-action: manipulation; font-size: 0.95rem; }
-    .buy-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #183018; }
-    .buy-btn:disabled { opacity: 0.4; transform: translateY(2px); box-shadow: 0 2px 0 #183018; pointer-events: none; }
-
-    .inventory-row { display: flex; gap: 12px; background: #162316; padding: 10px 16px;
-      border-radius: 50px; justify-content: space-around; font-weight: 600;
-      color: #d0e8c0; border: 1px solid #527a52; }
-
-    /* ============================================ */
-    /* ===== BOTTOM NAV - FIXED (NEMPEL DI LAYAR) ===== */
-    /* ============================================ */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+    .form-input {
       width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
+      padding: 14px 16px;
+      border-radius: 40px;
+      border: 1px solid #4a704a;
+      background: #0c180c;
+      color: #e0f0d0;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: #a0d0a0;
+    }
+
+    .form-input::placeholder {
+      color: #6a8a6a;
+    }
+
+    .btn-login {
+      padding: 14px;
+      border-radius: 40px;
+      border: none;
+      background: #4a7a4a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      box-shadow: 0 5px 0 #1e3a1e;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      touch-action: manipulation;
+    }
+
+    .btn-login:active {
+      transform: translateY(5px);
+      box-shadow: 0 0 0 #1e3a1e;
+    }
+
+    .btn-login:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      box-shadow: 0 3px 0 #1e3a1e;
+    }
+
+    .btn-guest {
+      background: #6a5a2a;
+      box-shadow: 0 5px 0 #3a2f10;
+    }
+
+    .btn-github {
+      background: #24292e;
+      box-shadow: 0 5px 0 #0d1117;
+      border: 1px solid #444c56;
+    }
+
+    .btn-link {
+      background: transparent;
+      border: none;
+      color: #a0d0a0;
+      text-decoration: underline;
+      font-size: 0.95rem;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #6a8a6a;
+      font-size: 0.85rem;
+      margin: 4px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #3a5a3a;
+    }
+
+    .tab-switch {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .tab-switch button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 40px;
+      border: 1px solid #4a704a;
+      background: #0c180c;
+      color: #8fa88f;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .tab-switch button.active {
+      background: #4a7a4a;
+      color: #fff;
+      border-color: #a0d0a0;
+    }
+
+    .error-msg {
+      background: #5a1e1e;
+      color: #ffd0d0;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      text-align: center;
+      border: 1px solid #a04040;
+    }
+
+    .error-msg.hidden {
+      display: none;
+    }
+
+    /* ===== STATUS BAR (HEADER) ===== */
+    .status-bar {
+      flex-shrink: 0; /* Penting: tidak boleh menyusut */
+      background: #0f1a0f;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #e0f0d0;
+      border-bottom: 2px solid #3a6b3a;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .currency {
+      display: flex;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .currency span {
+      background: #1d2e1d;
+      padding: 5px 10px;
+      border-radius: 30px;
+      border: 1px solid #4f7a4f;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .points {
+      background: #2a3f2a;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      border: 1px solid #6f9e6f;
+    }
+
+    .cloud-status {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: #1d2e1d;
+      color: #8fa88f;
+      border: 1px solid #3a5a3a;
+    }
+
+    .cloud-status.saving {
+      color: #ffe08a;
+    }
+
+    .cloud-status.saved {
+      color: #a0f0a0;
+    }
+
+    .cloud-status.offline {
+      color: #ff9090;
+    }
+
+    /* ===== MAIN (SCROLLABLE) ===== */
+    main {
+      flex: 1 1 auto;
+      min-height: 0; /* PENTING: agar flex anak bisa scroll */
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== BOTTOM NAV (DI-BAWAH MAIN) ===== */
+    /* Pakai flex, BUKAN fixed. Nav akan selalu terlihat. */
+    .bottom-nav {
+      flex-shrink: 0; /* Penting: tidak boleh menyusut */
       background: #0f1a0f;
       display: flex;
       border-top: 2px solid #3f6b3f;
-      padding: 6px 0;
-      /* Safe area untuk gesture bar HP */
-      padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
-      z-index: 999;
-      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.7);
+      padding: 8px 0;
+      padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+      position: relative;
     }
 
     .nav-item {
@@ -249,19 +323,17 @@
       color: #8aa88a;
       font-weight: 600;
       padding: 6px 2px;
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       line-height: 1.1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
+      gap: 3px;
       cursor: pointer;
-      transition: 0.1s;
       touch-action: manipulation;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .nav-item.active {
@@ -272,158 +344,948 @@
     }
 
     .nav-icon {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       line-height: 1;
       display: block;
     }
 
     .nav-label {
       display: block;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
-    /* Profile & region */
-    .profile-card { background: #1e2f1e; border-radius: 24px; padding: 16px;
-      border: 1px solid #5b875b; display: flex; flex-direction: column; gap: 10px; }
-    .profile-row { display: flex; justify-content: space-between; align-items: center;
-      background: #162316; border-radius: 50px; padding: 10px 16px; border: 1px solid #3f5f3f; gap: 8px; }
-    .profile-label { color: #8fa88f; font-size: 0.85rem; white-space: nowrap; }
-    .profile-value { color: #e0f0d0; font-weight: 700; font-size: 0.9rem;
-      word-break: break-word; text-align: right; max-width: 65%; }
-    .profile-avatar {
-      width: 60px; height: 60px; border-radius: 50%;
-      background: #0c180c; border: 2px solid #5b875b;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2rem; margin: 0 auto 8px;
+    /* ===== PAGES ===== */
+    .page {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 16px;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    .tree-card {
+      background: #1b2e1b;
+      border-radius: 32px;
+      padding: 24px 16px;
+      box-shadow: inset 0 0 0 2px #3a613a, 0 12px 20px -8px black;
+      text-align: center;
+    }
+
+    .tree-icon {
+      font-size: 4.2rem;
+      line-height: 1;
+      filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.5));
+      margin-bottom: 8px;
+    }
+
+    .level-badge {
+      background: #2c4a2c;
+      padding: 6px 16px;
+      border-radius: 40px;
+      display: inline-block;
+      font-weight: 700;
+      color: #d4f0c0;
+      margin-bottom: 8px;
+      border: 1px solid #7fb07f;
+      font-size: 1.1rem;
+    }
+
+    .exp-bar-container {
+      width: 100%;
+      background: #0c180c;
+      height: 20px;
+      border-radius: 30px;
+      margin: 12px 0 8px;
+      overflow: hidden;
+      border: 1px solid #4a704a;
+    }
+
+    .exp-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #9fdf4f, #4caf50);
+      border-radius: 30px;
+      transition: width 0.2s ease;
+    }
+
+    .exp-text {
+      font-size: 0.9rem;
+      color: #b0d0a0;
+    }
+
+    .reward-badge {
+      background: #3d5e3d;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #ffffc0;
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .total-exp-badge {
+      display: inline-block;
+      background: #4a3d2a;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: #ffd980;
+      border: 1px solid #a08050;
+      margin-top: 6px;
+    }
+
+    .daily-badge {
+      display: inline-block;
+      background: #3a2e1e;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: #ffb060;
+      border: 1px solid #a07040;
+      margin-top: 6px;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .btn {
+      background: #2d4a2d;
+      border: none;
+      padding: 16px 8px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #ecffe2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 0 #0f1f0f, 0 6px 12px rgba(0, 0, 0, 0.5);
+      transition: all 0.05s ease;
+      cursor: pointer;
+      border: 1px solid #6a9e6a;
+      touch-action: manipulation;
+    }
+
+    .btn:active {
+      transform: translateY(6px);
+      box-shadow: 0 0 0 #0f1f0f;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #0f1f0f;
+      pointer-events: none;
+    }
+
+    .btn-harvest {
+      background: #c9a23f;
+      color: #1e2b0e;
+      border-color: #f5e56b;
+      grid-column: span 2;
+      font-size: 1.3rem;
+      box-shadow: 0 6px 0 #7a5e1e;
+    }
+
+    /* LEADERBOARD */
+    .lb-controls {
+      background: #162316;
+      border-radius: 20px;
+      padding: 12px;
+      border: 1px solid #3a5a3a;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .lb-section-label {
+      font-size: 0.75rem;
+      color: #8fa88f;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .lb-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      background: #0c180c;
+      border: 1px solid #4a704a;
+      color: #8fa88f;
+      padding: 8px 14px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      background: #4a7a4a;
+      color: #fff;
+      border-color: #a0d0a0;
+      box-shadow: 0 0 8px rgba(160, 208, 160, 0.4);
+    }
+
+    .lb-list {
+      background: #162316;
+      border-radius: 20px;
+      border: 1px solid #3a5a3a;
+      padding: 8px;
+      min-height: 100px;
+    }
+
+    .lb-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border-bottom: 1px solid #1f2f1f;
+    }
+
+    .lb-row:last-child {
+      border-bottom: none;
+    }
+
+    .lb-row.me {
+      background: #2a4a2a;
+      border: 1px solid #7fb07f;
+    }
+
+    .lb-rank {
+      min-width: 36px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #a0d0a0;
+    }
+
+    .lb-rank.gold {
+      color: #ffd700;
+      text-shadow: 0 0 6px #ffd70080;
+    }
+
+    .lb-rank.silver {
+      color: #c0c0c0;
+    }
+
+    .lb-rank.bronze {
+      color: #cd7f32;
+    }
+
+    .lb-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .lb-name {
+      color: #e0f0d0;
+      font-weight: 700;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .lb-name.me {
+      color: #ffe08a;
+    }
+
+    .lb-sub {
+      color: #8fa88f;
+      font-size: 0.72rem;
+    }
+
+    .lb-value {
+      font-weight: 800;
+      color: #d4f0b0;
+      font-size: 1rem;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .lb-value.exp {
+      color: #9fdf4f;
+    }
+
+    .lb-value.points {
+      color: #ffd980;
+    }
+
+    .lb-empty {
+      text-align: center;
+      padding: 30px 16px;
+      color: #6a8a6a;
+      font-size: 0.9rem;
+    }
+
+    .lb-loading {
+      text-align: center;
+      padding: 30px 16px;
+      color: #8fa88f;
+    }
+
+    .lb-region-info {
+      background: #0c180c;
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      color: #8fa88f;
+      border: 1px dashed #3a5a3a;
+      text-align: center;
+    }
+
+    .lb-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      padding: 1px 6px;
+      border-radius: 8px;
+      font-weight: 700;
+      vertical-align: middle;
+    }
+
+    .lb-badge.github {
+      background: #24292e;
+      color: #fff;
+      border: 1px solid #444c56;
+    }
+
+    .lb-badge.email {
+      background: #3a5a3a;
+      color: #d0f0c0;
+      border: 1px solid #5a8a5a;
+    }
+
+    .lb-badge.guest {
+      background: #3a3a2a;
+      color: #e0d0a0;
+      border: 1px solid #6a6a4a;
+    }
+
+    /* INVENTORI */
+    .inv-header {
+      background: #162316;
+      border-radius: 20px;
+      padding: 14px 16px;
+      border: 1px solid #3a5a3a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .inv-header .title {
+      color: #d4f0b0;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .inv-header .count {
+      background: #0c180c;
+      color: #a0d0a0;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid #4a704a;
+    }
+
+    .inv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .inv-card {
+      background: #162316;
+      border-radius: 18px;
+      padding: 14px 12px;
+      border: 1px solid #3a5a3a;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
       overflow: hidden;
     }
-    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .edit-btn { background: #3b5e3b; border: none; color: white; padding: 10px 16px;
-      border-radius: 40px; font-weight: 600; cursor: pointer; touch-action: manipulation;
-      border: 1px solid #7fa07f; font-size: 0.9rem; }
+
+    .inv-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .inv-card.water::before {
+      background: linear-gradient(90deg, #4fa8ff, #80d0ff);
+    }
+
+    .inv-card.fertilizer::before {
+      background: linear-gradient(90deg, #9fdf4f, #4caf50);
+    }
+
+    .inv-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+      text-align: center;
+      margin-bottom: 2px;
+    }
+
+    .inv-name {
+      color: #e0f0d0;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .inv-amount {
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.3rem;
+      padding: 4px 0;
+    }
+
+    .inv-amount.water {
+      color: #80d0ff;
+    }
+
+    .inv-amount.fertilizer {
+      color: #9fdf4f;
+    }
+
+    .inv-unit {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #8fa88f;
+      margin-left: 2px;
+    }
+
+    .inv-desc {
+      font-size: 0.72rem;
+      color: #8fa88f;
+      text-align: center;
+      line-height: 1.35;
+      border-top: 1px dashed #2a3a2a;
+      padding-top: 6px;
+      margin-top: 2px;
+    }
+
+    .inv-bar {
+      width: 100%;
+      height: 6px;
+      background: #0c180c;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 2px;
+    }
+
+    .inv-bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 10px;
+    }
+
+    .inv-bar-fill.water {
+      background: linear-gradient(90deg, #4fa8ff, #80d0ff);
+    }
+
+    .inv-bar-fill.fertilizer {
+      background: linear-gradient(90deg, #9fdf4f, #4caf50);
+    }
+
+    .inv-tip {
+      text-align: center;
+      font-size: 0.72rem;
+      color: #6a8a6a;
+      margin-top: 8px;
+    }
+
+    .inv-section-title {
+      color: #8fa88f;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      padding-left: 4px;
+      margin-top: 4px;
+    }
+
+    /* SHOP & PROFILE */
+    .shop-item {
+      background: #1e2f1e;
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #497049;
+      box-shadow: 0 4px 0 #0a130a;
+      margin-bottom: 10px;
+    }
+
+    .item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .item-name {
+      font-weight: 700;
+      color: #e0f0d0;
+      font-size: 1rem;
+    }
+
+    .item-price {
+      font-size: 0.9rem;
+      color: #b8d8a8;
+    }
+
+    .buy-btn {
+      background: #426842;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 40px;
+      font-weight: 700;
+      color: #e9ffe0;
+      box-shadow: 0 4px 0 #183018;
+      border: 1px solid #84b084;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-size: 0.95rem;
+    }
+
+    .buy-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #183018;
+    }
+
+    .buy-btn:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .inventory-row {
+      display: flex;
+      gap: 12px;
+      background: #162316;
+      padding: 10px 16px;
+      border-radius: 50px;
+      justify-content: space-around;
+      font-weight: 600;
+      color: #d0e8c0;
+      border: 1px solid #527a52;
+    }
+
+    .profile-card {
+      background: #1e2f1e;
+      border-radius: 24px;
+      padding: 16px;
+      border: 1px solid #5b875b;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #162316;
+      border-radius: 50px;
+      padding: 10px 16px;
+      border: 1px solid #3f5f3f;
+      gap: 8px;
+    }
+
+    .profile-label {
+      color: #8fa88f;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .profile-value {
+      color: #e0f0d0;
+      font-weight: 700;
+      font-size: 0.9rem;
+      word-break: break-word;
+      text-align: right;
+      max-width: 65%;
+    }
+
+    .profile-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #0c180c;
+      border: 2px solid #5b875b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 8px;
+      overflow: hidden;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .edit-btn {
+      background: #3b5e3b;
+      border: none;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+      border: 1px solid #7fa07f;
+      font-size: 0.9rem;
+    }
+
     .danger-btn { background: #5e3b3b; border-color: #a07a7a; }
     .admin-btn { background: #4a3d2a; border-color: #a08050; color: #ffe08a; }
     .delete-btn { background: #8a2a2a; border-color: #c06060; }
     .lock-btn { background: #4a3a1e; border-color: #a08040; color: #ffd980; }
-    .locked-display { background: #1e2f1e; border: 1px solid #5b875b; border-radius: 24px;
-      padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-    .locked-display .title { color: #ffd980; font-weight: 700; font-size: 0.95rem;
-      display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-    .locked-display .row { display: flex; align-items: center; gap: 8px;
-      background: #162316; padding: 10px 14px; border-radius: 14px;
-      color: #e0f0d0; font-size: 0.9rem; border: 1px solid #3f5f3f; }
+
+    .locked-display {
+      background: #1e2f1e;
+      border: 1px solid #5b875b;
+      border-radius: 24px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .locked-display .title {
+      color: #ffd980;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .locked-display .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #162316;
+      padding: 10px 14px;
+      border-radius: 14px;
+      color: #e0f0d0;
+      font-size: 0.9rem;
+      border: 1px solid #3f5f3f;
+    }
+
     .locked-display .row .icon { font-size: 1.1rem; }
-    .locked-note { color: #8fa88f; font-size: 0.78rem;
-      text-align: center; margin-top: 6px; font-style: italic; }
 
-    .region-form { background: #1e2f1e; border: 1px solid #5b875b; border-radius: 24px;
-      padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .region-form .label { color: #8fa88f; font-size: 0.75rem; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .locked-note {
+      color: #8fa88f;
+      font-size: 0.78rem;
+      text-align: center;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    .region-form {
+      background: #1e2f1e;
+      border: 1px solid #5b875b;
+      border-radius: 24px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .region-form .label {
+      color: #8fa88f;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
     .region-form .field { display: flex; flex-direction: column; gap: 4px; }
-    .region-warning { background: #5a3e1e; border: 1px solid #a08040; border-radius: 12px;
-      padding: 10px 14px; color: #ffe0a0; font-size: 0.82rem; line-height: 1.5; }
 
-    .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-      background: #2d4a2d; color: #f0ffe0; padding: 12px 24px; border-radius: 50px;
-      font-weight: 600; box-shadow: 0 8px 20px black; border: 1px solid #a0d0a0;
-      z-index: 9999; opacity: 0; transition: opacity 0.2s; pointer-events: none;
-      white-space: nowrap; font-size: 0.9rem; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
+    .region-warning {
+      background: #5a3e1e;
+      border: 1px solid #a08040;
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #ffe0a0;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2d4a2d;
+      color: #f0ffe0;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      box-shadow: 0 8px 20px black;
+      border: 1px solid #a0d0a0;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+      font-size: 0.9rem;
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .toast.show { opacity: 1; }
-    .toast.reward { background: #4a3a1e; border-color: #ffd980; color: #fff0c0;
-      font-size: 1rem; box-shadow: 0 8px 24px rgba(255, 217, 128, 0.3); }
+
+    .toast.reward {
+      background: #4a3a1e;
+      border-color: #ffd980;
+      color: #fff0c0;
+      font-size: 1rem;
+    }
 
     .hidden { display: none !important; }
-    .small-note { font-size: 0.75rem; color: #8fa88f; text-align: center; margin-top: 6px; }
-    .loading-spinner { display: inline-block; width: 16px; height: 16px;
-      border: 2px solid #a0d0a0; border-radius: 50%; border-top-color: transparent;
-      animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85); z-index: 9998; display: flex;
-      align-items: center; justify-content: center; padding: 20px; }
+    .small-note {
+      font-size: 0.75rem;
+      color: #8fa88f;
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #a0d0a0;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
     .modal-backdrop.hidden { display: none; }
-    .modal { background: #1e2f1e; border-radius: 24px; padding: 20px;
-      max-width: 420px; width: 100%; border: 1px solid #5b875b;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-    .modal h3 { color: #ffd980; font-size: 1.15rem; margin-bottom: 10px; text-align: center; }
-    .modal p { color: #d0e8c0; font-size: 0.9rem; line-height: 1.5;
-      margin-bottom: 16px; text-align: center; }
-    .modal .region-preview { background: #0c180c; border-radius: 14px;
-      padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
-    .modal .region-preview .row { display: flex; align-items: center; gap: 8px;
-      color: #e0f0d0; font-size: 0.9rem; padding: 4px 8px; }
-    .modal .warning-box { background: #5a1e1e; border: 1px solid #a04040;
-      border-radius: 12px; padding: 10px 14px; color: #ffd0d0;
-      font-size: 0.82rem; text-align: center; line-height: 1.5; margin-bottom: 16px; }
-    .modal-input { width: 100%; padding: 12px 16px; border-radius: 40px;
-      border: 1px solid #4a704a; background: #0c180c; color: #e0f0d0;
-      font-size: 1rem; outline: none; margin-bottom: 16px; text-align: center;
-      text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-    .modal-buttons { display: flex; gap: 10px; }
-    .modal-buttons button { flex: 1; padding: 14px; border-radius: 40px;
-      border: none; font-weight: 700; cursor: pointer; touch-action: manipulation; font-size: 0.95rem; }
+
+    .modal {
+      background: #1e2f1e;
+      border-radius: 24px;
+      padding: 20px;
+      max-width: 420px;
+      width: 100%;
+      border: 1px solid #5b875b;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal h3 {
+      color: #ffd980;
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .modal p {
+      color: #d0e8c0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .modal .region-preview {
+      background: #0c180c;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal .region-preview .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #e0f0d0;
+      font-size: 0.9rem;
+      padding: 4px 8px;
+    }
+
+    .modal .warning-box {
+      background: #5a1e1e;
+      border: 1px solid #a04040;
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #ffd0d0;
+      font-size: 0.82rem;
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 40px;
+      border: 1px solid #4a704a;
+      background: #0c180c;
+      color: #e0f0d0;
+      font-size: 1rem;
+      outline: none;
+      margin-bottom: 16px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-buttons button {
+      flex: 1;
+      padding: 14px;
+      border-radius: 40px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-size: 0.95rem;
+    }
+
     .modal-cancel { background: #3a5a3a; color: #fff; }
     .modal-confirm { background: #4a7a4a; color: #fff; }
     .modal-confirm:disabled { background: #2a3a2a; color: #6a7a6a; cursor: not-allowed; }
-    .modal-confirm:active:not(:disabled) { transform: translateY(3px); }
-    .modal-cancel:active { background: #2a4a2a; }
     .modal-danger { background: #8a2a2a; color: #fff; }
     .modal-danger:disabled { background: #4a2a2a; color: #888; }
-    .modal-danger:active:not(:disabled) { background: #6a1a1a; }
 
-    .daily-modal { background: linear-gradient(160deg, #3a2e1e, #1e2f1e);
-      border: 2px solid #ffd980; border-radius: 28px; padding: 24px 20px;
-      text-align: center; max-width: 360px; width: 100%;
+    .daily-modal {
+      background: linear-gradient(160deg, #3a2e1e, #1e2f1e);
+      border: 2px solid #ffd980;
+      border-radius: 28px;
+      padding: 24px 20px;
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
       box-shadow: 0 20px 60px rgba(255, 217, 128, 0.4);
-      animation: dailyPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-    @keyframes dailyPop {
-      0% { transform: scale(0.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
     }
-    .daily-modal .gift-icon { font-size: 4rem; margin-bottom: 8px;
-      animation: dailyBounce 1s ease infinite; }
+
+    .daily-modal .gift-icon {
+      font-size: 4rem;
+      margin-bottom: 8px;
+      animation: dailyBounce 1s ease infinite;
+    }
+
     @keyframes dailyBounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
     }
-    .daily-modal h2 { color: #ffd980; font-size: 1.4rem;
-      margin-bottom: 6px; text-shadow: 0 2px 8px rgba(255, 217, 128, 0.5); }
-    .daily-modal .reward-amount { color: #fff; font-size: 2rem;
-      font-weight: 800; margin: 12px 0;
-      text-shadow: 0 2px 12px rgba(255, 217, 128, 0.8); }
-    .daily-modal .reward-sub { color: #d0e8c0; font-size: 0.85rem; margin-bottom: 16px; }
-    .daily-modal .claim-btn { width: 100%; padding: 14px;
+
+    .daily-modal h2 {
+      color: #ffd980;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+    }
+
+    .daily-modal .reward-amount {
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 12px 0;
+    }
+
+    .daily-modal .reward-sub {
+      color: #d0e8c0;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    .daily-modal .claim-btn {
+      width: 100%;
+      padding: 14px;
       background: linear-gradient(160deg, #ffd980, #c9a23f);
-      color: #1e2b0e; border: none; border-radius: 40px;
-      font-weight: 800; font-size: 1.05rem; cursor: pointer;
+      color: #1e2b0e;
+      border: none;
+      border-radius: 40px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
       touch-action: manipulation;
-      box-shadow: 0 6px 0 #7a5e1e, 0 8px 20px rgba(0,0,0,0.4); }
-    .daily-modal .claim-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #7a5e1e; }
+      box-shadow: 0 6px 0 #7a5e1e;
+    }
 
     main::-webkit-scrollbar { width: 4px; }
     main::-webkit-scrollbar-thumb { background: #4a704a; border-radius: 10px; }
 
-    @media (max-width: 380px) {
-      .inv-grid { grid-template-columns: repeat(2, 1fr); }
-      .inv-icon { font-size: 1.8rem; }
-      .inv-amount { font-size: 1.1rem; }
-      .nav-item { font-size: 0.6rem; padding: 5px 1px; }
-      .nav-icon { font-size: 1.25rem; }
+    @media (max-width: 360px) {
+      .nav-item { font-size: 0.6rem; }
+      .nav-icon { font-size: 1.2rem; }
+      .nav-label { font-size: 0.6rem; }
     }
   </style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div class="login-screen" id="loginScreen">
+<div id="loginScreen">
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v0.9.1 · Nav Fixed</p>
+    <p>v0.9.2 · Layout Fixed</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -457,7 +1319,7 @@
 </div>
 
 <!-- GAME -->
-<div class="game-container" id="gameContainer" style="display:none;">
+<div id="gameContainer">
   <div class="status-bar">
     <div class="currency">
       <span>💰 $<span id="moneyDisplay">1500</span></span>
@@ -477,7 +1339,7 @@
         <div class="exp-text" id="expText">0 / 499 Exp</div>
         <div class="reward-badge">🎁 $5.000 · 💧1000 · 💎30 · 50 PP</div>
         <div><span class="total-exp-badge" id="totalExpBadge">🌟 Total Exp: 0</span></div>
-        <div><span class="daily-badge" id="dailyBadge">🎁 Daily: hari ini sudah diklaim</span></div>
+        <div><span class="daily-badge" id="dailyBadge">🎁 Daily: -</span></div>
       </div>
       <div class="inventory-row">
         <span>💧 <span id="waterDisplay">0</span> L</span>
@@ -516,7 +1378,6 @@
       <div class="lb-list" id="lbList">
         <div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat peringkat...</div></div>
       </div>
-      <div class="small-note">Top 100 pemain · Diurutkan dari tertinggi</div>
     </div>
 
     <!-- INVENTORI -->
@@ -527,9 +1388,7 @@
       </div>
       <div class="inv-section-title">📦 Item Aktif</div>
       <div class="inv-grid" id="invGrid"></div>
-      <div class="inv-tip">
-        💡 Item bertambah dari pembelian di Toko & hadiah panen
-      </div>
+      <div class="inv-tip">💡 Item bertambah dari pembelian di Toko & hadiah panen</div>
     </div>
 
     <!-- TOKO -->
@@ -570,19 +1429,17 @@
           <button class="edit-btn" id="editNameBtn" style="flex:1;">✏️ Edit Nama</button>
           <button class="edit-btn" id="upgradeBtn" style="flex:1;">🔗 Upgrade</button>
         </div>
-
         <div id="regionSection"></div>
-
         <button class="edit-btn danger-btn" id="logoutBtn" style="width:100%;">🚪 Logout (Tetap Simpan)</button>
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.9.1</div>
+      <div class="small-note">Compound Harvest 1 · v0.9.2</div>
     </div>
   </main>
 
-  <!-- ===== BOTTOM NAV ===== -->
-  <div class="bottom-nav">
+  <!-- ===== BOTTOM NAV (bagian dari flex, tidak fixed) ===== -->
+  <nav class="bottom-nav">
     <button class="nav-item active" data-page="tanam">
       <span class="nav-icon">🌳</span>
       <span class="nav-label">Tanam</span>
@@ -603,10 +1460,10 @@
       <span class="nav-icon">👤</span>
       <span class="nav-label">Akun</span>
     </button>
-  </div>
+  </nav>
 </div>
 
-<!-- GENERIC MODAL -->
+<!-- MODALS -->
 <div class="modal-backdrop hidden" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle">⚠️ Konfirmasi</h3>
@@ -619,10 +1476,9 @@
   </div>
 </div>
 
-<!-- REGION MODAL -->
 <div class="modal-backdrop hidden" id="regionModalBackdrop">
   <div class="modal" style="max-width: 460px;">
-    <h3 id="regionModalTitle">🌍 Atur Wilayah</h3>
+    <h3>🌍 Atur Wilayah</h3>
     <div id="regionModalStep1">
       <div class="region-warning" style="margin-bottom: 14px;">
         ⚠️ Wilayah hanya bisa diatur <b>SEKALI</b>. Setelah disimpan, tidak bisa diubah sendiri!
@@ -650,7 +1506,6 @@
         <button class="modal-confirm" id="regionModalNext">Lanjut →</button>
       </div>
     </div>
-
     <div id="regionModalStep2" class="hidden">
       <p style="color: #d0e8c0; font-size: 0.95rem; margin-bottom: 12px; text-align: center;">
         Apakah wilayah berikut sudah sesuai?
@@ -668,7 +1523,6 @@
   </div>
 </div>
 
-<!-- DAILY REWARD MODAL -->
 <div class="modal-backdrop hidden" id="dailyRewardBackdrop">
   <div class="daily-modal">
     <div class="gift-icon">🎁</div>
@@ -681,7 +1535,7 @@
 
 <div id="toast" class="toast"></div>
 
-<!-- ===== FIREBASE ===== -->
+<!-- FIREBASE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getDatabase, ref, get, set, update, remove, query, orderByChild, limitToLast, onValue }
@@ -716,13 +1570,9 @@
     water: 0, fertilizer: 0, exp: 0, level: 1,
     name: 'Petani', waterSinceFertilizer: 0, skipUsedThisLevel: false,
     uid: null, email: null, isAnonymous: true,
-    provider: 'guest',
-    displayName: '',
-    photoURL: '',
+    provider: 'guest', displayName: '', photoURL: '',
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
-    regionLocked: false,
-    lastDailyReward: '',
-    isOwner: false,
+    regionLocked: false, lastDailyReward: '', isOwner: false,
   });
 
   let state = DEFAULT_STATE();
@@ -730,7 +1580,7 @@
   let saveTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v091_state';
+  const LOCAL_KEY = 'compoundHarvest_v092_state';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
@@ -864,13 +1714,10 @@
     return !!(r.negara && r.provinsi && r.kabupaten && r.kecamatan);
   }
 
-  // ===== DAILY REWARD =====
+  // ===== DAILY =====
   function getTodayKey() {
     const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
   function hasClaimedDailyToday() { return state.lastDailyReward === getTodayKey(); }
   function showDailyRewardModal() { dailyRewardBackdrop.classList.remove('hidden'); }
@@ -891,7 +1738,7 @@
     showDailyRewardModal();
   }
 
-  // ===== LOCAL STORAGE =====
+  // ===== LOCAL =====
   function getLocalState() {
     try { const raw = localStorage.getItem(LOCAL_KEY); return raw ? JSON.parse(raw) : null; }
     catch { return null; }
@@ -899,7 +1746,7 @@
   function setLocalState(s) { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {} }
   function clearLocalState() { try { localStorage.removeItem(LOCAL_KEY); } catch {} }
 
-  // ===== NAMA UNIK =====
+  // ===== NAMA =====
   function sanitizeName(name) {
     if (!name) return '';
     return String(name).replace(/[^a-zA-Z0-9_]/g, '_').substring(0, 15);
@@ -925,8 +1772,7 @@
   }
   async function generateUniqueGuestName() {
     for (let i = 0; i < 30; i++) {
-      const suffix = Math.floor(1000 + Math.random() * 9000);
-      const candidate = `Petani_${suffix}`;
+      const candidate = `Petani_${Math.floor(1000 + Math.random() * 9000)}`;
       try {
         const nameSnap = await get(ref(db, `nameRegistry/${candidate}`));
         if (!nameSnap.exists()) return candidate;
@@ -936,9 +1782,9 @@
   }
   function isValidName(name) {
     if (!name || typeof name !== 'string') return false;
-    const trimmed = name.trim();
-    if (trimmed.length < 2) return false;
-    if (trimmed.toLowerCase() === 'petani') return false;
+    const t = name.trim();
+    if (t.length < 2) return false;
+    if (t.toLowerCase() === 'petani') return false;
     return true;
   }
 
@@ -954,7 +1800,7 @@
   function renderInventory() {
     if (!invGrid) return;
     const items = getInventoryItems();
-    const html = items.map(item => {
+    invGrid.innerHTML = items.map(item => {
       const pct = Math.min(100, (item.amount / item.max) * 100);
       return `
         <div class="inv-card ${item.className}">
@@ -969,9 +1815,7 @@
           <div class="inv-desc">${escapeHtml(item.desc)}</div>
         </div>`;
     }).join('');
-    invGrid.innerHTML = html;
-    const totalItems = items.filter(i => i.amount > 0).length;
-    invItemCount.textContent = `${totalItems} item`;
+    invItemCount.textContent = `${items.filter(i => i.amount > 0).length} item`;
   }
 
   // ===== UI =====
@@ -1081,7 +1925,6 @@
     renderInventory();
   }
 
-  // ===== RENDER REGION =====
   function renderRegionSection() {
     if (!regionSection) return;
     const r = state.region;
@@ -1089,12 +1932,8 @@
       regionSection.innerHTML = `
         <div class="locked-display">
           <div class="title" style="color:#ffb060;">⚠️ Wilayah Belum Diatur</div>
-          <div class="small-note" style="margin-top: 4px;">
-            Set <b>SEKALI</b>, tidak bisa diubah sendiri setelah tersimpan.
-          </div>
-          <button class="edit-btn lock-btn" id="setRegionBtn" style="width:100%; margin-top: 6px;">
-            🌍 Atur Wilayah Sekarang
-          </button>
+          <div class="small-note" style="margin-top: 4px;">Set <b>SEKALI</b>, tidak bisa diubah sendiri.</div>
+          <button class="edit-btn lock-btn" id="setRegionBtn" style="width:100%; margin-top: 6px;">🌍 Atur Wilayah Sekarang</button>
         </div>`;
       const btn = $('setRegionBtn');
       if (btn) btn.addEventListener('click', openRegionModal);
@@ -1117,7 +1956,6 @@
     if (saveTimer) clearTimeout(saveTimer);
     saveTimer = setTimeout(() => { saveToCloud(); }, 800);
   }
-
   async function saveToCloud() {
     if (!dbRef || !state.uid) return;
     if (!isOnline) { setCloudStatus('offline'); return; }
@@ -1125,26 +1963,21 @@
     try {
       isSaving = true;
       setCloudStatus('saving');
-      const payload = {
+      await set(dbRef, {
         name: state.name, money: state.money, diamond: state.diamond,
         water: state.water, fertilizer: state.fertilizer,
         exp: state.exp, level: state.level,
         planterPoints: state.planterPoints, totalExp: state.totalExp,
-        region: state.region,
-        regionLocked: state.regionLocked,
+        region: state.region, regionLocked: state.regionLocked,
         lastDailyReward: state.lastDailyReward,
         waterSinceFertilizer: state.waterSinceFertilizer,
         skipUsedThisLevel: state.skipUsedThisLevel,
-        email: state.email || null,
-        isAnonymous: state.isAnonymous,
-        provider: state.provider,
-        displayName: state.displayName || '',
-        photoURL: state.photoURL || '',
-        lastUpdated: Date.now(),
-      };
-      await set(dbRef, payload);
+        email: state.email || null, isAnonymous: state.isAnonymous,
+        provider: state.provider, displayName: state.displayName || '',
+        photoURL: state.photoURL || '', lastUpdated: Date.now(),
+      });
       setCloudStatus('saved');
-      updateLeaderboardEntries().catch(e => console.warn('LB update error:', e));
+      updateLeaderboardEntries().catch(e => console.warn(e));
     } catch (e) {
       console.error('Save error:', e);
       setCloudStatus('offline');
@@ -1152,24 +1985,16 @@
       isSaving = false;
     }
   }
-
   async function loadFromCloud(uid) {
     const userRef = ref(db, 'users/' + uid);
     dbRef = userRef;
-
     const savedMeta = {
-      uid: state.uid,
-      email: state.email,
-      isAnonymous: state.isAnonymous,
-      isOwner: state.isOwner,
-      provider: state.provider,
-      displayName: state.displayName,
-      photoURL: state.photoURL,
+      uid: state.uid, email: state.email, isAnonymous: state.isAnonymous,
+      isOwner: state.isOwner, provider: state.provider,
+      displayName: state.displayName, photoURL: state.photoURL,
     };
     state = { ...DEFAULT_STATE(), ...savedMeta };
-
     let isNewAccount = false;
-
     try {
       const snap = await get(userRef);
       if (snap.exists()) {
@@ -1193,18 +2018,12 @@
       } else {
         isNewAccount = true;
         if (!isValidName(state.name)) {
-          if (state.provider === 'github' && state.displayName) {
-            state.name = await generateUniqueName(state.displayName);
-          } else if (state.isAnonymous) {
-            state.name = await generateUniqueGuestName();
-          } else {
-            state.name = await generateUniqueName(state.name);
-          }
+          if (state.provider === 'github' && state.displayName) state.name = await generateUniqueName(state.displayName);
+          else if (state.isAnonymous) state.name = await generateUniqueGuestName();
+          else state.name = await generateUniqueName(state.name);
         }
         try { await set(ref(db, `nameRegistry/${state.name}`), { uid, ts: Date.now() }); } catch {}
         state.money = 1500;
-        state.regionLocked = false;
-        state.lastDailyReward = '';
         await saveToCloud();
         showToast(`🌱 Selamat datang, ${state.name}!`);
       }
@@ -1214,27 +2033,15 @@
     } catch (e) {
       console.error('Load error:', e);
       const local = getLocalState();
-      if (local && local.uid === uid) {
-        Object.assign(state, local);
-        updateUI();
-        showToast('⚠️ Mode offline — data lokal dipakai');
-      }
+      if (local && local.uid === uid) { Object.assign(state, local); updateUI(); showToast('⚠️ Mode offline'); }
     }
   }
 
   // ===== LEADERBOARD =====
   async function updateLeaderboardEntries() {
     if (!state.uid) return;
-    const entryExp = {
-      uid: state.uid, name: state.name || 'Petani',
-      value: state.totalExp || 0, region: state.region,
-      provider: state.provider || 'guest',
-    };
-    const entryPts = {
-      uid: state.uid, name: state.name || 'Petani',
-      value: state.planterPoints || 0, region: state.region,
-      provider: state.provider || 'guest',
-    };
+    const entryExp = { uid: state.uid, name: state.name || 'Petani', value: state.totalExp || 0, region: state.region, provider: state.provider || 'guest' };
+    const entryPts = { uid: state.uid, name: state.name || 'Petani', value: state.planterPoints || 0, region: state.region, provider: state.provider || 'guest' };
     const updates = {};
     updates[`leaderboard/global/exp/${state.uid}`] = entryExp;
     updates[`leaderboard/global/points/${state.uid}`] = entryPts;
@@ -1246,7 +2053,6 @@
     }
     await update(ref(db), updates);
   }
-
   function getLbPath() {
     const cat = lbView.category;
     if (lbView.region === 'global') return `leaderboard/global/${cat}`;
@@ -1265,33 +2071,26 @@
     if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
     lbList.innerHTML = `<div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat peringkat...</div></div>`;
     lbRegionInfo.textContent = getLbRegionLabel();
-
     const path = getLbPath();
     if (!path) {
-      lbList.innerHTML = `<div class="lb-empty">🌍 Wilayah <b>${lbView.region}</b> belum diatur.<br>Set di <b>Akun → Atur Wilayah</b>.</div>`;
+      lbList.innerHTML = `<div class="lb-empty">🌍 Wilayah <b>${lbView.region}</b> belum diatur.</div>`;
       return;
     }
-
     try {
       const q = query(ref(db, path), orderByChild('value'), limitToLast(100));
       const unsubscribe = onValue(q, (snapshot) => {
         const rows = [];
         snapshot.forEach(child => {
           const v = child.val() || {};
-          rows.push({
-            uid: child.key, name: v.name || 'Petani',
-            value: v.value || 0, provider: v.provider || 'guest',
-          });
+          rows.push({ uid: child.key, name: v.name || 'Petani', value: v.value || 0, provider: v.provider || 'guest' });
         });
         rows.sort((a, b) => b.value - a.value);
         renderLeaderboard(rows);
       }, (err) => {
-        console.error('LB listen error:', err);
         lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${err.message}</div>`;
       });
       lbView.unsubscribe = unsubscribe;
     } catch (e) {
-      console.error('LB query error:', e);
       lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${e.message}</div>`;
     }
   }
@@ -1310,19 +2109,15 @@
       else if (rank === 2) { rankClass = 'silver'; rankIcon = '🥈'; }
       else if (rank === 3) { rankClass = 'bronze'; rankIcon = '🥉'; }
       const isMe = row.uid === state.uid;
-
       let badge = '';
       if (row.provider === 'github') badge = `<span class="lb-badge github">🐙</span>`;
       else if (row.provider === 'email') badge = `<span class="lb-badge email">📧</span>`;
       else badge = `<span class="lb-badge guest">🎮</span>`;
-
       html += `
         <div class="lb-row ${isMe ? 'me' : ''}">
           <div class="lb-rank ${rankClass}">${rankIcon}</div>
           <div class="lb-info">
-            <div class="lb-name ${isMe ? 'me' : ''}">
-              ${badge} ${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}
-            </div>
+            <div class="lb-name ${isMe ? 'me' : ''}">${badge} ${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}</div>
             <div class="lb-sub">#${rank}</div>
           </div>
           <div class="lb-value ${cat}">${formatNumber(row.value)} ${unit}</div>
@@ -1331,7 +2126,7 @@
     lbList.innerHTML = html;
   }
 
-  // ===== GAME LOGIC =====
+  // ===== GAME =====
   function addExp(amount) {
     if (state.level === 5) return;
     state.exp = Math.min(state.exp + amount, 3000);
@@ -1389,7 +2184,6 @@
     { id: 'instant', name: '✨ Instant Grow (+500 exp)', priceDiamond: 25, type: 'instant' },
     { id: 'skip', name: '⏩ Skip Level (naik 1 level)', priceDiamond: 100, type: 'skip' },
   ];
-
   function renderShop() {
     if (!shopItemsContainer) return;
     let html = '';
@@ -1419,7 +2213,6 @@
       btn.addEventListener('click', e => buyItem(e.currentTarget.dataset.id));
     });
   }
-
   function buyItem(id) {
     const item = shopCatalog.find(i => i.id === id);
     if (!item) return;
@@ -1457,11 +2250,7 @@
 
   // ===== NAV =====
   function switchPage(pageId) {
-    pageTanam.classList.remove('active');
-    pageLeaderboard.classList.remove('active');
-    pageInventori.classList.remove('active');
-    pageToko.classList.remove('active');
-    pageAkun.classList.remove('active');
+    [pageTanam, pageLeaderboard, pageInventori, pageToko, pageAkun].forEach(p => p.classList.remove('active'));
     if (pageId === 'tanam') pageTanam.classList.add('active');
     else if (pageId === 'leaderboard') pageLeaderboard.classList.add('active');
     else if (pageId === 'inventori') { pageInventori.classList.add('active'); renderInventory(); }
@@ -1474,7 +2263,6 @@
       lbView.unsubscribe(); lbView.unsubscribe = null;
     }
   }
-
   lbCategoryChips.addEventListener('click', e => {
     const chip = e.target.closest('.chip');
     if (!chip) return;
@@ -1532,10 +2320,7 @@
   // ===== REGION MODAL =====
   let regionCountdownTimer = null;
   function openRegionModal() {
-    if (state.regionLocked && hasRegion()) {
-      showToast('🔒 Wilayah sudah terkunci. Hubungi admin.');
-      return;
-    }
+    if (state.regionLocked && hasRegion()) { showToast('🔒 Wilayah sudah terkunci.'); return; }
     regionModalStep1.classList.remove('hidden');
     regionModalStep2.classList.add('hidden');
     regCountry.value = state.region.negara || 'Indonesia';
@@ -1555,10 +2340,7 @@
     const provinsi = regProvince.value.trim();
     const kabupaten = regRegency.value.trim();
     const kecamatan = regDistrict.value.trim();
-    if (!negara || !provinsi || !kabupaten || !kecamatan) {
-      showToast('❌ Semua field wajib diisi!');
-      return;
-    }
+    if (!negara || !provinsi || !kabupaten || !kecamatan) { showToast('❌ Semua field wajib diisi!'); return; }
     regionPreview.innerHTML = `
       <div class="row"><span>🌍</span><span>${escapeHtml(negara)}</span></div>
       <div class="row"><span>🏙️</span><span>${escapeHtml(provinsi)}</span></div>
@@ -1573,9 +2355,8 @@
     if (regionCountdownTimer) clearInterval(regionCountdownTimer);
     regionCountdownTimer = setInterval(() => {
       count--;
-      if (count > 0) {
-        regionModalConfirm.textContent = `Ya (${count})`;
-      } else {
+      if (count > 0) regionModalConfirm.textContent = `Ya (${count})`;
+      else {
         clearInterval(regionCountdownTimer);
         regionCountdownTimer = null;
         regionModalConfirm.disabled = false;
@@ -1584,19 +2365,12 @@
     }, 1000);
   }
   async function confirmRegionLock() {
-    if (state.regionLocked && hasRegion()) {
-      showToast('🔒 Wilayah sudah terkunci.');
-      closeRegionModal();
-      return;
-    }
+    if (state.regionLocked && hasRegion()) { showToast('🔒 Sudah terkunci.'); closeRegionModal(); return; }
     const negara = regCountry.value.trim();
     const provinsi = regProvince.value.trim();
     const kabupaten = regRegency.value.trim();
     const kecamatan = regDistrict.value.trim();
-    if (!negara || !provinsi || !kabupaten || !kecamatan) {
-      showToast('❌ Semua field wajib diisi!');
-      return;
-    }
+    if (!negara || !provinsi || !kabupaten || !kecamatan) { showToast('❌ Semua field wajib diisi!'); return; }
     state.region = { negara, provinsi, kabupaten, kecamatan };
     state.regionLocked = true;
     closeRegionModal();
@@ -1619,12 +2393,10 @@
     if (e.target === regionModalBackdrop) closeRegionModal();
   });
 
-  // ===== DAILY REWARD EVENTS =====
+  // ===== DAILY EVENTS =====
   dailyClaimBtn.addEventListener('click', claimDailyReward);
   dailyRewardBackdrop.addEventListener('click', e => {
-    if (e.target === dailyRewardBackdrop) {
-      showToast('Klik "Klaim & Lanjut" untuk lanjut');
-    }
+    if (e.target === dailyRewardBackdrop) showToast('Klik "Klaim & Lanjut" untuk lanjut');
   });
 
   // ===== AUTH =====
@@ -1672,30 +2444,18 @@
       } catch (popupError) {
         if (popupError.code === 'auth/popup-blocked' || popupError.code === 'auth/popup-closed-by-user') {
           await signInWithRedirect(auth, provider);
-        } else {
-          throw popupError;
-        }
+        } else throw popupError;
       }
     } catch (e) {
       console.error('GitHub login error:', e);
       let msg = e.message;
-      if (e.code === 'auth/account-exists-with-different-credential') {
-        msg = 'Email ini sudah dipakai login metode lain. Pakai metode lama dulu, lalu link ke GitHub dari Akun.';
-      } else if (e.code === 'auth/popup-closed-by-user') {
-        msg = 'Login dibatalkan';
-      } else if (e.code === 'auth/operation-not-allowed') {
-        msg = 'GitHub login belum aktif di Firebase. Hubungi admin.';
-      } else if (e.code === 'auth/unauthorized-domain') {
-        msg = 'Domain game belum diizinkan. Cek Firebase Console → Authentication → Settings → Authorized domains.';
-      }
+      if (e.code === 'auth/account-exists-with-different-credential') msg = 'Email sudah dipakai login lain.';
+      else if (e.code === 'auth/popup-closed-by-user') msg = 'Login dibatalkan';
+      else if (e.code === 'auth/operation-not-allowed') msg = 'GitHub login belum aktif.';
+      else if (e.code === 'auth/unauthorized-domain') msg = 'Domain belum diizinkan di Firebase.';
       showError(msg);
       githubLoginBtn.disabled = false;
-      githubLoginBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
-          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-        </svg>
-        Masuk dengan GitHub
-      `;
+      githubLoginBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> Masuk dengan GitHub`;
     }
   }
   async function handleLogin() {
@@ -1781,9 +2541,7 @@
         } catch (e) {
           let msg = e.message;
           if (e.code === 'auth/credential-already-in-use') msg = 'Akun GitHub sudah dipakai';
-          else if (e.code === 'auth/email-already-in-use') msg = 'Email sudah terdaftar';
           else if (e.code === 'auth/popup-closed-by-user') msg = 'Login dibatalkan';
-          else msg = 'Gagal upgrade: ' + e.message;
           showToast('❌ ' + msg);
         }
       }
@@ -1793,11 +2551,7 @@
         await signInWithPopup(auth, provider);
         showToast('🐙 Akun di-link ke GitHub!');
       } catch (e) {
-        let msg = e.message;
-        if (e.code === 'auth/credential-already-in-use') msg = 'Akun GitHub sudah dipakai';
-        else if (e.code === 'auth/popup-closed-by-user') msg = 'Login dibatalkan';
-        else msg = 'Gagal: ' + e.message;
-        showToast('❌ ' + msg);
+        showToast('❌ ' + e.message);
       }
     }
   }
@@ -1822,33 +2576,19 @@
         try {
           showToast('🗑️ Menghapus...', 3000);
           try { await remove(ref(db, `users/${uidToDelete}`)); } catch (e) {}
-          const paths = [
-            `leaderboard/global/exp/${uidToDelete}`,
-            `leaderboard/global/points/${uidToDelete}`,
-          ];
+          const paths = [`leaderboard/global/exp/${uidToDelete}`, `leaderboard/global/points/${uidToDelete}`];
           for (const r of ['negara', 'provinsi', 'kabupaten', 'kecamatan']) {
             const key = sanitizeKey(regionToDelete[r]);
-            if (key) {
-              paths.push(`leaderboard/${r}/${key}/exp/${uidToDelete}`);
-              paths.push(`leaderboard/${r}/${key}/points/${uidToDelete}`);
-            }
+            if (key) { paths.push(`leaderboard/${r}/${key}/exp/${uidToDelete}`); paths.push(`leaderboard/${r}/${key}/points/${uidToDelete}`); }
           }
-          for (const p of paths) {
-            try { await remove(ref(db, p)); } catch (e) {}
-          }
-          if (nameToDelete) {
-            try { await remove(ref(db, `nameRegistry/${nameToDelete}`)); } catch {}
-          }
+          for (const p of paths) { try { await remove(ref(db, p)); } catch (e) {} }
+          if (nameToDelete) { try { await remove(ref(db, `nameRegistry/${nameToDelete}`)); } catch {} }
           clearLocalState();
           state = DEFAULT_STATE();
-          try {
-            if (auth.currentUser) await deleteUser(auth.currentUser);
-          } catch (e) {
-            try { await signOut(auth); } catch {}
-          }
+          try { if (auth.currentUser) await deleteUser(auth.currentUser); }
+          catch (e) { try { await signOut(auth); } catch {} }
           showToast('✅ Data dihapus', 2500);
         } catch (e) {
-          console.error('Delete error:', e);
           clearLocalState();
           try { await signOut(auth); } catch {}
           showToast('⚠️ Logout paksa.');
@@ -1861,9 +2601,7 @@
   function isBotName(name) {
     if (!name) return false;
     const lower = name.toLowerCase().trim();
-    for (const kw of BOT_KEYWORDS) {
-      if (lower.includes(kw)) return true;
-    }
+    for (const kw of BOT_KEYWORDS) if (lower.includes(kw)) return true;
     return false;
   }
   async function autoCleanupBots() {
@@ -1906,38 +2644,23 @@
   }
   async function handleAdminCleanup() {
     if (!state.isOwner) return;
-    showModal(
-      '🧹 Bersihkan Data Bot?',
+    showModal('🧹 Bersihkan Data Bot?',
       `Hapus akun dengan kata kunci: ${BOT_KEYWORDS.join(', ')}. Lanjutkan?`,
       'Ya, Bersihkan',
-      async () => {
-        showToast('🧹 Memindai...', 3000);
-        await autoCleanupBots();
-      }
-    );
+      async () => { showToast('🧹 Memindai...', 3000); await autoCleanupBots(); });
   }
   function handleEditName() {
     const newName = prompt('Nama baru (jangan "Petani" saja):', state.name);
     if (newName === null) return;
     const trimmed = sanitizeName(newName.trim()).substring(0, 15);
-    if (!isValidName(trimmed)) {
-      showToast('❌ Nama tidak valid.');
-      return;
-    }
+    if (!isValidName(trimmed)) { showToast('❌ Nama tidak valid.'); return; }
     const oldName = state.name;
     get(ref(db, `nameRegistry/${trimmed}`)).then(snap => {
-      if (snap.exists() && snap.val().uid !== state.uid) {
-        showToast('❌ Nama sudah dipakai.');
-        return;
-      }
-      if (oldName && oldName !== trimmed) {
-        remove(ref(db, `nameRegistry/${oldName}`)).catch(() => {});
-      }
+      if (snap.exists() && snap.val().uid !== state.uid) { showToast('❌ Nama sudah dipakai.'); return; }
+      if (oldName && oldName !== trimmed) remove(ref(db, `nameRegistry/${oldName}`)).catch(() => {});
       state.name = trimmed;
       set(ref(db, `nameRegistry/${trimmed}`), { uid: state.uid, ts: Date.now() }).catch(() => {});
-      if (auth.currentUser && !auth.currentUser.isAnonymous) {
-        updateProfile(auth.currentUser, { displayName: state.name }).catch(() => {});
-      }
+      if (auth.currentUser && !auth.currentUser.isAnonymous) updateProfile(auth.currentUser, { displayName: state.name }).catch(() => {});
       updateUI();
       debouncedSave();
       showToast('✏️ Nama: ' + state.name);
@@ -1960,7 +2683,6 @@
         else if (p === 'password') provider = 'email';
       }
       if (user.isAnonymous) provider = 'guest';
-
       state = DEFAULT_STATE();
       state.uid = user.uid;
       state.email = user.email || null;
@@ -1970,30 +2692,22 @@
       state.photoURL = user.photoURL || '';
       state.isOwner = (user.email === OWNER_EMAIL);
       if (user.displayName && !state.name) state.name = user.displayName;
-
       if (oldUid && oldUid !== user.uid) clearLocalState();
-
       loginScreen.classList.add('hidden');
-      gameContainer.style.display = 'flex';
+      gameContainer.classList.add('active');
       await loadFromCloud(user.uid);
       updateUI();
-
       if (state.isOwner) setTimeout(() => autoCleanupBots(), 2000);
     } else {
       loginScreen.classList.remove('hidden');
-      gameContainer.style.display = 'none';
+      gameContainer.classList.remove('active');
       state = DEFAULT_STATE();
       dbRef = null;
       hideDailyRewardModal();
       guestBtn.disabled = false;
       guestBtn.textContent = '🎮 Main sebagai Guest';
       githubLoginBtn.disabled = false;
-      githubLoginBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
-          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-        </svg>
-        Masuk dengan GitHub
-      `;
+      githubLoginBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> Masuk dengan GitHub`;
       loginSubmitBtn.disabled = false;
       loginSubmitBtn.textContent = '🔑 Masuk';
       registerSubmitBtn.disabled = false;
@@ -2003,19 +2717,14 @@
 
   try {
     const redirectResult = await getRedirectResult(auth);
-    if (redirectResult && redirectResult.user) {
-      console.log('✅ Redirect login berhasil:', redirectResult.user.displayName);
-    }
-  } catch (e) {
-    console.warn('Redirect result error:', e);
-  }
+    if (redirectResult && redirectResult.user) console.log('✅ Redirect login berhasil:', redirectResult.user.displayName);
+  } catch (e) { console.warn('Redirect result error:', e); }
 
   // ===== EVENTS =====
   waterBtn.addEventListener('click', waterTree);
   fertilizeBtn.addEventListener('click', fertilizeTree);
   harvestBtn.addEventListener('click', harvest);
   navItems.forEach(item => item.addEventListener('click', () => switchPage(item.dataset.page)));
-
   tabLoginBtn.addEventListener('click', () => switchLoginTab('login'));
   tabRegisterBtn.addEventListener('click', () => switchLoginTab('register'));
   guestBtn.addEventListener('click', handleGuest);
@@ -2023,22 +2732,19 @@
   loginSubmitBtn.addEventListener('click', handleLogin);
   registerSubmitBtn.addEventListener('click', handleRegister);
   forgotBtn.addEventListener('click', handleForgot);
-
   editNameBtn.addEventListener('click', handleEditName);
   upgradeBtn.addEventListener('click', handleUpgrade);
   logoutBtn.addEventListener('click', handleLogout);
   deleteAccountBtn.addEventListener('click', handleDeleteAccount);
   adminCleanupBtn.addEventListener('click', handleAdminCleanup);
-
   $('loginPassword').addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
   $('regPassword2').addEventListener('keypress', e => { if (e.key === 'Enter') handleRegister(); });
   regDistrict.addEventListener('keypress', e => { if (e.key === 'Enter') goToRegionConfirm(); });
-
   window.addEventListener('online', () => { isOnline = true; setCloudStatus('saved'); saveToCloud(); });
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v0.9.1 ready');
+  console.log('🌳 Compound Harvest v0.9.2 ready');
 </script>
 </body>
 </html>
