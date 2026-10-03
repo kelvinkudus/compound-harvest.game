@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.5.1</title>
+  <title>Compound Harvest 1 · v0.6</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
@@ -78,6 +78,8 @@
       font-size: 0.85rem; color: #ffffc0; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; }
     .total-exp-badge { display: inline-block; background: #4a3d2a; padding: 4px 12px;
       border-radius: 20px; font-size: 0.8rem; color: #ffd980; border: 1px solid #a08050; margin-top: 6px; }
+    .daily-badge { display: inline-block; background: #3a2e1e; padding: 4px 12px;
+      border-radius: 20px; font-size: 0.78rem; color: #ffb060; border: 1px solid #a07040; margin-top: 6px; }
 
     .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
     .btn { background: #2d4a2d; border: none; padding: 16px 8px; border-radius: 30px;
@@ -191,6 +193,8 @@
       z-index: 9999; opacity: 0; transition: opacity 0.2s; pointer-events: none;
       white-space: nowrap; font-size: 0.9rem; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
     .toast.show { opacity: 1; }
+    .toast.reward { background: #4a3a1e; border-color: #ffd980; color: #fff0c0;
+      font-size: 1rem; box-shadow: 0 8px 24px rgba(255, 217, 128, 0.3); }
 
     .hidden { display: none !important; }
     .small-note { font-size: 0.75rem; color: #8fa88f; text-align: center; margin-top: 6px; }
@@ -233,6 +237,36 @@
     .modal-danger:disabled { background: #4a2a2a; color: #888; }
     .modal-danger:active:not(:disabled) { background: #6a1a1a; }
 
+    /* DAILY REWARD MODAL */
+    .daily-modal { background: linear-gradient(160deg, #3a2e1e, #1e2f1e);
+      border: 2px solid #ffd980; border-radius: 28px; padding: 24px 20px;
+      text-align: center; max-width: 360px; width: 100%;
+      box-shadow: 0 20px 60px rgba(255, 217, 128, 0.4);
+      animation: dailyPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes dailyPop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .daily-modal .gift-icon { font-size: 4rem; margin-bottom: 8px;
+      animation: dailyBounce 1s ease infinite; }
+    @keyframes dailyBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .daily-modal h2 { color: #ffd980; font-size: 1.4rem;
+      margin-bottom: 6px; text-shadow: 0 2px 8px rgba(255, 217, 128, 0.5); }
+    .daily-modal .reward-amount { color: #fff; font-size: 2rem;
+      font-weight: 800; margin: 12px 0;
+      text-shadow: 0 2px 12px rgba(255, 217, 128, 0.8); }
+    .daily-modal .reward-sub { color: #d0e8c0; font-size: 0.85rem; margin-bottom: 16px; }
+    .daily-modal .claim-btn { width: 100%; padding: 14px;
+      background: linear-gradient(160deg, #ffd980, #c9a23f);
+      color: #1e2b0e; border: none; border-radius: 40px;
+      font-weight: 800; font-size: 1.05rem; cursor: pointer;
+      touch-action: manipulation;
+      box-shadow: 0 6px 0 #7a5e1e, 0 8px 20px rgba(0,0,0,0.4); }
+    .daily-modal .claim-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #7a5e1e; }
+
     main::-webkit-scrollbar { width: 4px; }
     main::-webkit-scrollbar-thumb { background: #4a704a; border-radius: 10px; }
   </style>
@@ -244,7 +278,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v0.5.1 · Locked Region</p>
+    <p>v0.6 · Daily Reward</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -292,6 +326,7 @@
         <div class="exp-text" id="expText">0 / 499 Exp</div>
         <div class="reward-badge">🎁 $5.000 · 💧1000 · 💎30 · 50 PP</div>
         <div><span class="total-exp-badge" id="totalExpBadge">🌟 Total Exp: 0</span></div>
+        <div><span class="daily-badge" id="dailyBadge">🎁 Daily: hari ini sudah diklaim</span></div>
       </div>
       <div class="inventory-row">
         <span>💧 <span id="waterDisplay">0</span> L</span>
@@ -362,19 +397,22 @@
           <span class="profile-label">🌟 Total Exp</span>
           <span class="profile-value" id="profileTotalExp">0</span>
         </div>
+        <div class="profile-row">
+          <span class="profile-label">🎁 Daily Reward</span>
+          <span class="profile-value" id="profileDaily">-</span>
+        </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button class="edit-btn" id="editNameBtn" style="flex:1;">✏️ Edit Nama</button>
           <button class="edit-btn" id="upgradeBtn" style="flex:1;">🔗 Upgrade</button>
         </div>
 
-        <!-- WILAYAH SECTION -->
         <div id="regionSection"></div>
 
         <button class="edit-btn danger-btn" id="logoutBtn" style="width:100%;">🚪 Logout (Tetap Simpan)</button>
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.5.1</div>
+      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.6</div>
     </div>
   </main>
 
@@ -386,7 +424,7 @@
   </div>
 </div>
 
-<!-- MODAL CONFIRM (generic) -->
+<!-- GENERIC MODAL -->
 <div class="modal-backdrop hidden" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle">⚠️ Konfirmasi</h3>
@@ -399,7 +437,7 @@
   </div>
 </div>
 
-<!-- MODAL REGION FORM -->
+<!-- REGION MODAL -->
 <div class="modal-backdrop hidden" id="regionModalBackdrop">
   <div class="modal" style="max-width: 460px;">
     <h3 id="regionModalTitle">🌍 Atur Wilayah</h3>
@@ -448,6 +486,17 @@
   </div>
 </div>
 
+<!-- DAILY REWARD MODAL -->
+<div class="modal-backdrop hidden" id="dailyRewardBackdrop">
+  <div class="daily-modal">
+    <div class="gift-icon">🎁</div>
+    <h2>Daily Reward!</h2>
+    <div class="reward-amount">+$500</div>
+    <div class="reward-sub">Bonus login harian.<br>Kembali besok untuk reward lagi!</div>
+    <button class="claim-btn" id="dailyClaimBtn">✅ Klaim & Lanjut</button>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <!-- ===== FIREBASE ===== -->
@@ -460,9 +509,9 @@
     linkWithCredential, EmailAuthProvider, sendPasswordResetEmail, deleteUser }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  // ⚠️ GANTI dengan email owner Anda
   const OWNER_EMAIL = "kelvinkudus@gmail.com";
   const BOT_KEYWORDS = ['test', 'bot', 'dummy', 'admin', 'player_', 'petani_bot', 'xxx'];
+  const DAILY_REWARD_AMOUNT = 500;
 
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
@@ -486,6 +535,7 @@
     uid: null, email: null, isAnonymous: true,
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
     regionLocked: false,
+    lastDailyReward: '',   // ← BARU
     isOwner: false,
   });
 
@@ -494,7 +544,7 @@
   let saveTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v051_state';
+  const LOCAL_KEY = 'compoundHarvest_v06_state';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
@@ -518,6 +568,7 @@
   const expFill = $('expFill');
   const expText = $('expText');
   const totalExpBadge = $('totalExpBadge');
+  const dailyBadge = $('dailyBadge');
   const waterDisplay = $('waterDisplay');
   const fertilizerDisplay = $('fertilizerDisplay');
   const waterBtn = $('waterBtn');
@@ -530,6 +581,7 @@
   const profileUid = $('profileUid');
   const profileType = $('profileType');
   const profileTotalExp = $('profileTotalExp');
+  const profileDaily = $('profileDaily');
   const editNameBtn = $('editNameBtn');
   const upgradeBtn = $('upgradeBtn');
   const logoutBtn = $('logoutBtn');
@@ -557,7 +609,6 @@
   const registerSubmitBtn = $('registerSubmitBtn');
   const forgotBtn = $('forgotBtn');
 
-  // Generic modal
   const modalBackdrop = $('modalBackdrop');
   const modalTitle = $('modalTitle');
   const modalMessage = $('modalMessage');
@@ -565,7 +616,6 @@
   const modalCancel = $('modalCancel');
   const modalConfirm = $('modalConfirm');
 
-  // Region modal
   const regionModalBackdrop = $('regionModalBackdrop');
   const regionModalStep1 = $('regionModalStep1');
   const regionModalStep2 = $('regionModalStep2');
@@ -579,9 +629,13 @@
   const regRegency = $('regRegency');
   const regDistrict = $('regDistrict');
 
+  const dailyRewardBackdrop = $('dailyRewardBackdrop');
+  const dailyClaimBtn = $('dailyClaimBtn');
+
   // ===== UTILS =====
-  function showToast(msg, duration = 1800) {
+  function showToast(msg, duration = 1800, isReward = false) {
     toastEl.textContent = msg;
+    toastEl.classList.toggle('reward', !!isReward);
     toastEl.classList.add('show');
     clearTimeout(window.toastTimeout);
     window.toastTimeout = setTimeout(() => toastEl.classList.remove('show'), duration);
@@ -617,6 +671,59 @@
   function hasRegion() {
     const r = state.region;
     return !!(r.negara && r.provinsi && r.kabupaten && r.kecamatan);
+  }
+
+  // ===== DAILY REWARD =====
+  function getTodayKey() {
+    // Format: YYYY-MM-DD di timezone lokal device
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  function hasClaimedDailyToday() {
+    return state.lastDailyReward === getTodayKey();
+  }
+
+  function showDailyRewardModal() {
+    dailyRewardBackdrop.classList.remove('hidden');
+  }
+
+  function hideDailyRewardModal() {
+    dailyRewardBackdrop.classList.add('hidden');
+  }
+
+  async function claimDailyReward() {
+    const today = getTodayKey();
+
+    // Cek lagi untuk safety
+    if (state.lastDailyReward === today) {
+      hideDailyRewardModal();
+      return;
+    }
+
+    // Beri reward
+    state.money += DAILY_REWARD_AMOUNT;
+    state.lastDailyReward = today;
+
+    updateUI();
+    await saveToCloud();
+
+    hideDailyRewardModal();
+    showToast(`🎁 +$${formatNumber(DAILY_REWARD_AMOUNT)} Daily Reward!`, 2500, true);
+  }
+
+  function checkAndShowDailyReward() {
+    if (hasClaimedDailyToday()) {
+      // Sudah klaim hari ini
+      console.log('✅ Daily reward sudah diklaim hari ini');
+      return;
+    }
+    // Belum klaim → tampilkan modal
+    console.log('🎁 Daily reward tersedia!');
+    showDailyRewardModal();
   }
 
   // ===== LOCAL STORAGE =====
@@ -655,6 +762,13 @@
     waterDisplay.textContent = state.water;
     fertilizerDisplay.textContent = state.fertilizer;
     totalExpBadge.textContent = `🌟 Total Exp: ${formatNumber(state.totalExp)}`;
+
+    // Daily badge
+    if (state.lastDailyReward) {
+      dailyBadge.textContent = `🎁 Daily: terakhir ${state.lastDailyReward}`;
+    } else {
+      dailyBadge.textContent = `🎁 Daily: belum pernah`;
+    }
 
     const currentLevelData = getLevelData(state.exp);
     state.level = currentLevelData.level;
@@ -698,6 +812,21 @@
     profileType.textContent = state.isAnonymous ? 'Guest' : 'Email';
     profileTotalExp.textContent = formatNumber(state.totalExp);
 
+    // Daily info di profile
+    if (state.lastDailyReward) {
+      const today = getTodayKey();
+      if (state.lastDailyReward === today) {
+        profileDaily.textContent = '✅ Hari ini sudah klaim';
+        profileDaily.style.color = '#a0f0a0';
+      } else {
+        profileDaily.textContent = `Terakhir: ${state.lastDailyReward}`;
+        profileDaily.style.color = '#ffd980';
+      }
+    } else {
+      profileDaily.textContent = 'Belum pernah';
+      profileDaily.style.color = '#8fa88f';
+    }
+
     if (state.isAnonymous) upgradeBtn.style.display = 'block';
     else upgradeBtn.style.display = 'none';
 
@@ -711,12 +840,11 @@
     renderShop();
   }
 
-  // ===== RENDER REGION SECTION =====
+  // ===== RENDER REGION =====
   function renderRegionSection() {
     if (!regionSection) return;
     const r = state.region;
     if (!state.regionLocked || !hasRegion()) {
-      // Belum diatur → tampilkan tombol Atur
       regionSection.innerHTML = `
         <div class="locked-display">
           <div class="title" style="color:#ffb060;">⚠️ Wilayah Belum Diatur</div>
@@ -731,7 +859,6 @@
       const btn = $('setRegionBtn');
       if (btn) btn.addEventListener('click', openRegionModal);
     } else {
-      // Sudah terkunci
       regionSection.innerHTML = `
         <div class="locked-display">
           <div class="title">🔒 Wilayah Anda (Terkunci)</div>
@@ -765,7 +892,8 @@
         exp: state.exp, level: state.level,
         planterPoints: state.planterPoints, totalExp: state.totalExp,
         region: state.region,
-        regionLocked: state.regionLocked,    // ← baru
+        regionLocked: state.regionLocked,
+        lastDailyReward: state.lastDailyReward,   // ← BARU
         waterSinceFertilizer: state.waterSinceFertilizer,
         skipUsedThisLevel: state.skipUsedThisLevel,
         email: state.email || null, isAnonymous: state.isAnonymous,
@@ -794,6 +922,8 @@
     };
     state = { ...DEFAULT_STATE(), ...savedMeta };
 
+    let isNewAccount = false;
+
     try {
       const snap = await get(userRef);
       if (snap.exists()) {
@@ -808,21 +938,31 @@
           skipUsedThisLevel: data.skipUsedThisLevel ?? false,
           region: data.region || { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
           regionLocked: data.regionLocked === true,
+          lastDailyReward: data.lastDailyReward || '',
         });
         showToast('☁️ Data dimuat');
       } else {
-        // Akun baru
+        // Akun benar-benar baru
+        isNewAccount = true;
         if (state.isAnonymous && !isValidName(state.name)) {
           state.name = await generateUniqueGuestName();
           try { await set(ref(db, `nameRegistry/${state.name}`), { uid, ts: Date.now() }); } catch {}
         }
         state.money = 1500;
         state.regionLocked = false;
+        state.lastDailyReward = '';   // belum pernah klaim
         await saveToCloud();
         showToast(`🌱 Selamat datang, ${state.name}!`);
       }
       updateUI();
       updateLeaderboardEntries().catch(() => {});
+
+      // Cek daily reward setelah UI siap
+      // (Delay sedikit biar toast selamat datang selesai dulu)
+      setTimeout(() => {
+        checkAndShowDailyReward();
+      }, isNewAccount ? 800 : 500);
+
     } catch (e) {
       console.error('Load error:', e);
       const local = getLocalState();
@@ -1131,12 +1271,10 @@
   let regionCountdownTimer = null;
 
   function openRegionModal() {
-    // Kalau sudah terkunci, jangan buka
     if (state.regionLocked && hasRegion()) {
       showToast('🔒 Wilayah sudah terkunci. Hubungi admin.');
       return;
     }
-    // Reset form
     regionModalStep1.classList.remove('hidden');
     regionModalStep2.classList.add('hidden');
     regCountry.value = state.region.negara || 'Indonesia';
@@ -1164,7 +1302,6 @@
       return;
     }
 
-    // Tampilkan preview
     regionPreview.innerHTML = `
       <div class="row"><span>🌍</span><span>${escapeHtml(negara)}</span></div>
       <div class="row"><span>🏙️</span><span>${escapeHtml(provinsi)}</span></div>
@@ -1175,7 +1312,6 @@
     regionModalStep1.classList.add('hidden');
     regionModalStep2.classList.remove('hidden');
 
-    // Countdown 3 detik
     let count = 3;
     regionModalConfirm.disabled = true;
     regionModalConfirm.textContent = `Ya (${count})`;
@@ -1209,7 +1345,6 @@
       return;
     }
 
-    // Kunci!
     state.region = { negara, provinsi, kabupaten, kecamatan };
     state.regionLocked = true;
 
@@ -1233,6 +1368,16 @@
   regionModalConfirm.addEventListener('click', confirmRegionLock);
   regionModalBackdrop.addEventListener('click', e => {
     if (e.target === regionModalBackdrop) closeRegionModal();
+  });
+
+  // ===== DAILY REWARD EVENTS =====
+  dailyClaimBtn.addEventListener('click', claimDailyReward);
+  // Prevent close by clicking backdrop (wajib klik klaim)
+  dailyRewardBackdrop.addEventListener('click', e => {
+    if (e.target === dailyRewardBackdrop) {
+      // Tidak menutup — user harus klik tombol
+      showToast('Klik "Klaim & Lanjut" untuk lanjut');
+    }
   });
 
   // ===== AUTH =====
@@ -1522,6 +1667,7 @@
       gameContainer.style.display = 'none';
       state = DEFAULT_STATE();
       dbRef = null;
+      hideDailyRewardModal();
       guestBtn.disabled = false;
       guestBtn.textContent = '🎮 Main sebagai Guest';
       loginSubmitBtn.disabled = false;
@@ -1558,7 +1704,7 @@
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v0.5.1 ready');
+  console.log('🌳 Compound Harvest v0.6 ready');
 </script>
 </body>
 </html>
