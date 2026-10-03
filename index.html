@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.04</title>
+  <title>Compound Harvest 1 · v0.05</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
@@ -163,6 +163,7 @@
       border: 1px solid #7fa07f; font-size: 0.9rem; }
     .danger-btn { background: #5e3b3b; border-color: #a07a7a; }
     .admin-btn { background: #4a3d2a; border-color: #a08050; color: #ffe08a; }
+    .delete-btn { background: #8a2a2a; border-color: #c06060; }
 
     .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
       background: #2d4a2d; color: #f0ffe0; padding: 12px 24px; border-radius: 50px;
@@ -180,7 +181,7 @@
 
     /* MODAL */
     .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.75); z-index: 9998; display: flex;
+      background: rgba(0,0,0,0.85); z-index: 9998; display: flex;
       align-items: center; justify-content: center; padding: 20px; }
     .modal-backdrop.hidden { display: none; }
     .modal { background: #1e2f1e; border-radius: 24px; padding: 20px;
@@ -189,12 +190,17 @@
     .modal h3 { color: #ff9090; font-size: 1.2rem; margin-bottom: 10px; text-align: center; }
     .modal p { color: #d0e8c0; font-size: 0.9rem; line-height: 1.5;
       margin-bottom: 16px; text-align: center; }
+    .modal-input { width: 100%; padding: 12px 16px; border-radius: 40px;
+      border: 1px solid #4a704a; background: #0c180c; color: #e0f0d0;
+      font-size: 1rem; outline: none; margin-bottom: 16px; text-align: center;
+      text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
     .modal-buttons { display: flex; gap: 10px; }
     .modal-buttons button { flex: 1; padding: 12px; border-radius: 40px;
       border: none; font-weight: 700; cursor: pointer; touch-action: manipulation; font-size: 0.95rem; }
     .modal-cancel { background: #3a5a3a; color: #fff; }
     .modal-confirm { background: #8a2a2a; color: #fff; }
-    .modal-confirm:active { background: #6a1a1a; }
+    .modal-confirm:disabled { background: #4a2a2a; color: #888; cursor: not-allowed; }
+    .modal-confirm:active:not(:disabled) { background: #6a1a1a; }
     .modal-cancel:active { background: #2a4a2a; }
 
     main::-webkit-scrollbar { width: 4px; }
@@ -208,7 +214,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v0.04 · Cleanup</p>
+    <p>v0.05 · Bug Fix</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -231,7 +237,7 @@
     </div>
     <div class="divider">atau</div>
     <button class="btn-login btn-guest" id="guestBtn">🎮 Main sebagai Guest</button>
-    <div class="small-note">Guest: nama otomatis unik (Petani_xxxx)</div>
+    <div class="small-note">Guest: nama otomatis unik</div>
   </div>
 </div>
 
@@ -332,10 +338,10 @@
         </div>
         <button class="edit-btn" id="editRegionBtn" style="width:100%;">🌍 Atur Wilayah</button>
         <button class="edit-btn danger-btn" id="logoutBtn" style="width:100%;">🚪 Logout (Tetap Simpan)</button>
-        <button class="edit-btn danger-btn hidden" id="deleteAccountBtn" style="width:100%; background:#8a2a2a; border-color:#c06060;">🗑️ Logout + Hapus Data (Guest)</button>
-        <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Test (Admin)</button>
+        <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
+        <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.04</div>
+      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.05</div>
     </div>
   </main>
 
@@ -352,9 +358,10 @@
   <div class="modal">
     <h3 id="modalTitle">⚠️ Konfirmasi</h3>
     <p id="modalMessage">Yakin?</p>
+    <input type="text" class="modal-input hidden" id="modalInput" placeholder="Ketik HAPUS">
     <div class="modal-buttons">
       <button class="modal-cancel" id="modalCancel">Batal</button>
-      <button class="modal-confirm" id="modalConfirm">Ya, Hapus</button>
+      <button class="modal-confirm" id="modalConfirm">Ya, Lanjut</button>
     </div>
   </div>
 </div>
@@ -368,11 +375,14 @@
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
   import { getAuth, signInAnonymously, createUserWithEmailAndPassword,
     signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile,
-    linkWithCredential, EmailAuthProvider, sendPasswordResetEmail }
+    linkWithCredential, EmailAuthProvider, sendPasswordResetEmail, deleteUser }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  // ⚠️ GANTI dengan email owner Anda (email Google yang login ke Firebase Console)
+  // ⚠️ GANTI dengan email owner Anda (email Google untuk login Firebase Console)
   const OWNER_EMAIL = "kelvinkudus@gmail.com";
+
+  // Kata kunci yang dianggap bot/test untuk cleanup otomatis
+  const BOT_KEYWORDS = ['test', 'bot', 'dummy', 'admin', 'player_', 'petani_bot', 'xxx'];
 
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
@@ -389,20 +399,21 @@
   const db = getDatabase(app);
   const auth = getAuth(app);
 
-  // ===== STATE =====
-  const state = {
+  const DEFAULT_STATE = () => ({
     money: 1500, diamond: 0, planterPoints: 0, totalExp: 0,
     water: 0, fertilizer: 0, exp: 0, level: 1,
     name: 'Petani', waterSinceFertilizer: 0, skipUsedThisLevel: false,
     uid: null, email: null, isAnonymous: true,
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
     isOwner: false,
-  };
+  });
 
+  let state = DEFAULT_STATE();
   let dbRef = null;
   let saveTimer = null;
   let isOnline = navigator.onLine;
-  const LOCAL_KEY = 'compoundHarvest_v04_state';
+  let isSaving = false;
+  const LOCAL_KEY = 'compoundHarvest_v05_state';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
@@ -414,7 +425,6 @@
     { level: 5, name: 'Pohon Dewasa', min: 3000, max: 3000 }
   ];
 
-  // ===== DOM =====
   const $ = id => document.getElementById(id);
   const loginScreen = $('loginScreen');
   const gameContainer = $('gameContainer');
@@ -466,10 +476,10 @@
   const registerSubmitBtn = $('registerSubmitBtn');
   const forgotBtn = $('forgotBtn');
 
-  // modal
   const modalBackdrop = $('modalBackdrop');
   const modalTitle = $('modalTitle');
   const modalMessage = $('modalMessage');
+  const modalInput = $('modalInput');
   const modalCancel = $('modalCancel');
   const modalConfirm = $('modalConfirm');
 
@@ -480,17 +490,12 @@
     clearTimeout(window.toastTimeout);
     window.toastTimeout = setTimeout(() => toastEl.classList.remove('show'), duration);
   }
-
   function showError(msg) {
     errorMsg.textContent = msg;
     errorMsg.classList.remove('hidden');
     setTimeout(() => errorMsg.classList.add('hidden'), 5000);
   }
-
-  function formatNumber(num) {
-    return Number(num || 0).toLocaleString('id-ID');
-  }
-
+  function formatNumber(num) { return Number(num || 0).toLocaleString('id-ID'); }
   function getLevelData(exp) {
     if (exp >= 3000) return LEVELS[4];
     for (let i = LEVELS.length - 1; i >= 0; i--) {
@@ -498,64 +503,58 @@
     }
     return LEVELS[0];
   }
-
   function setCloudStatus(status) {
     if (status === 'saving') { cloudStatus.textContent = '⏳ Menyimpan...'; cloudStatus.className = 'cloud-status saving'; }
     else if (status === 'saved') { cloudStatus.textContent = '☁️ Tersimpan'; cloudStatus.className = 'cloud-status saved'; }
     else if (status === 'offline') { cloudStatus.textContent = '⚠️ Offline'; cloudStatus.className = 'cloud-status offline'; }
     else { cloudStatus.textContent = '☁️ Sync'; cloudStatus.className = 'cloud-status'; }
   }
-
   function sanitizeKey(str) {
     if (!str) return '';
     return String(str).replace(/[.#$\[\]\/]/g, '_').trim().substring(0, 40);
   }
-
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     }[c]));
   }
 
-  // ===== NAMA UNIK UNTUK GUEST =====
-  // Generate nama unik: "Petani_<4 digit>", cek ke Firebase agar tidak duplikat
+  // ===== LOCAL STORAGE =====
+  function getLocalState() {
+    try { const raw = localStorage.getItem(LOCAL_KEY); return raw ? JSON.parse(raw) : null; }
+    catch { return null; }
+  }
+  function setLocalState(s) {
+    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {}
+  }
+  function clearLocalState() {
+    try { localStorage.removeItem(LOCAL_KEY); } catch {}
+  }
+
+  // ===== NAMA UNIK =====
   async function generateUniqueGuestName() {
-    let attempts = 0;
-    const maxAttempts = 20;
-    while (attempts < maxAttempts) {
-      attempts++;
-      const suffix = Math.floor(1000 + Math.random() * 9000); // 1000-9999
+    for (let i = 0; i < 30; i++) {
+      const suffix = Math.floor(1000 + Math.random() * 9000);
       const candidate = `Petani_${suffix}`;
       try {
-        // Cek di leaderboard global (paling cepat)
-        const snap = await get(ref(db, `leaderboard/global/exp/${candidate}_check`));
-        // Kita cek dengan cara lain: query leaderboard, cari nama yg sama
-        // Tapi karena path leaderboard/{uid}, kita tidak tahu uid-nya.
-        // Simpler: cek di /nameRegistry/{name}
         const nameSnap = await get(ref(db, `nameRegistry/${candidate}`));
-        if (!nameSnap.exists()) {
-          // Reserve nama ini (optional, tapi bagus untuk mencegah race condition)
-          return candidate;
-        }
+        if (!nameSnap.exists()) return candidate;
       } catch (e) {
-        // Kalau error (misal permission), kembalikan saja
         return candidate;
       }
     }
-    // Fallback: pakai timestamp
     return `Petani_${Date.now().toString().slice(-5)}`;
   }
 
-  // Validasi nama: tidak boleh kosong, tidak boleh cuma "Petani"
   function isValidName(name) {
     if (!name || typeof name !== 'string') return false;
     const trimmed = name.trim();
     if (trimmed.length < 2) return false;
-    if (trimmed.toLowerCase() === 'petani') return false; // tolak "Petani" telanjang
+    if (trimmed.toLowerCase() === 'petani') return false;
     return true;
   }
 
-  // ===== UI UPDATE =====
+  // ===== UI =====
   function updateUI() {
     moneyDisplay.textContent = formatNumber(state.money);
     diamondDisplay.textContent = state.diamond;
@@ -609,11 +608,9 @@
     if (state.isAnonymous) upgradeBtn.style.display = 'block';
     else upgradeBtn.style.display = 'none';
 
-    // Tombol Hapus Data: hanya untuk Guest
     if (state.isAnonymous) deleteAccountBtn.classList.remove('hidden');
     else deleteAccountBtn.classList.add('hidden');
 
-    // Tombol Admin: hanya untuk owner
     if (state.isOwner) adminCleanupBtn.classList.remove('hidden');
     else adminCleanupBtn.classList.add('hidden');
 
@@ -621,12 +618,6 @@
   }
 
   // ===== SAVE / LOAD =====
-  function getLocalState() {
-    try { const raw = localStorage.getItem(LOCAL_KEY); return raw ? JSON.parse(raw) : null; }
-    catch { return null; }
-  }
-  function setLocalState(s) { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {} }
-
   function debouncedSave() {
     setLocalState(state);
     if (saveTimer) clearTimeout(saveTimer);
@@ -636,7 +627,9 @@
   async function saveToCloud() {
     if (!dbRef || !state.uid) return;
     if (!isOnline) { setCloudStatus('offline'); return; }
+    if (isSaving) return;
     try {
+      isSaving = true;
       setCloudStatus('saving');
       const payload = {
         name: state.name, money: state.money, diamond: state.diamond,
@@ -655,12 +648,25 @@
     } catch (e) {
       console.error('Save error:', e);
       setCloudStatus('offline');
+    } finally {
+      isSaving = false;
     }
   }
 
   async function loadFromCloud(uid) {
     const userRef = ref(db, 'users/' + uid);
     dbRef = userRef;
+
+    // ⚠️ PENTING: Reset state ke default DULU sebelum load
+    // Biar tidak ada residu dari akun sebelumnya
+    const savedMeta = {
+      uid: state.uid,
+      email: state.email,
+      isAnonymous: state.isAnonymous,
+      isOwner: state.isOwner,
+    };
+    state = { ...DEFAULT_STATE(), ...savedMeta };
+
     try {
       const snap = await get(userRef);
       if (snap.exists()) {
@@ -677,12 +683,13 @@
         });
         showToast('☁️ Data dimuat dari cloud');
       } else {
-        // Akun baru: generate nama unik kalau anonymous
+        // Akun benar-benar baru
         if (state.isAnonymous && !isValidName(state.name)) {
           state.name = await generateUniqueGuestName();
-          // Reserve nama
           try { await set(ref(db, `nameRegistry/${state.name}`), { uid, ts: Date.now() }); } catch {}
         }
+        // Pastikan money default 1500
+        state.money = 1500;
         await saveToCloud();
         showToast(`🌱 Selamat datang, ${state.name}!`);
       }
@@ -690,8 +697,9 @@
       updateLeaderboardEntries().catch(() => {});
     } catch (e) {
       console.error('Load error:', e);
+      // Fallback: pakai localStorage HANYA kalau uid sama
       const local = getLocalState();
-      if (local) {
+      if (local && local.uid === uid) {
         Object.assign(state, local);
         updateUI();
         showToast('⚠️ Mode offline — data lokal dipakai');
@@ -707,8 +715,7 @@
     const updates = {};
     updates[`leaderboard/global/exp/${state.uid}`] = entryExp;
     updates[`leaderboard/global/points/${state.uid}`] = entryPts;
-    const regions = ['negara', 'provinsi', 'kabupaten', 'kecamatan'];
-    for (const r of regions) {
+    for (const r of ['negara', 'provinsi', 'kabupaten', 'kecamatan']) {
       const key = sanitizeKey(state.region[r]);
       if (!key) continue;
       updates[`leaderboard/${r}/${key}/exp/${state.uid}`] = entryExp;
@@ -756,12 +763,12 @@
         renderLeaderboard(rows);
       }, (err) => {
         console.error('LB listen error:', err);
-        lbList.innerHTML = `<div class="lb-empty">❌ Gagal memuat leaderboard: ${err.message}</div>`;
+        lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${err.message}</div>`;
       });
       lbView.unsubscribe = unsubscribe;
     } catch (e) {
       console.error('LB query error:', e);
-      lbList.innerHTML = `<div class="lb-empty">❌ Gagal memuat: ${e.message}</div>`;
+      lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${e.message}</div>`;
     }
   }
 
@@ -822,7 +829,7 @@
 
   function fertilizeTree() {
     if (state.fertilizer < 1) { showToast('🧪 Pupuk habis! Beli di toko.'); return; }
-    if (state.level === 5) { showToast('Pohon sudah dewasa, tidak perlu pupuk.'); return; }
+    if (state.level === 5) { showToast('Pohon sudah dewasa.'); return; }
     state.fertilizer -= 1;
     addExp(5);
     state.waterSinceFertilizer = 0;
@@ -889,7 +896,7 @@
     const item = shopCatalog.find(i => i.id === id);
     if (!item) return;
     if (item.type === 'skip') {
-      if (state.skipUsedThisLevel) { showToast('⏩ Skip sudah dipakai di level ini.'); return; }
+      if (state.skipUsedThisLevel) { showToast('⏩ Skip sudah dipakai.'); return; }
       if (state.level >= 5) { showToast('Pohon sudah dewasa.'); return; }
     }
     let paid = false;
@@ -900,8 +907,8 @@
     } else { showToast('❌ Saldo tidak cukup!'); return; }
     if (!paid) return;
     switch (item.type) {
-      case 'water': state.water += item.amount; showToast(`💧 +${item.amount} Liter air`); break;
-      case 'fertilizer': state.fertilizer += item.amount; showToast(`🧪 +${item.amount} Kg pupuk`); break;
+      case 'water': state.water += item.amount; showToast(`💧 +${item.amount} Liter`); break;
+      case 'fertilizer': state.fertilizer += item.amount; showToast(`🧪 +${item.amount} Kg`); break;
       case 'instant':
         if (state.level >= 5) { state.diamond += 25; showToast('Refund 💎25'); return; }
         addExp(500); showToast('✨ +500 Exp'); break;
@@ -912,7 +919,7 @@
           state.exp = target.min;
           state.level = nextLevel;
           state.skipUsedThisLevel = true;
-          showToast(`⏩ Skip ke Lv.${nextLevel} ${target.name}`);
+          showToast(`⏩ Skip ke Lv.${nextLevel}`);
         }
         break;
     }
@@ -958,16 +965,30 @@
 
   // ===== MODAL =====
   let modalCallback = null;
-  function showModal(title, message, confirmText, callback) {
+  function showModal(title, message, confirmText, callback, requireWord) {
     modalTitle.textContent = title;
     modalMessage.textContent = message;
-    modalConfirm.textContent = confirmText || 'Ya, Hapus';
+    modalConfirm.textContent = confirmText || 'Ya, Lanjut';
+    if (requireWord) {
+      modalInput.classList.remove('hidden');
+      modalInput.value = '';
+      modalInput.placeholder = `Ketik "${requireWord}"`;
+      modalConfirm.disabled = true;
+      modalInput.oninput = () => {
+        modalConfirm.disabled = modalInput.value.trim().toUpperCase() !== requireWord.toUpperCase();
+      };
+    } else {
+      modalInput.classList.add('hidden');
+      modalConfirm.disabled = false;
+    }
     modalCallback = callback;
     modalBackdrop.classList.remove('hidden');
   }
   function hideModal() {
     modalBackdrop.classList.add('hidden');
     modalCallback = null;
+    modalInput.value = '';
+    modalConfirm.disabled = false;
   }
   modalCancel.addEventListener('click', hideModal);
   modalConfirm.addEventListener('click', () => {
@@ -998,9 +1019,9 @@
     guestBtn.disabled = true;
     guestBtn.innerHTML = '<span class="loading-spinner"></span> Memuat...';
     try {
-      // Generate nama unik sebelum login
-      const uniqueName = await generateUniqueGuestName();
-      state.name = uniqueName;
+      // PENTING: clear localStorage sebelum login guest baru
+      clearLocalState();
+      state = DEFAULT_STATE();
       await signInAnonymously(auth);
     } catch (e) {
       showError('Gagal login guest: ' + e.message);
@@ -1015,8 +1036,11 @@
     if (!email || !pw) { showError('Email dan password wajib diisi'); return; }
     loginSubmitBtn.disabled = true;
     loginSubmitBtn.innerHTML = '<span class="loading-spinner"></span> Masuk...';
-    try { await signInWithEmailAndPassword(auth, email, pw); }
-    catch (e) {
+    try {
+      clearLocalState();
+      state = DEFAULT_STATE();
+      await signInWithEmailAndPassword(auth, email, pw);
+    } catch (e) {
       let msg = e.message;
       if (e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') msg = 'Email atau password salah';
       else if (e.code === 'auth/user-not-found') msg = 'Akun tidak ditemukan';
@@ -1033,7 +1057,7 @@
     const pw = $('regPassword').value;
     const pw2 = $('regPassword2').value;
     if (!name) { showError('Nama wajib diisi'); return; }
-    if (!isValidName(name)) { showError('Nama tidak boleh "Petani" saja. Tambah angka/karakter.'); return; }
+    if (!isValidName(name)) { showError('Nama tidak boleh "Petani" saja.'); return; }
     if (!email || !pw) { showError('Email dan password wajib diisi'); return; }
     if (pw.length < 6) { showError('Password minimal 6 karakter'); return; }
     if (pw !== pw2) { showError('Password tidak sama'); return; }
@@ -1041,6 +1065,8 @@
     registerSubmitBtn.disabled = true;
     registerSubmitBtn.innerHTML = '<span class="loading-spinner"></span> Mendaftar...';
     try {
+      clearLocalState();
+      state = DEFAULT_STATE();
       const cred = await createUserWithEmailAndPassword(auth, email, pw);
       await updateProfile(cred.user, { displayName: name });
       state.name = name;
@@ -1056,22 +1082,22 @@
   }
 
   async function handleForgot() {
-    const email = prompt('Masukkan email untuk reset password:');
+    const email = prompt('Email untuk reset:');
     if (!email) return;
     try { await sendPasswordResetEmail(auth, email); showToast('📧 Email reset terkirim!'); }
     catch (e) { showError('Gagal: ' + e.message); }
   }
 
   async function handleUpgrade() {
-    if (!state.isAnonymous) { showToast('Akun sudah Email.'); return; }
+    if (!state.isAnonymous) { showToast('Sudah Email.'); return; }
     const email = prompt('Email baru:');
     if (!email) return;
-    const pw = prompt('Password (min 6 karakter):');
-    if (!pw || pw.length < 6) { showToast('Password minimal 6 karakter'); return; }
+    const pw = prompt('Password (min 6):');
+    if (!pw || pw.length < 6) { showToast('Min 6 karakter'); return; }
     try {
       const cred = EmailAuthProvider.credential(email, pw);
       await linkWithCredential(auth.currentUser, cred);
-      showToast('🔗 Akun di-upgrade ke Email!');
+      showToast('🔗 Upgrade berhasil!');
     } catch (e) {
       let msg = e.message;
       if (e.code === 'auth/email-already-in-use') msg = 'Email sudah dipakai';
@@ -1108,101 +1134,153 @@
     if (saveTimer) clearTimeout(saveTimer);
     await saveToCloud();
     if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
+    clearLocalState();  // ← PENTING: hapus cache lokal
     await signOut(auth);
   }
 
-  // ===== HAPUS AKUN (GUEST ONLY) =====
+  // ===== HAPUS AKUN (GUEST) =====
   async function handleDeleteAccount() {
-    if (!state.isAnonymous) { showToast('Fitur ini hanya untuk Guest.'); return; }
+    if (!state.isAnonymous) { showToast('Hanya untuk Guest.'); return; }
+    const uidToDelete = state.uid;
+    const nameToDelete = state.name;
+    const regionToDelete = { ...state.region };
+
     showModal(
       '⚠️ Hapus Data Permainan?',
-      `Semua progress (money, diamond, level, item) akan DIHAPUS PERMANEN. Nama "${state.name}" tidak akan bisa dikembalikan. Lanjutkan?`,
-      'Ya, Hapus Semua',
+      `Semua progress "${nameToDelete}" akan DIHAPUS PERMANEN. Tidak bisa dikembalikan. Ketik "HAPUS" untuk konfirmasi.`,
+      'Ya, Hapus',
       async () => {
         try {
           showToast('🗑️ Menghapus data...', 3000);
-          // Hapus user data
-          if (dbRef) await remove(dbRef);
-          // Hapus entry leaderboard
-          const paths = [];
-          paths.push(`leaderboard/global/exp/${state.uid}`);
-          paths.push(`leaderboard/global/points/${state.uid}`);
+
+          // 1. Hapus user data
+          try { await remove(ref(db, `users/${uidToDelete}`)); } catch (e) { console.warn('users:', e); }
+
+          // 2. Hapus entry leaderboard (semua wilayah)
+          const paths = [
+            `leaderboard/global/exp/${uidToDelete}`,
+            `leaderboard/global/points/${uidToDelete}`,
+          ];
           for (const r of ['negara', 'provinsi', 'kabupaten', 'kecamatan']) {
-            const key = sanitizeKey(state.region[r]);
+            const key = sanitizeKey(regionToDelete[r]);
             if (key) {
-              paths.push(`leaderboard/${r}/${key}/exp/${state.uid}`);
-              paths.push(`leaderboard/${r}/${key}/points/${state.uid}`);
+              paths.push(`leaderboard/${r}/${key}/exp/${uidToDelete}`);
+              paths.push(`leaderboard/${r}/${key}/points/${uidToDelete}`);
             }
           }
           for (const p of paths) {
             try { await remove(ref(db, p)); } catch (e) { console.warn('Skip:', p); }
           }
-          // Hapus name registry
-          try { await remove(ref(db, `nameRegistry/${state.name}`)); } catch {}
-          showToast('✅ Data dihapus. Logout...', 2000);
-          // Logout
-          if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
-          await signOut(auth);
+
+          // 3. Hapus name registry
+          if (nameToDelete) {
+            try { await remove(ref(db, `nameRegistry/${nameToDelete}`)); } catch {}
+          }
+
+          // 4. Hapus localStorage
+          clearLocalState();
+
+          // 5. Reset state in-memory
+          state = DEFAULT_STATE();
+
+          // 6. Hapus akun auth (anonymous)
+          try {
+            if (auth.currentUser) await deleteUser(auth.currentUser);
+          } catch (e) {
+            console.warn('deleteUser gagal, fallback logout:', e);
+            try { await signOut(auth); } catch {}
+          }
+
+          showToast('✅ Data berhasil dihapus', 2500);
         } catch (e) {
           console.error('Delete error:', e);
-          showToast('⚠️ Sebagian data mungkin gagal dihapus: ' + e.message);
-          // Tetap logout
+          clearLocalState();
           try { await signOut(auth); } catch {}
+          showToast('⚠️ Logout paksa. Cek Firebase manual.');
         }
-      }
+      },
+      'HAPUS'
     );
   }
 
-  // ===== ADMIN CLEANUP =====
+  // ===== ADMIN CLEANUP OTOMATIS =====
+  // Deteksi apakah nama termasuk bot/test
+  function isBotName(name) {
+    if (!name) return false;
+    const lower = name.toLowerCase().trim();
+    for (const kw of BOT_KEYWORDS) {
+      if (lower.includes(kw)) return true;
+    }
+    return false;
+  }
+
+  // Cleanup bot otomatis (untuk owner)
+  async function autoCleanupBots() {
+    if (!state.isOwner) return;
+    try {
+      console.log('🧹 Auto-cleanup bots...');
+      // Ambil semua data user
+      const usersSnap = await get(ref(db, 'users'));
+      if (!usersSnap.exists()) { console.log('Tidak ada users'); return; }
+
+      const tasks = [];
+      let count = 0;
+      const ownUid = state.uid;
+
+      usersSnap.forEach(child => {
+        const uid = child.key;
+        if (uid === ownUid) return; // jangan hapus diri sendiri
+        const data = child.val() || {};
+        const name = data.name || '';
+        if (isBotName(name)) {
+          console.log(`🗑️ Hapus bot: ${name} (${uid})`);
+          // Hapus dari users
+          tasks.push(remove(ref(db, `users/${uid}`)).catch(() => {}));
+          // Hapus dari leaderboard
+          tasks.push(remove(ref(db, `leaderboard/global/exp/${uid}`)).catch(() => {}));
+          tasks.push(remove(ref(db, `leaderboard/global/points/${uid}`)).catch(() => {}));
+          // Hapus dari region
+          const region = data.region || {};
+          for (const r of ['negara', 'provinsi', 'kabupaten', 'kecamatan']) {
+            const key = sanitizeKey(region[r]);
+            if (key) {
+              tasks.push(remove(ref(db, `leaderboard/${r}/${key}/exp/${uid}`)).catch(() => {}));
+              tasks.push(remove(ref(db, `leaderboard/${r}/${key}/points/${uid}`)).catch(() => {}));
+            }
+          }
+          // Hapus name registry
+          if (name) {
+            tasks.push(remove(ref(db, `nameRegistry/${name}`)).catch(() => {}));
+          }
+          count++;
+        }
+      });
+
+      await Promise.all(tasks);
+      if (count > 0) {
+        showToast(`🧹 ${count} akun bot dihapus otomatis`, 3000);
+        if (lbView.unsubscribe) {
+          // Refresh leaderboard setelah cleanup
+          setTimeout(() => loadLeaderboard(), 500);
+        }
+      } else {
+        console.log('✅ Tidak ada bot ditemukan');
+      }
+    } catch (e) {
+      console.warn('Auto-cleanup error (mungkin permission):', e);
+    }
+  }
+
+  // Manual cleanup (tombol admin)
   async function handleAdminCleanup() {
     if (!state.isOwner) return;
-    const keyword = prompt(
-      'Kata kunci nama yang mau dihapus dari leaderboard (contoh: test, bot, dummy):',
-      'test'
-    );
-    if (!keyword) return;
     showModal(
-      '🧹 Bersihkan Data Test?',
-      `Hapus SEMUA entry leaderboard yang namanya mengandung "${keyword}" (case-insensitive). Ini juga akan hapus data /users/ mereka. Lanjutkan?`,
+      '🧹 Bersihkan Data Bot/Test?',
+      `Hapus SEMUA akun yang namanya mengandung: ${BOT_KEYWORDS.join(', ')}. Lanjutkan?`,
       'Ya, Bersihkan',
       async () => {
-        try {
-          showToast('🧹 Membersihkan...', 3000);
-          const snap = await get(ref(db, 'leaderboard/global/exp'));
-          if (!snap.exists()) { showToast('Tidak ada data'); return; }
-          let deleted = 0;
-          const tasks = [];
-          snap.forEach(child => {
-            const data = child.val();
-            const uid = child.key;
-            const name = (data.name || '').toLowerCase();
-            if (name.includes(keyword.toLowerCase())) {
-              // Hapus dari semua wilayah
-              const paths = [
-                `users/${uid}`,
-                `leaderboard/global/exp/${uid}`,
-                `leaderboard/global/points/${uid}`,
-              ];
-              const region = data.region || {};
-              for (const r of ['negara', 'provinsi', 'kabupaten', 'kecamatan']) {
-                const key = sanitizeKey(region[r]);
-                if (key) {
-                  paths.push(`leaderboard/${r}/${key}/exp/${uid}`);
-                  paths.push(`leaderboard/${r}/${key}/points/${uid}`);
-                }
-              }
-              paths.forEach(p => {
-                tasks.push(remove(ref(db, p)).catch(() => {}));
-              });
-              deleted++;
-            }
-          });
-          await Promise.all(tasks);
-          showToast(`✅ ${deleted} akun test dihapus`);
-        } catch (e) {
-          console.error('Cleanup error:', e);
-          showToast('❌ Gagal: ' + e.message);
-        }
+        showToast('🧹 Memindai...', 3000);
+        await autoCleanupBots();
       }
     );
   }
@@ -1213,19 +1291,19 @@
     if (newName === null) return;
     const trimmed = newName.trim().substring(0, 15);
     if (!isValidName(trimmed)) {
-      showToast('❌ Nama tidak valid. Tambah angka/karakter.');
+      showToast('❌ Nama tidak valid.');
       return;
     }
-    // Cek duplikat nama di nameRegistry
+    const oldName = state.name;
     get(ref(db, `nameRegistry/${trimmed}`)).then(snap => {
       if (snap.exists() && snap.val().uid !== state.uid) {
-        showToast('❌ Nama sudah dipakai pemain lain.');
+        showToast('❌ Nama sudah dipakai.');
         return;
       }
-      // Hapus nama lama dari registry
-      if (state.name) remove(ref(db, `nameRegistry/${state.name}`)).catch(() => {});
+      if (oldName && oldName !== trimmed) {
+        remove(ref(db, `nameRegistry/${oldName}`)).catch(() => {});
+      }
       state.name = trimmed;
-      // Reserve nama baru
       set(ref(db, `nameRegistry/${trimmed}`), { uid: state.uid, ts: Date.now() }).catch(() => {});
       if (auth.currentUser && !auth.currentUser.isAnonymous) {
         updateProfile(auth.currentUser, { displayName: state.name }).catch(() => {});
@@ -1234,7 +1312,6 @@
       debouncedSave();
       showToast('✏️ Nama: ' + state.name);
     }).catch(() => {
-      // Fallback kalau cek gagal
       state.name = trimmed;
       updateUI();
       debouncedSave();
@@ -1245,19 +1322,33 @@
   // ===== AUTH STATE =====
   onAuthStateChanged(auth, async (user) => {
     if (user) {
+      // ⚠️ RESET total state dulu
+      const oldUid = state.uid;
+      state = DEFAULT_STATE();
       state.uid = user.uid;
       state.email = user.email || null;
       state.isAnonymous = user.isAnonymous;
       state.isOwner = (user.email === OWNER_EMAIL);
-      if (user.displayName && !state.name) state.name = user.displayName;
+      if (user.displayName) state.name = user.displayName;
+
+      // Kalau user berbeda dari sebelumnya, pastikan localStorage bersih
+      if (oldUid && oldUid !== user.uid) {
+        clearLocalState();
+      }
+
       loginScreen.classList.add('hidden');
       gameContainer.style.display = 'flex';
       await loadFromCloud(user.uid);
       updateUI();
+
+      // Auto-cleanup untuk owner (delay biar load selesai dulu)
+      if (state.isOwner) {
+        setTimeout(() => autoCleanupBots(), 2000);
+      }
     } else {
       loginScreen.classList.remove('hidden');
       gameContainer.style.display = 'none';
-      state.uid = null; state.email = null; state.isAnonymous = true; state.isOwner = false;
+      state = DEFAULT_STATE();
       dbRef = null;
       guestBtn.disabled = false;
       guestBtn.textContent = '🎮 Main sebagai Guest';
@@ -1295,7 +1386,7 @@
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v0.04 ready');
+  console.log('🌳 Compound Harvest v0.05 ready');
 </script>
 </body>
 </html>
