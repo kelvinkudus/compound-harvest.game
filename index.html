@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.8</title>
+  <title>Compound Harvest 1 · v0.9</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
     body { background: #1b3b1b; background-image: radial-gradient(circle at 20% 30%, #2e5e2e, #0f1f0f);
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
       margin: 0; overflow: hidden; user-select: none; }
-    .game-container { width: 100%; max-width: 500px; height: 100vh; max-height: 100dvh;
+    .game-container { width: 100%; max-width: 500px; height: 100vh; height: 100dvh;
       background: #1e2b1e; display: flex; flex-direction: column;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); overflow: hidden; position: relative; }
 
@@ -64,7 +64,11 @@
     .cloud-status.saved { color: #a0f0a0; }
     .cloud-status.offline { color: #ff9090; }
 
-    main { flex: 1; overflow-y: auto; padding: 16px 16px 80px; display: flex; flex-direction: column; scroll-behavior: smooth; }
+    /* ===== MAIN CONTENT ===== */
+    /* Padding bawah diperbesar jadi 120px supaya tidak ketutup nav */
+    main { flex: 1; overflow-y: auto; padding: 16px 16px 120px;
+      display: flex; flex-direction: column; scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch; }
     .page { display: none; flex-direction: column; gap: 16px; }
     .page.active { display: flex; }
 
@@ -130,11 +134,8 @@
     .lb-loading .loading-spinner { width: 24px; height: 24px; border-width: 3px; }
     .lb-region-info { background: #0c180c; border-radius: 12px; padding: 8px 12px;
       font-size: 0.75rem; color: #8fa88f; border: 1px dashed #3a5a3a; text-align: center; }
-    .lb-badge {
-      display: inline-block; font-size: 0.65rem;
-      padding: 1px 6px; border-radius: 8px; font-weight: 700;
-      vertical-align: middle;
-    }
+    .lb-badge { display: inline-block; font-size: 0.65rem; padding: 1px 6px;
+      border-radius: 8px; font-weight: 700; vertical-align: middle; }
     .lb-badge.github { background: #24292e; color: #fff; border: 1px solid #444c56; }
     .lb-badge.email { background: #3a5a3a; color: #d0f0c0; border: 1px solid #5a8a5a; }
     .lb-badge.guest { background: #3a3a2a; color: #e0d0a0; border: 1px solid #6a6a4a; }
@@ -192,23 +193,73 @@
       border-radius: 50px; justify-content: space-around; font-weight: 600;
       color: #d0e8c0; border: 1px solid #527a52; }
 
-    .bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: #0f1a0f;
-      display: flex; border-top: 2px solid #3f6b3f; padding: 6px 0;
-      padding-bottom: max(6px, env(safe-area-inset-bottom)); z-index: 10; }
-    .nav-item { flex: 1; background: transparent; border: none; color: #8aa88a;
-      font-weight: 600; padding: 10px 0; font-size: 0.75rem;
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
-      cursor: pointer; transition: 0.1s; touch-action: manipulation; }
-    .nav-item.active { color: #d4f0b0; background: #1e2f1e; border-radius: 20px; margin: 0 2px; }
-    .nav-icon { font-size: 1.3rem; }
+    /* ===== BOTTOM NAV (DIPERBAIKI) ===== */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: #0f1a0f;
+      display: flex;
+      border-top: 2px solid #3f6b3f;
+      padding: 6px 0;
+      /* Safe area untuk gesture bar HP */
+      padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+      z-index: 20;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-item {
+      flex: 1 1 0;
+      min-width: 0;          /* penting: biar flex bisa menyusut */
+      background: transparent;
+      border: none;
+      color: #8aa88a;
+      font-weight: 600;
+      padding: 6px 2px;
+      font-size: 0.65rem;    /* diperkecil dari 0.75 */
+      line-height: 1.1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      transition: 0.1s;
+      touch-action: manipulation;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-item.active {
+      color: #d4f0b0;
+      background: #1e2f1e;
+      border-radius: 16px;
+      margin: 0 2px;
+    }
+
+    .nav-icon {
+      font-size: 1.35rem;
+      line-height: 1;
+      display: block;
+    }
+
+    .nav-label {
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     .profile-card { background: #1e2f1e; border-radius: 24px; padding: 16px;
       border: 1px solid #5b875b; display: flex; flex-direction: column; gap: 10px; }
     .profile-row { display: flex; justify-content: space-between; align-items: center;
-      background: #162316; border-radius: 50px; padding: 10px 16px; border: 1px solid #3f5f3f; }
-    .profile-label { color: #8fa88f; font-size: 0.85rem; }
+      background: #162316; border-radius: 50px; padding: 10px 16px; border: 1px solid #3f5f3f; gap: 8px; }
+    .profile-label { color: #8fa88f; font-size: 0.85rem; white-space: nowrap; }
     .profile-value { color: #e0f0d0; font-weight: 700; font-size: 0.9rem;
-      word-break: break-word; text-align: right; max-width: 60%; }
+      word-break: break-word; text-align: right; max-width: 65%; }
     .profile-avatar {
       width: 60px; height: 60px; border-radius: 50%;
       background: #0c180c; border: 2px solid #5b875b;
@@ -224,7 +275,6 @@
     .admin-btn { background: #4a3d2a; border-color: #a08050; color: #ffe08a; }
     .delete-btn { background: #8a2a2a; border-color: #c06060; }
     .lock-btn { background: #4a3a1e; border-color: #a08040; color: #ffd980; }
-    .github-btn { background: #24292e; border-color: #444c56; color: #fff; }
     .locked-display { background: #1e2f1e; border: 1px solid #5b875b; border-radius: 24px;
       padding: 16px; display: flex; flex-direction: column; gap: 8px; }
     .locked-display .title { color: #ffd980; font-weight: 700; font-size: 0.95rem;
@@ -325,10 +375,20 @@
     main::-webkit-scrollbar { width: 4px; }
     main::-webkit-scrollbar-thumb { background: #4a704a; border-radius: 10px; }
 
+    /* HP sangat kecil */
     @media (max-width: 380px) {
       .inv-grid { grid-template-columns: repeat(2, 1fr); }
       .inv-icon { font-size: 1.8rem; }
       .inv-amount { font-size: 1.1rem; }
+      .nav-item { font-size: 0.6rem; padding: 5px 1px; }
+      .nav-icon { font-size: 1.25rem; }
+    }
+
+    /* HP tinggi (iPhone X+ dsb) */
+    @supports (padding: max(0px)) {
+      .bottom-nav {
+        padding-bottom: max(6px, env(safe-area-inset-bottom));
+      }
     }
   </style>
 </head>
@@ -339,7 +399,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v0.8 · GitHub Login</p>
+    <p>v0.9 · UI Fix</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -493,16 +553,32 @@
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.8</div>
+      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.9</div>
     </div>
   </main>
 
+  <!-- ===== BOTTOM NAV ===== -->
   <div class="bottom-nav">
-    <button class="nav-item active" data-page="tanam"><span class="nav-icon">🌳</span>Tanam</button>
-    <button class="nav-item" data-page="leaderboard"><span class="nav-icon">🥇</span>Peringkat</button>
-    <button class="nav-item" data-page="inventori"><span class="nav-icon">🎒</span>Inventori</button>
-    <button class="nav-item" data-page="toko"><span class="nav-icon">🛒</span>Toko</button>
-    <button class="nav-item" data-page="akun"><span class="nav-icon">👤</span>Akun</button>
+    <button class="nav-item active" data-page="tanam">
+      <span class="nav-icon">🌳</span>
+      <span class="nav-label">Tanam</span>
+    </button>
+    <button class="nav-item" data-page="leaderboard">
+      <span class="nav-icon">🥇</span>
+      <span class="nav-label">Rank</span>
+    </button>
+    <button class="nav-item" data-page="inventori">
+      <span class="nav-icon">🎒</span>
+      <span class="nav-label">Invent</span>
+    </button>
+    <button class="nav-item" data-page="toko">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Toko</span>
+    </button>
+    <button class="nav-item" data-page="akun">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Akun</span>
+    </button>
   </div>
 </div>
 
@@ -616,7 +692,7 @@
     water: 0, fertilizer: 0, exp: 0, level: 1,
     name: 'Petani', waterSinceFertilizer: 0, skipUsedThisLevel: false,
     uid: null, email: null, isAnonymous: true,
-    provider: 'guest',       // 'guest' | 'email' | 'github'
+    provider: 'guest',
     displayName: '',
     photoURL: '',
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
@@ -630,7 +706,7 @@
   let saveTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v08_state';
+  const LOCAL_KEY = 'compoundHarvest_v09_state';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
@@ -805,19 +881,15 @@
     if (!name) return '';
     return String(name).replace(/[^a-zA-Z0-9_]/g, '_').substring(0, 15);
   }
-
   async function generateUniqueName(baseName) {
     baseName = sanitizeName(baseName) || 'Petani';
-    // Kalau baseName = "Petani" telanjang, tambah angka
     if (baseName.toLowerCase() === 'petani') {
       baseName = `Petani_${Math.floor(1000 + Math.random() * 9000)}`;
     }
-    // Cek apakah tersedia
     try {
       const snap = await get(ref(db, `nameRegistry/${baseName}`));
       if (!snap.exists()) return baseName;
     } catch (e) { return baseName; }
-    // Kalau sudah ada, coba tambah angka
     for (let i = 0; i < 30; i++) {
       const suffix = Math.floor(1000 + Math.random() * 9000);
       const candidate = `${baseName.substring(0, 11)}_${suffix}`;
@@ -828,7 +900,6 @@
     }
     return `Petani_${Date.now().toString().slice(-5)}`;
   }
-
   async function generateUniqueGuestName() {
     for (let i = 0; i < 30; i++) {
       const suffix = Math.floor(1000 + Math.random() * 9000);
@@ -840,7 +911,6 @@
     }
     return `Petani_${Date.now().toString().slice(-5)}`;
   }
-
   function isValidName(name) {
     if (!name || typeof name !== 'string') return false;
     const trimmed = name.trim();
@@ -852,21 +922,12 @@
   // ===== INVENTORY =====
   function getInventoryItems() {
     return [
-      {
-        id: 'water', icon: '💧', name: 'Air',
-        amount: state.water, unit: 'L',
-        desc: 'Untuk menyiram pohon. 1L = +10 Exp',
-        className: 'water', max: 5000,
-      },
-      {
-        id: 'fertilizer', icon: '🧪', name: 'Pupuk',
-        amount: state.fertilizer, unit: 'Kg',
-        desc: 'Beri tiap 10 siram agar efek air tetap 10/L',
-        className: 'fertilizer', max: 100,
-      },
+      { id: 'water', icon: '💧', name: 'Air', amount: state.water, unit: 'L',
+        desc: 'Untuk menyiram pohon. 1L = +10 Exp', className: 'water', max: 5000 },
+      { id: 'fertilizer', icon: '🧪', name: 'Pupuk', amount: state.fertilizer, unit: 'Kg',
+        desc: 'Beri tiap 10 siram agar efek air tetap 10/L', className: 'fertilizer', max: 100 },
     ];
   }
-
   function renderInventory() {
     if (!invGrid) return;
     const items = getInventoryItems();
@@ -945,7 +1006,6 @@
     profileEmail.textContent = state.email || '-';
     profileUid.textContent = state.uid ? state.uid.substring(0, 20) + '...' : '-';
 
-    // Tipe user + avatar
     if (state.provider === 'github') {
       profileType.textContent = '🐙 GitHub';
       if (state.photoURL) {
@@ -977,7 +1037,6 @@
       profileDaily.style.color = '#8fa88f';
     }
 
-    // Upgrade button (untuk Guest & Email → GitHub / Guest → Email)
     if (state.provider === 'guest') {
       upgradeBtn.style.display = 'block';
       upgradeBtn.textContent = '🔗 Upgrade Akun';
@@ -988,7 +1047,6 @@
       upgradeBtn.style.display = 'none';
     }
 
-    // Delete button (hanya Guest)
     if (state.provider === 'guest') deleteAccountBtn.classList.remove('hidden');
     else deleteAccountBtn.classList.add('hidden');
 
@@ -1111,7 +1169,6 @@
         showToast('☁️ Data dimuat');
       } else {
         isNewAccount = true;
-        // Generate nama unik
         if (!isValidName(state.name)) {
           if (state.provider === 'github' && state.displayName) {
             state.name = await generateUniqueName(state.displayName);
@@ -1201,10 +1258,8 @@
         snapshot.forEach(child => {
           const v = child.val() || {};
           rows.push({
-            uid: child.key,
-            name: v.name || 'Petani',
-            value: v.value || 0,
-            provider: v.provider || 'guest',
+            uid: child.key, name: v.name || 'Petani',
+            value: v.value || 0, provider: v.provider || 'guest',
           });
         });
         rows.sort((a, b) => b.value - a.value);
@@ -1236,7 +1291,6 @@
       else if (rank === 3) { rankClass = 'bronze'; rankIcon = '🥉'; }
       const isMe = row.uid === state.uid;
 
-      // Badge provider
       let badge = '';
       if (row.provider === 'github') badge = `<span class="lb-badge github">🐙</span>`;
       else if (row.provider === 'email') badge = `<span class="lb-badge email">📧</span>`;
@@ -1461,7 +1515,6 @@
 
   // ===== REGION MODAL =====
   let regionCountdownTimer = null;
-
   function openRegionModal() {
     if (state.regionLocked && hasRegion()) {
       showToast('🔒 Wilayah sudah terkunci. Hubungi admin.');
@@ -1477,33 +1530,27 @@
     regionModalBackdrop.classList.remove('hidden');
     setTimeout(() => regProvince.focus(), 100);
   }
-
   function closeRegionModal() {
     regionModalBackdrop.classList.add('hidden');
     if (regionCountdownTimer) { clearInterval(regionCountdownTimer); regionCountdownTimer = null; }
   }
-
   function goToRegionConfirm() {
     const negara = regCountry.value.trim();
     const provinsi = regProvince.value.trim();
     const kabupaten = regRegency.value.trim();
     const kecamatan = regDistrict.value.trim();
-
     if (!negara || !provinsi || !kabupaten || !kecamatan) {
       showToast('❌ Semua field wajib diisi!');
       return;
     }
-
     regionPreview.innerHTML = `
       <div class="row"><span>🌍</span><span>${escapeHtml(negara)}</span></div>
       <div class="row"><span>🏙️</span><span>${escapeHtml(provinsi)}</span></div>
       <div class="row"><span>🏘️</span><span>${escapeHtml(kabupaten)}</span></div>
       <div class="row"><span>🏡</span><span>${escapeHtml(kecamatan)}</span></div>
     `;
-
     regionModalStep1.classList.add('hidden');
     regionModalStep2.classList.remove('hidden');
-
     let count = 3;
     regionModalConfirm.disabled = true;
     regionModalConfirm.textContent = `Ya (${count})`;
@@ -1520,7 +1567,6 @@
       }
     }, 1000);
   }
-
   async function confirmRegionLock() {
     if (state.regionLocked && hasRegion()) {
       showToast('🔒 Wilayah sudah terkunci.');
@@ -1531,23 +1577,18 @@
     const provinsi = regProvince.value.trim();
     const kabupaten = regRegency.value.trim();
     const kecamatan = regDistrict.value.trim();
-
     if (!negara || !provinsi || !kabupaten || !kecamatan) {
       showToast('❌ Semua field wajib diisi!');
       return;
     }
-
     state.region = { negara, provinsi, kabupaten, kecamatan };
     state.regionLocked = true;
-
     closeRegionModal();
     updateUI();
     await saveToCloud();
     await updateLeaderboardEntries().catch(() => {});
-
     showToast('🔒 Wilayah tersimpan & terkunci!');
   }
-
   regionModalCancel.addEventListener('click', closeRegionModal);
   regionModalNext.addEventListener('click', goToRegionConfirm);
   regionModalBack.addEventListener('click', () => {
@@ -1585,7 +1626,6 @@
     }
     errorMsg.classList.add('hidden');
   }
-
   async function handleGuest() {
     guestBtn.disabled = true;
     guestBtn.innerHTML = '<span class="loading-spinner"></span> Memuat...';
@@ -1600,7 +1640,6 @@
       guestBtn.textContent = '🎮 Main sebagai Guest';
     }
   }
-
   async function handleGithubLogin() {
     githubLoginBtn.disabled = true;
     githubLoginBtn.innerHTML = '<span class="loading-spinner"></span> Menghubungkan...';
@@ -1609,17 +1648,13 @@
       state = DEFAULT_STATE();
       state.provider = 'github';
       const provider = new GithubAuthProvider();
-      // Pakai popup (bisa di HP modern)
       try {
         const result = await signInWithPopup(auth, provider);
-        // Ambil info dari GitHub
         const user = result.user;
-        state.displayName = user.displayName || user.reloadUserInfo?.screenName || 'GitHub User';
+        state.displayName = user.displayName || 'GitHub User';
         state.photoURL = user.photoURL || '';
       } catch (popupError) {
-        // Fallback ke redirect kalau popup diblokir
         if (popupError.code === 'auth/popup-blocked' || popupError.code === 'auth/popup-closed-by-user') {
-          console.log('Popup gagal, pakai redirect...');
           await signInWithRedirect(auth, provider);
         } else {
           throw popupError;
@@ -1647,7 +1682,6 @@
       `;
     }
   }
-
   async function handleLogin() {
     const email = $('loginEmail').value.trim();
     const pw = $('loginPassword').value;
@@ -1669,7 +1703,6 @@
       loginSubmitBtn.textContent = '🔑 Masuk';
     }
   }
-
   async function handleRegister() {
     const name = $('regName').value.trim();
     const email = $('regEmail').value.trim();
@@ -1680,7 +1713,6 @@
     if (!email || !pw) { showError('Email dan password wajib diisi'); return; }
     if (pw.length < 6) { showError('Password minimal 6 karakter'); return; }
     if (pw !== pw2) { showError('Password tidak sama'); return; }
-
     registerSubmitBtn.disabled = true;
     registerSubmitBtn.innerHTML = '<span class="loading-spinner"></span> Mendaftar...';
     try {
@@ -1700,26 +1732,17 @@
       registerSubmitBtn.textContent = '📝 Daftar';
     }
   }
-
   async function handleForgot() {
     const email = prompt('Email untuk reset:');
     if (!email) return;
     try { await sendPasswordResetEmail(auth, email); showToast('📧 Email reset terkirim!'); }
     catch (e) { showError('Gagal: ' + e.message); }
   }
-
-  // ===== UPGRADE AKUN =====
   async function handleUpgrade() {
     if (state.provider === 'github') { showToast('Sudah GitHub.'); return; }
-
     if (state.provider === 'guest') {
-      // Guest → pilih upgrade ke Email atau GitHub
-      const choice = prompt(
-        'Upgrade ke:\n1 = Email/Password\n2 = GitHub\n\nKetik angka:',
-        '1'
-      );
+      const choice = prompt('Upgrade ke:\n1 = Email/Password\n2 = GitHub\n\nKetik angka:', '1');
       if (choice === '1') {
-        // Upgrade ke Email
         const email = prompt('Email baru:');
         if (!email) return;
         const pw = prompt('Password (min 6):');
@@ -1735,12 +1758,9 @@
           showToast('❌ ' + msg);
         }
       } else if (choice === '2') {
-        // Upgrade ke GitHub
         try {
           const provider = new GithubAuthProvider();
-          const result = await signInWithPopup(auth, provider);
-          // linkWithCredential otomatis via signInWithPopup? Tidak. Kita harus link manual.
-          // Tapi Firebase sudah otomatis link kalau user sudah login.
+          await signInWithPopup(auth, provider);
           showToast('🐙 Akun di-link ke GitHub!');
         } catch (e) {
           let msg = e.message;
@@ -1752,7 +1772,6 @@
         }
       }
     } else if (state.provider === 'email') {
-      // Email → GitHub (link)
       try {
         const provider = new GithubAuthProvider();
         await signInWithPopup(auth, provider);
@@ -1766,7 +1785,6 @@
       }
     }
   }
-
   async function handleLogout() {
     if (!confirm('Logout? Data tetap tersimpan di cloud.')) return;
     if (saveTimer) clearTimeout(saveTimer);
@@ -1775,13 +1793,11 @@
     clearLocalState();
     await signOut(auth);
   }
-
   async function handleDeleteAccount() {
     if (state.provider !== 'guest') { showToast('Hanya untuk Guest.'); return; }
     const uidToDelete = state.uid;
     const nameToDelete = state.name;
     const regionToDelete = { ...state.region };
-
     showModal(
       '⚠️ Hapus Data Permainan?',
       `Semua progress "${nameToDelete}" akan DIHAPUS PERMANEN. Ketik "HAPUS" untuk konfirmasi.`,
@@ -1826,7 +1842,6 @@
       true
     );
   }
-
   function isBotName(name) {
     if (!name) return false;
     const lower = name.toLowerCase().trim();
@@ -1835,7 +1850,6 @@
     }
     return false;
   }
-
   async function autoCleanupBots() {
     if (!state.isOwner) return;
     try {
@@ -1874,7 +1888,6 @@
       console.warn('Auto-cleanup error:', e);
     }
   }
-
   async function handleAdminCleanup() {
     if (!state.isOwner) return;
     showModal(
@@ -1887,7 +1900,6 @@
       }
     );
   }
-
   function handleEditName() {
     const newName = prompt('Nama baru (jangan "Petani" saja):', state.name);
     if (newName === null) return;
@@ -1925,8 +1937,6 @@
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const oldUid = state.uid;
-
-      // Deteksi provider
       let provider = 'guest';
       if (user.providerData && user.providerData.length > 0) {
         const p = user.providerData[0].providerId;
@@ -1943,7 +1953,6 @@
       state.displayName = user.displayName || '';
       state.photoURL = user.photoURL || '';
       state.isOwner = (user.email === OWNER_EMAIL);
-
       if (user.displayName && !state.name) state.name = user.displayName;
 
       if (oldUid && oldUid !== user.uid) clearLocalState();
@@ -1976,7 +1985,6 @@
     }
   });
 
-  // Handle redirect result (kalau pakai signInWithRedirect)
   try {
     const redirectResult = await getRedirectResult(auth);
     if (redirectResult && redirectResult.user) {
@@ -2014,7 +2022,7 @@
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v0.8 ready');
+  console.log('🌳 Compound Harvest v0.9 ready');
 </script>
 </body>
 </html>
