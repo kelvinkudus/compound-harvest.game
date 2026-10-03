@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.7</title>
+  <title>Compound Harvest 1 · v0.8</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
@@ -31,10 +31,14 @@
     .form-input::placeholder { color: #6a8a6a; }
     .btn-login { padding: 14px; border-radius: 40px; border: none; background: #4a7a4a;
       color: #fff; font-weight: 700; font-size: 1.05rem; box-shadow: 0 5px 0 #1e3a1e;
-      cursor: pointer; transition: transform 0.05s; touch-action: manipulation; margin-top: 4px; }
+      cursor: pointer; transition: transform 0.05s; touch-action: manipulation; margin-top: 4px;
+      display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-login:active { transform: translateY(5px); box-shadow: 0 0 0 #1e3a1e; }
     .btn-login:disabled { opacity: 0.5; pointer-events: none; box-shadow: 0 3px 0 #1e3a1e; }
     .btn-guest { background: #6a5a2a; box-shadow: 0 5px 0 #3a2f10; }
+    .btn-guest:active { box-shadow: 0 0 0 #3a2f10; }
+    .btn-github { background: #24292e; box-shadow: 0 5px 0 #0d1117; border: 1px solid #444c56; }
+    .btn-github:active { transform: translateY(5px); box-shadow: 0 0 0 #0d1117; }
     .btn-link { background: transparent; border: none; color: #a0d0a0; text-decoration: underline;
       font-size: 0.95rem; cursor: pointer; padding: 8px; touch-action: manipulation; }
     .divider { display: flex; align-items: center; gap: 8px; color: #6a8a6a; font-size: 0.85rem; margin: 4px 0; }
@@ -114,7 +118,8 @@
     .lb-rank.bronze { color: #cd7f32; }
     .lb-info { flex: 1; min-width: 0; }
     .lb-name { color: #e0f0d0; font-weight: 700; font-size: 0.95rem;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      display: flex; align-items: center; gap: 4px; }
     .lb-name.me { color: #ffe08a; }
     .lb-sub { color: #8fa88f; font-size: 0.72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .lb-value { font-weight: 800; color: #d4f0b0; font-size: 1rem; white-space: nowrap; text-align: right; }
@@ -125,95 +130,50 @@
     .lb-loading .loading-spinner { width: 24px; height: 24px; border-width: 3px; }
     .lb-region-info { background: #0c180c; border-radius: 12px; padding: 8px 12px;
       font-size: 0.75rem; color: #8fa88f; border: 1px dashed #3a5a3a; text-align: center; }
+    .lb-badge {
+      display: inline-block; font-size: 0.65rem;
+      padding: 1px 6px; border-radius: 8px; font-weight: 700;
+      vertical-align: middle;
+    }
+    .lb-badge.github { background: #24292e; color: #fff; border: 1px solid #444c56; }
+    .lb-badge.email { background: #3a5a3a; color: #d0f0c0; border: 1px solid #5a8a5a; }
+    .lb-badge.guest { background: #3a3a2a; color: #e0d0a0; border: 1px solid #6a6a4a; }
 
-    /* ===== INVENTORI ===== */
-    .inv-header {
-      background: #162316; border-radius: 20px; padding: 14px 16px;
+    /* INVENTORI */
+    .inv-header { background: #162316; border-radius: 20px; padding: 14px 16px;
       border: 1px solid #3a5a3a; display: flex; justify-content: space-between;
-      align-items: center; gap: 10px;
-    }
-    .inv-header .title {
-      color: #d4f0b0; font-weight: 700; font-size: 1.05rem;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .inv-header .count {
-      background: #0c180c; color: #a0d0a0;
-      padding: 4px 12px; border-radius: 30px;
-      font-size: 0.8rem; font-weight: 600;
-      border: 1px solid #4a704a;
-    }
-    .inv-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
-    }
-    .inv-card {
-      background: #162316; border-radius: 18px;
+      align-items: center; gap: 10px; }
+    .inv-header .title { color: #d4f0b0; font-weight: 700; font-size: 1.05rem;
+      display: flex; align-items: center; gap: 6px; }
+    .inv-header .count { background: #0c180c; color: #a0d0a0;
+      padding: 4px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 600;
+      border: 1px solid #4a704a; }
+    .inv-grid { display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+    .inv-card { background: #162316; border-radius: 18px;
       padding: 14px 12px; border: 1px solid #3a5a3a;
-      display: flex; flex-direction: column;
-      gap: 6px; transition: 0.15s; position: relative;
-      overflow: hidden;
-    }
-    .inv-card::before {
-      content: ''; position: absolute;
-      top: 0; left: 0; right: 0; height: 3px;
-    }
+      display: flex; flex-direction: column; gap: 6px; transition: 0.15s;
+      position: relative; overflow: hidden; }
+    .inv-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
     .inv-card.water::before { background: linear-gradient(90deg, #4fa8ff, #80d0ff); }
     .inv-card.fertilizer::before { background: linear-gradient(90deg, #9fdf4f, #4caf50); }
-    .inv-card.diamond::before { background: linear-gradient(90deg, #a0e0ff, #60c0f0); }
-    .inv-card.money::before { background: linear-gradient(90deg, #ffd980, #c9a23f); }
-    .inv-card.points::before { background: linear-gradient(90deg, #ffb060, #e08040); }
-
-    .inv-icon {
-      font-size: 2.2rem; line-height: 1;
-      text-align: center; margin-bottom: 2px;
-    }
-    .inv-name {
-      color: #e0f0d0; font-weight: 700; font-size: 0.95rem;
-      text-align: center;
-    }
-    .inv-amount {
-      text-align: center; font-weight: 800; font-size: 1.3rem;
-      padding: 4px 0;
-    }
+    .inv-icon { font-size: 2.2rem; line-height: 1; text-align: center; margin-bottom: 2px; }
+    .inv-name { color: #e0f0d0; font-weight: 700; font-size: 0.95rem; text-align: center; }
+    .inv-amount { text-align: center; font-weight: 800; font-size: 1.3rem; padding: 4px 0; }
     .inv-amount.water { color: #80d0ff; }
     .inv-amount.fertilizer { color: #9fdf4f; }
-    .inv-amount.diamond { color: #a0e0ff; }
-    .inv-amount.money { color: #ffd980; }
-    .inv-amount.points { color: #ffb060; }
-    .inv-unit {
-      font-size: 0.75rem; font-weight: 500;
-      color: #8fa88f; margin-left: 2px;
-    }
-    .inv-desc {
-      font-size: 0.72rem; color: #8fa88f;
-      text-align: center; line-height: 1.35;
-      border-top: 1px dashed #2a3a2a;
-      padding-top: 6px; margin-top: 2px;
-    }
-    .inv-bar {
-      width: 100%; height: 6px;
-      background: #0c180c; border-radius: 10px;
-      overflow: hidden; margin-top: 2px;
-    }
-    .inv-bar-fill {
-      height: 100%; width: 0%;
-      transition: width 0.3s ease;
-      border-radius: 10px;
-    }
+    .inv-unit { font-size: 0.75rem; font-weight: 500; color: #8fa88f; margin-left: 2px; }
+    .inv-desc { font-size: 0.72rem; color: #8fa88f; text-align: center; line-height: 1.35;
+      border-top: 1px dashed #2a3a2a; padding-top: 6px; margin-top: 2px; }
+    .inv-bar { width: 100%; height: 6px; background: #0c180c; border-radius: 10px;
+      overflow: hidden; margin-top: 2px; }
+    .inv-bar-fill { height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 10px; }
     .inv-bar-fill.water { background: linear-gradient(90deg, #4fa8ff, #80d0ff); }
     .inv-bar-fill.fertilizer { background: linear-gradient(90deg, #9fdf4f, #4caf50); }
-    .inv-tip {
-      text-align: center; font-size: 0.72rem;
-      color: #6a8a6a; margin-top: 8px;
-      padding: 0 8px;
-    }
-    .inv-section-title {
-      color: #8fa88f; font-size: 0.72rem;
-      text-transform: uppercase; letter-spacing: 1px;
-      font-weight: 600; padding-left: 4px;
-      margin-top: 4px;
-    }
+    .inv-tip { text-align: center; font-size: 0.72rem; color: #6a8a6a; margin-top: 8px; padding: 0 8px; }
+    .inv-section-title { color: #8fa88f; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+      padding-left: 4px; margin-top: 4px; }
 
     /* SHOP & PROFILE */
     .shop-item { background: #1e2f1e; border-radius: 20px; padding: 14px 16px;
@@ -249,6 +209,14 @@
     .profile-label { color: #8fa88f; font-size: 0.85rem; }
     .profile-value { color: #e0f0d0; font-weight: 700; font-size: 0.9rem;
       word-break: break-word; text-align: right; max-width: 60%; }
+    .profile-avatar {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: #0c180c; border: 2px solid #5b875b;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin: 0 auto 8px;
+      overflow: hidden;
+    }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .edit-btn { background: #3b5e3b; border: none; color: white; padding: 10px 16px;
       border-radius: 40px; font-weight: 600; cursor: pointer; touch-action: manipulation;
       border: 1px solid #7fa07f; font-size: 0.9rem; }
@@ -256,6 +224,7 @@
     .admin-btn { background: #4a3d2a; border-color: #a08050; color: #ffe08a; }
     .delete-btn { background: #8a2a2a; border-color: #c06060; }
     .lock-btn { background: #4a3a1e; border-color: #a08040; color: #ffd980; }
+    .github-btn { background: #24292e; border-color: #444c56; color: #fff; }
     .locked-display { background: #1e2f1e; border: 1px solid #5b875b; border-radius: 24px;
       padding: 16px; display: flex; flex-direction: column; gap: 8px; }
     .locked-display .title { color: #ffd980; font-weight: 700; font-size: 0.95rem;
@@ -356,7 +325,6 @@
     main::-webkit-scrollbar { width: 4px; }
     main::-webkit-scrollbar-thumb { background: #4a704a; border-radius: 10px; }
 
-    /* Mobile kecil: 2 kolom minimum */
     @media (max-width: 380px) {
       .inv-grid { grid-template-columns: repeat(2, 1fr); }
       .inv-icon { font-size: 1.8rem; }
@@ -371,7 +339,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v0.7 · Inventori</p>
+    <p>v0.8 · GitHub Login</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -394,7 +362,13 @@
     </div>
     <div class="divider">atau</div>
     <button class="btn-login btn-guest" id="guestBtn">🎮 Main sebagai Guest</button>
-    <div class="small-note">Guest: nama otomatis unik</div>
+    <button class="btn-login btn-github" id="githubLoginBtn" style="margin-top: 10px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+      Masuk dengan GitHub
+    </button>
+    <div class="small-note">Guest: nama otomatis unik · GitHub: data tersimpan permanen</div>
   </div>
 </div>
 
@@ -467,10 +441,8 @@
         <div class="title">🎒 Inventori</div>
         <div class="count" id="invItemCount">0 item</div>
       </div>
-
       <div class="inv-section-title">📦 Item Aktif</div>
       <div class="inv-grid" id="invGrid"></div>
-
       <div class="inv-tip">
         💡 Item bertambah dari pembelian di Toko & hadiah panen
       </div>
@@ -485,6 +457,7 @@
     <!-- AKUN -->
     <div id="pageAkun" class="page">
       <div class="profile-card">
+        <div class="profile-avatar" id="profileAvatar">👤</div>
         <div class="profile-row">
           <span class="profile-label">👤 Nama</span>
           <span class="profile-value" id="profileName">-</span>
@@ -520,7 +493,7 @@
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.7</div>
+      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.8</div>
     </div>
   </main>
 
@@ -615,7 +588,8 @@
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
   import { getAuth, signInAnonymously, createUserWithEmailAndPassword,
     signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile,
-    linkWithCredential, EmailAuthProvider, sendPasswordResetEmail, deleteUser }
+    linkWithCredential, EmailAuthProvider, sendPasswordResetEmail, deleteUser,
+    GithubAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
   const OWNER_EMAIL = "kelvinkudus@gmail.com";
@@ -642,6 +616,9 @@
     water: 0, fertilizer: 0, exp: 0, level: 1,
     name: 'Petani', waterSinceFertilizer: 0, skipUsedThisLevel: false,
     uid: null, email: null, isAnonymous: true,
+    provider: 'guest',       // 'guest' | 'email' | 'github'
+    displayName: '',
+    photoURL: '',
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
     regionLocked: false,
     lastDailyReward: '',
@@ -653,7 +630,7 @@
   let saveTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v07_state';
+  const LOCAL_KEY = 'compoundHarvest_v08_state';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
@@ -685,6 +662,7 @@
   const harvestBtn = $('harvestBtn');
   const pupukNote = $('pupukNote');
   const shopItemsContainer = $('shopItemsContainer');
+  const profileAvatar = $('profileAvatar');
   const profileName = $('profileName');
   const profileEmail = $('profileEmail');
   const profileUid = $('profileUid');
@@ -709,8 +687,6 @@
   const lbCategoryChips = $('lbCategoryChips');
   const lbRegionChips = $('lbRegionChips');
   const lbRegionInfo = $('lbRegionInfo');
-
-  // Inventori
   const invGrid = $('invGrid');
   const invItemCount = $('invItemCount');
 
@@ -719,6 +695,7 @@
   const loginForm = $('loginForm');
   const registerForm = $('registerForm');
   const guestBtn = $('guestBtn');
+  const githubLoginBtn = $('githubLoginBtn');
   const loginSubmitBtn = $('loginSubmitBtn');
   const registerSubmitBtn = $('registerSubmitBtn');
   const forgotBtn = $('forgotBtn');
@@ -795,18 +772,13 @@
     const dd = String(d.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   }
-  function hasClaimedDailyToday() {
-    return state.lastDailyReward === getTodayKey();
-  }
+  function hasClaimedDailyToday() { return state.lastDailyReward === getTodayKey(); }
   function showDailyRewardModal() { dailyRewardBackdrop.classList.remove('hidden'); }
   function hideDailyRewardModal() { dailyRewardBackdrop.classList.add('hidden'); }
 
   async function claimDailyReward() {
     const today = getTodayKey();
-    if (state.lastDailyReward === today) {
-      hideDailyRewardModal();
-      return;
-    }
+    if (state.lastDailyReward === today) { hideDailyRewardModal(); return; }
     state.money += DAILY_REWARD_AMOUNT;
     state.lastDailyReward = today;
     updateUI();
@@ -816,11 +788,7 @@
   }
 
   function checkAndShowDailyReward() {
-    if (hasClaimedDailyToday()) {
-      console.log('✅ Daily reward sudah diklaim hari ini');
-      return;
-    }
-    console.log('🎁 Daily reward tersedia!');
+    if (hasClaimedDailyToday()) return;
     showDailyRewardModal();
   }
 
@@ -833,6 +801,34 @@
   function clearLocalState() { try { localStorage.removeItem(LOCAL_KEY); } catch {} }
 
   // ===== NAMA UNIK =====
+  function sanitizeName(name) {
+    if (!name) return '';
+    return String(name).replace(/[^a-zA-Z0-9_]/g, '_').substring(0, 15);
+  }
+
+  async function generateUniqueName(baseName) {
+    baseName = sanitizeName(baseName) || 'Petani';
+    // Kalau baseName = "Petani" telanjang, tambah angka
+    if (baseName.toLowerCase() === 'petani') {
+      baseName = `Petani_${Math.floor(1000 + Math.random() * 9000)}`;
+    }
+    // Cek apakah tersedia
+    try {
+      const snap = await get(ref(db, `nameRegistry/${baseName}`));
+      if (!snap.exists()) return baseName;
+    } catch (e) { return baseName; }
+    // Kalau sudah ada, coba tambah angka
+    for (let i = 0; i < 30; i++) {
+      const suffix = Math.floor(1000 + Math.random() * 9000);
+      const candidate = `${baseName.substring(0, 11)}_${suffix}`;
+      try {
+        const snap = await get(ref(db, `nameRegistry/${candidate}`));
+        if (!snap.exists()) return candidate;
+      } catch (e) { return candidate; }
+    }
+    return `Petani_${Date.now().toString().slice(-5)}`;
+  }
+
   async function generateUniqueGuestName() {
     for (let i = 0; i < 30; i++) {
       const suffix = Math.floor(1000 + Math.random() * 9000);
@@ -844,6 +840,7 @@
     }
     return `Petani_${Date.now().toString().slice(-5)}`;
   }
+
   function isValidName(name) {
     if (!name || typeof name !== 'string') return false;
     const trimmed = name.trim();
@@ -852,30 +849,20 @@
     return true;
   }
 
-  // ===== INVENTORY DATA =====
-  // Daftar item yang tampil di inventori.
-  // Tambah entry di sini kalau mau tambah item baru.
+  // ===== INVENTORY =====
   function getInventoryItems() {
     return [
       {
-        id: 'water',
-        icon: '💧',
-        name: 'Air',
-        amount: state.water,
-        unit: 'L',
+        id: 'water', icon: '💧', name: 'Air',
+        amount: state.water, unit: 'L',
         desc: 'Untuk menyiram pohon. 1L = +10 Exp',
-        className: 'water',
-        max: 5000,
+        className: 'water', max: 5000,
       },
       {
-        id: 'fertilizer',
-        icon: '🧪',
-        name: 'Pupuk',
-        amount: state.fertilizer,
-        unit: 'Kg',
+        id: 'fertilizer', icon: '🧪', name: 'Pupuk',
+        amount: state.fertilizer, unit: 'Kg',
         desc: 'Beri tiap 10 siram agar efek air tetap 10/L',
-        className: 'fertilizer',
-        max: 100,
+        className: 'fertilizer', max: 100,
       },
     ];
   }
@@ -883,9 +870,6 @@
   function renderInventory() {
     if (!invGrid) return;
     const items = getInventoryItems();
-
-    // Filter: hanya tampil item yang jumlahnya > 0? Atau tampil semua?
-    // Kita tampil semua biar user tahu kapasitas (termasuk 0)
     const html = items.map(item => {
       const pct = Math.min(100, (item.amount / item.max) * 100);
       return `
@@ -899,13 +883,9 @@
             <div class="inv-bar-fill ${item.className}" style="width: ${pct}%;"></div>
           </div>
           <div class="inv-desc">${escapeHtml(item.desc)}</div>
-        </div>
-      `;
+        </div>`;
     }).join('');
-
     invGrid.innerHTML = html;
-
-    // Update counter
     const totalItems = items.filter(i => i.amount > 0).length;
     invItemCount.textContent = `${totalItems} item`;
   }
@@ -964,7 +944,23 @@
     profileName.textContent = state.name;
     profileEmail.textContent = state.email || '-';
     profileUid.textContent = state.uid ? state.uid.substring(0, 20) + '...' : '-';
-    profileType.textContent = state.isAnonymous ? 'Guest' : 'Email';
+
+    // Tipe user + avatar
+    if (state.provider === 'github') {
+      profileType.textContent = '🐙 GitHub';
+      if (state.photoURL) {
+        profileAvatar.innerHTML = `<img src="${escapeHtml(state.photoURL)}" alt="avatar" onerror="this.style.display='none';this.parentElement.textContent='🐙'">`;
+      } else {
+        profileAvatar.textContent = '🐙';
+      }
+    } else if (state.provider === 'email') {
+      profileType.textContent = '📧 Email';
+      profileAvatar.textContent = '👤';
+    } else {
+      profileType.textContent = '🎮 Guest';
+      profileAvatar.textContent = '👤';
+    }
+
     profileTotalExp.textContent = formatNumber(state.totalExp);
 
     if (state.lastDailyReward) {
@@ -981,10 +977,19 @@
       profileDaily.style.color = '#8fa88f';
     }
 
-    if (state.isAnonymous) upgradeBtn.style.display = 'block';
-    else upgradeBtn.style.display = 'none';
+    // Upgrade button (untuk Guest & Email → GitHub / Guest → Email)
+    if (state.provider === 'guest') {
+      upgradeBtn.style.display = 'block';
+      upgradeBtn.textContent = '🔗 Upgrade Akun';
+    } else if (state.provider === 'email') {
+      upgradeBtn.style.display = 'block';
+      upgradeBtn.textContent = '🐙 Link ke GitHub';
+    } else {
+      upgradeBtn.style.display = 'none';
+    }
 
-    if (state.isAnonymous) deleteAccountBtn.classList.remove('hidden');
+    // Delete button (hanya Guest)
+    if (state.provider === 'guest') deleteAccountBtn.classList.remove('hidden');
     else deleteAccountBtn.classList.add('hidden');
 
     if (state.isOwner) adminCleanupBtn.classList.remove('hidden');
@@ -992,7 +997,7 @@
 
     renderRegionSection();
     renderShop();
-    renderInventory();   // ← BARU
+    renderInventory();
   }
 
   // ===== RENDER REGION =====
@@ -1009,8 +1014,7 @@
           <button class="edit-btn lock-btn" id="setRegionBtn" style="width:100%; margin-top: 6px;">
             🌍 Atur Wilayah Sekarang
           </button>
-        </div>
-      `;
+        </div>`;
       const btn = $('setRegionBtn');
       if (btn) btn.addEventListener('click', openRegionModal);
     } else {
@@ -1022,8 +1026,7 @@
           <div class="row"><span class="icon">🏘️</span><span>${escapeHtml(r.kabupaten)}</span></div>
           <div class="row"><span class="icon">🏡</span><span>${escapeHtml(r.kecamatan)}</span></div>
           <div class="locked-note">Hubungi admin untuk mengubah wilayah</div>
-        </div>
-      `;
+        </div>`;
     }
   }
 
@@ -1051,7 +1054,11 @@
         lastDailyReward: state.lastDailyReward,
         waterSinceFertilizer: state.waterSinceFertilizer,
         skipUsedThisLevel: state.skipUsedThisLevel,
-        email: state.email || null, isAnonymous: state.isAnonymous,
+        email: state.email || null,
+        isAnonymous: state.isAnonymous,
+        provider: state.provider,
+        displayName: state.displayName || '',
+        photoURL: state.photoURL || '',
         lastUpdated: Date.now(),
       };
       await set(dbRef, payload);
@@ -1074,6 +1081,9 @@
       email: state.email,
       isAnonymous: state.isAnonymous,
       isOwner: state.isOwner,
+      provider: state.provider,
+      displayName: state.displayName,
+      photoURL: state.photoURL,
     };
     state = { ...DEFAULT_STATE(), ...savedMeta };
 
@@ -1094,14 +1104,24 @@
           region: data.region || { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
           regionLocked: data.regionLocked === true,
           lastDailyReward: data.lastDailyReward || '',
+          provider: data.provider || state.provider,
+          displayName: data.displayName || state.displayName,
+          photoURL: data.photoURL || state.photoURL,
         });
         showToast('☁️ Data dimuat');
       } else {
         isNewAccount = true;
-        if (state.isAnonymous && !isValidName(state.name)) {
-          state.name = await generateUniqueGuestName();
-          try { await set(ref(db, `nameRegistry/${state.name}`), { uid, ts: Date.now() }); } catch {}
+        // Generate nama unik
+        if (!isValidName(state.name)) {
+          if (state.provider === 'github' && state.displayName) {
+            state.name = await generateUniqueName(state.displayName);
+          } else if (state.isAnonymous) {
+            state.name = await generateUniqueGuestName();
+          } else {
+            state.name = await generateUniqueName(state.name);
+          }
         }
+        try { await set(ref(db, `nameRegistry/${state.name}`), { uid, ts: Date.now() }); } catch {}
         state.money = 1500;
         state.regionLocked = false;
         state.lastDailyReward = '';
@@ -1110,11 +1130,7 @@
       }
       updateUI();
       updateLeaderboardEntries().catch(() => {});
-
-      setTimeout(() => {
-        checkAndShowDailyReward();
-      }, isNewAccount ? 800 : 500);
-
+      setTimeout(() => checkAndShowDailyReward(), isNewAccount ? 800 : 500);
     } catch (e) {
       console.error('Load error:', e);
       const local = getLocalState();
@@ -1129,8 +1145,16 @@
   // ===== LEADERBOARD =====
   async function updateLeaderboardEntries() {
     if (!state.uid) return;
-    const entryExp = { uid: state.uid, name: state.name || 'Petani', value: state.totalExp || 0, region: state.region };
-    const entryPts = { uid: state.uid, name: state.name || 'Petani', value: state.planterPoints || 0, region: state.region };
+    const entryExp = {
+      uid: state.uid, name: state.name || 'Petani',
+      value: state.totalExp || 0, region: state.region,
+      provider: state.provider || 'guest',
+    };
+    const entryPts = {
+      uid: state.uid, name: state.name || 'Petani',
+      value: state.planterPoints || 0, region: state.region,
+      provider: state.provider || 'guest',
+    };
     const updates = {};
     updates[`leaderboard/global/exp/${state.uid}`] = entryExp;
     updates[`leaderboard/global/points/${state.uid}`] = entryPts;
@@ -1176,7 +1200,12 @@
         const rows = [];
         snapshot.forEach(child => {
           const v = child.val() || {};
-          rows.push({ uid: child.key, name: v.name || 'Petani', value: v.value || 0 });
+          rows.push({
+            uid: child.key,
+            name: v.name || 'Petani',
+            value: v.value || 0,
+            provider: v.provider || 'guest',
+          });
         });
         rows.sort((a, b) => b.value - a.value);
         renderLeaderboard(rows);
@@ -1206,11 +1235,20 @@
       else if (rank === 2) { rankClass = 'silver'; rankIcon = '🥈'; }
       else if (rank === 3) { rankClass = 'bronze'; rankIcon = '🥉'; }
       const isMe = row.uid === state.uid;
+
+      // Badge provider
+      let badge = '';
+      if (row.provider === 'github') badge = `<span class="lb-badge github">🐙</span>`;
+      else if (row.provider === 'email') badge = `<span class="lb-badge email">📧</span>`;
+      else badge = `<span class="lb-badge guest">🎮</span>`;
+
       html += `
         <div class="lb-row ${isMe ? 'me' : ''}">
           <div class="lb-rank ${rankClass}">${rankIcon}</div>
           <div class="lb-info">
-            <div class="lb-name ${isMe ? 'me' : ''}">${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}</div>
+            <div class="lb-name ${isMe ? 'me' : ''}">
+              ${badge} ${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}
+            </div>
             <div class="lb-sub">#${rank}</div>
           </div>
           <div class="lb-value ${cat}">${formatNumber(row.value)} ${unit}</div>
@@ -1554,11 +1592,59 @@
     try {
       clearLocalState();
       state = DEFAULT_STATE();
+      state.provider = 'guest';
       await signInAnonymously(auth);
     } catch (e) {
       showError('Gagal login guest: ' + e.message);
       guestBtn.disabled = false;
       guestBtn.textContent = '🎮 Main sebagai Guest';
+    }
+  }
+
+  async function handleGithubLogin() {
+    githubLoginBtn.disabled = true;
+    githubLoginBtn.innerHTML = '<span class="loading-spinner"></span> Menghubungkan...';
+    try {
+      clearLocalState();
+      state = DEFAULT_STATE();
+      state.provider = 'github';
+      const provider = new GithubAuthProvider();
+      // Pakai popup (bisa di HP modern)
+      try {
+        const result = await signInWithPopup(auth, provider);
+        // Ambil info dari GitHub
+        const user = result.user;
+        state.displayName = user.displayName || user.reloadUserInfo?.screenName || 'GitHub User';
+        state.photoURL = user.photoURL || '';
+      } catch (popupError) {
+        // Fallback ke redirect kalau popup diblokir
+        if (popupError.code === 'auth/popup-blocked' || popupError.code === 'auth/popup-closed-by-user') {
+          console.log('Popup gagal, pakai redirect...');
+          await signInWithRedirect(auth, provider);
+        } else {
+          throw popupError;
+        }
+      }
+    } catch (e) {
+      console.error('GitHub login error:', e);
+      let msg = e.message;
+      if (e.code === 'auth/account-exists-with-different-credential') {
+        msg = 'Email ini sudah dipakai login metode lain. Pakai metode lama dulu, lalu link ke GitHub dari Akun.';
+      } else if (e.code === 'auth/popup-closed-by-user') {
+        msg = 'Login dibatalkan';
+      } else if (e.code === 'auth/operation-not-allowed') {
+        msg = 'GitHub login belum aktif di Firebase. Hubungi admin.';
+      } else if (e.code === 'auth/unauthorized-domain') {
+        msg = 'Domain game belum diizinkan. Cek Firebase Console → Authentication → Settings → Authorized domains.';
+      }
+      showError(msg);
+      githubLoginBtn.disabled = false;
+      githubLoginBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
+          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        </svg>
+        Masuk dengan GitHub
+      `;
     }
   }
 
@@ -1571,6 +1657,7 @@
     try {
       clearLocalState();
       state = DEFAULT_STATE();
+      state.provider = 'email';
       await signInWithEmailAndPassword(auth, email, pw);
     } catch (e) {
       let msg = e.message;
@@ -1599,6 +1686,7 @@
     try {
       clearLocalState();
       state = DEFAULT_STATE();
+      state.provider = 'email';
       const cred = await createUserWithEmailAndPassword(auth, email, pw);
       await updateProfile(cred.user, { displayName: name });
       state.name = name;
@@ -1620,21 +1708,62 @@
     catch (e) { showError('Gagal: ' + e.message); }
   }
 
+  // ===== UPGRADE AKUN =====
   async function handleUpgrade() {
-    if (!state.isAnonymous) { showToast('Sudah Email.'); return; }
-    const email = prompt('Email baru:');
-    if (!email) return;
-    const pw = prompt('Password (min 6):');
-    if (!pw || pw.length < 6) { showToast('Min 6 karakter'); return; }
-    try {
-      const cred = EmailAuthProvider.credential(email, pw);
-      await linkWithCredential(auth.currentUser, cred);
-      showToast('🔗 Upgrade berhasil!');
-    } catch (e) {
-      let msg = e.message;
-      if (e.code === 'auth/email-already-in-use') msg = 'Email sudah dipakai';
-      else if (e.code === 'auth/credential-already-in-use') msg = 'Email sudah terdaftar';
-      showToast('❌ ' + msg);
+    if (state.provider === 'github') { showToast('Sudah GitHub.'); return; }
+
+    if (state.provider === 'guest') {
+      // Guest → pilih upgrade ke Email atau GitHub
+      const choice = prompt(
+        'Upgrade ke:\n1 = Email/Password\n2 = GitHub\n\nKetik angka:',
+        '1'
+      );
+      if (choice === '1') {
+        // Upgrade ke Email
+        const email = prompt('Email baru:');
+        if (!email) return;
+        const pw = prompt('Password (min 6):');
+        if (!pw || pw.length < 6) { showToast('Min 6 karakter'); return; }
+        try {
+          const cred = EmailAuthProvider.credential(email, pw);
+          await linkWithCredential(auth.currentUser, cred);
+          showToast('🔗 Akun di-link ke Email!');
+        } catch (e) {
+          let msg = e.message;
+          if (e.code === 'auth/email-already-in-use') msg = 'Email sudah dipakai';
+          else if (e.code === 'auth/credential-already-in-use') msg = 'Email sudah terdaftar';
+          showToast('❌ ' + msg);
+        }
+      } else if (choice === '2') {
+        // Upgrade ke GitHub
+        try {
+          const provider = new GithubAuthProvider();
+          const result = await signInWithPopup(auth, provider);
+          // linkWithCredential otomatis via signInWithPopup? Tidak. Kita harus link manual.
+          // Tapi Firebase sudah otomatis link kalau user sudah login.
+          showToast('🐙 Akun di-link ke GitHub!');
+        } catch (e) {
+          let msg = e.message;
+          if (e.code === 'auth/credential-already-in-use') msg = 'Akun GitHub sudah dipakai';
+          else if (e.code === 'auth/email-already-in-use') msg = 'Email sudah terdaftar';
+          else if (e.code === 'auth/popup-closed-by-user') msg = 'Login dibatalkan';
+          else msg = 'Gagal upgrade: ' + e.message;
+          showToast('❌ ' + msg);
+        }
+      }
+    } else if (state.provider === 'email') {
+      // Email → GitHub (link)
+      try {
+        const provider = new GithubAuthProvider();
+        await signInWithPopup(auth, provider);
+        showToast('🐙 Akun di-link ke GitHub!');
+      } catch (e) {
+        let msg = e.message;
+        if (e.code === 'auth/credential-already-in-use') msg = 'Akun GitHub sudah dipakai';
+        else if (e.code === 'auth/popup-closed-by-user') msg = 'Login dibatalkan';
+        else msg = 'Gagal: ' + e.message;
+        showToast('❌ ' + msg);
+      }
     }
   }
 
@@ -1648,7 +1777,7 @@
   }
 
   async function handleDeleteAccount() {
-    if (!state.isAnonymous) { showToast('Hanya untuk Guest.'); return; }
+    if (state.provider !== 'guest') { showToast('Hanya untuk Guest.'); return; }
     const uidToDelete = state.uid;
     const nameToDelete = state.name;
     const regionToDelete = { ...state.region };
@@ -1762,7 +1891,7 @@
   function handleEditName() {
     const newName = prompt('Nama baru (jangan "Petani" saja):', state.name);
     if (newName === null) return;
-    const trimmed = newName.trim().substring(0, 15);
+    const trimmed = sanitizeName(newName.trim()).substring(0, 15);
     if (!isValidName(trimmed)) {
       showToast('❌ Nama tidak valid.');
       return;
@@ -1796,12 +1925,26 @@
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const oldUid = state.uid;
+
+      // Deteksi provider
+      let provider = 'guest';
+      if (user.providerData && user.providerData.length > 0) {
+        const p = user.providerData[0].providerId;
+        if (p === 'github.com') provider = 'github';
+        else if (p === 'password') provider = 'email';
+      }
+      if (user.isAnonymous) provider = 'guest';
+
       state = DEFAULT_STATE();
       state.uid = user.uid;
       state.email = user.email || null;
       state.isAnonymous = user.isAnonymous;
+      state.provider = provider;
+      state.displayName = user.displayName || '';
+      state.photoURL = user.photoURL || '';
       state.isOwner = (user.email === OWNER_EMAIL);
-      if (user.displayName) state.name = user.displayName;
+
+      if (user.displayName && !state.name) state.name = user.displayName;
 
       if (oldUid && oldUid !== user.uid) clearLocalState();
 
@@ -1819,12 +1962,29 @@
       hideDailyRewardModal();
       guestBtn.disabled = false;
       guestBtn.textContent = '🎮 Main sebagai Guest';
+      githubLoginBtn.disabled = false;
+      githubLoginBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
+          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        </svg>
+        Masuk dengan GitHub
+      `;
       loginSubmitBtn.disabled = false;
       loginSubmitBtn.textContent = '🔑 Masuk';
       registerSubmitBtn.disabled = false;
       registerSubmitBtn.textContent = '📝 Daftar';
     }
   });
+
+  // Handle redirect result (kalau pakai signInWithRedirect)
+  try {
+    const redirectResult = await getRedirectResult(auth);
+    if (redirectResult && redirectResult.user) {
+      console.log('✅ Redirect login berhasil:', redirectResult.user.displayName);
+    }
+  } catch (e) {
+    console.warn('Redirect result error:', e);
+  }
 
   // ===== EVENTS =====
   waterBtn.addEventListener('click', waterTree);
@@ -1835,6 +1995,7 @@
   tabLoginBtn.addEventListener('click', () => switchLoginTab('login'));
   tabRegisterBtn.addEventListener('click', () => switchLoginTab('register'));
   guestBtn.addEventListener('click', handleGuest);
+  githubLoginBtn.addEventListener('click', handleGithubLogin);
   loginSubmitBtn.addEventListener('click', handleLogin);
   registerSubmitBtn.addEventListener('click', handleRegister);
   forgotBtn.addEventListener('click', handleForgot);
@@ -1853,7 +2014,7 @@
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v0.7 ready');
+  console.log('🌳 Compound Harvest v0.8 ready');
 </script>
 </body>
 </html>
