@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Compound Harvest 1 · v0.05</title>
+  <title>Compound Harvest 1 · v0.5.1</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
@@ -164,6 +164,26 @@
     .danger-btn { background: #5e3b3b; border-color: #a07a7a; }
     .admin-btn { background: #4a3d2a; border-color: #a08050; color: #ffe08a; }
     .delete-btn { background: #8a2a2a; border-color: #c06060; }
+    .lock-btn { background: #4a3a1e; border-color: #a08040; color: #ffd980; }
+    .locked-display { background: #1e2f1e; border: 1px solid #5b875b; border-radius: 24px;
+      padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .locked-display .title { color: #ffd980; font-weight: 700; font-size: 0.95rem;
+      display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .locked-display .row { display: flex; align-items: center; gap: 8px;
+      background: #162316; padding: 10px 14px; border-radius: 14px;
+      color: #e0f0d0; font-size: 0.9rem; border: 1px solid #3f5f3f; }
+    .locked-display .row .icon { font-size: 1.1rem; }
+    .locked-note { color: #8fa88f; font-size: 0.78rem;
+      text-align: center; margin-top: 6px; font-style: italic; }
+
+    /* REGION FORM */
+    .region-form { background: #1e2f1e; border: 1px solid #5b875b; border-radius: 24px;
+      padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .region-form .label { color: #8fa88f; font-size: 0.75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .region-form .field { display: flex; flex-direction: column; gap: 4px; }
+    .region-warning { background: #5a3e1e; border: 1px solid #a08040; border-radius: 12px;
+      padding: 10px 14px; color: #ffe0a0; font-size: 0.82rem; line-height: 1.5; }
 
     .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
       background: #2d4a2d; color: #f0ffe0; padding: 12px 24px; border-radius: 50px;
@@ -185,23 +205,33 @@
       align-items: center; justify-content: center; padding: 20px; }
     .modal-backdrop.hidden { display: none; }
     .modal { background: #1e2f1e; border-radius: 24px; padding: 20px;
-      max-width: 400px; width: 100%; border: 1px solid #5b875b;
+      max-width: 420px; width: 100%; border: 1px solid #5b875b;
       box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-    .modal h3 { color: #ff9090; font-size: 1.2rem; margin-bottom: 10px; text-align: center; }
+    .modal h3 { color: #ffd980; font-size: 1.15rem; margin-bottom: 10px; text-align: center; }
     .modal p { color: #d0e8c0; font-size: 0.9rem; line-height: 1.5;
       margin-bottom: 16px; text-align: center; }
+    .modal .region-preview { background: #0c180c; border-radius: 14px;
+      padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+    .modal .region-preview .row { display: flex; align-items: center; gap: 8px;
+      color: #e0f0d0; font-size: 0.9rem; padding: 4px 8px; }
+    .modal .warning-box { background: #5a1e1e; border: 1px solid #a04040;
+      border-radius: 12px; padding: 10px 14px; color: #ffd0d0;
+      font-size: 0.82rem; text-align: center; line-height: 1.5; margin-bottom: 16px; }
     .modal-input { width: 100%; padding: 12px 16px; border-radius: 40px;
       border: 1px solid #4a704a; background: #0c180c; color: #e0f0d0;
       font-size: 1rem; outline: none; margin-bottom: 16px; text-align: center;
       text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
     .modal-buttons { display: flex; gap: 10px; }
-    .modal-buttons button { flex: 1; padding: 12px; border-radius: 40px;
+    .modal-buttons button { flex: 1; padding: 14px; border-radius: 40px;
       border: none; font-weight: 700; cursor: pointer; touch-action: manipulation; font-size: 0.95rem; }
     .modal-cancel { background: #3a5a3a; color: #fff; }
-    .modal-confirm { background: #8a2a2a; color: #fff; }
-    .modal-confirm:disabled { background: #4a2a2a; color: #888; cursor: not-allowed; }
-    .modal-confirm:active:not(:disabled) { background: #6a1a1a; }
+    .modal-confirm { background: #4a7a4a; color: #fff; }
+    .modal-confirm:disabled { background: #2a3a2a; color: #6a7a6a; cursor: not-allowed; }
+    .modal-confirm:active:not(:disabled) { transform: translateY(3px); }
     .modal-cancel:active { background: #2a4a2a; }
+    .modal-danger { background: #8a2a2a; color: #fff; }
+    .modal-danger:disabled { background: #4a2a2a; color: #888; }
+    .modal-danger:active:not(:disabled) { background: #6a1a1a; }
 
     main::-webkit-scrollbar { width: 4px; }
     main::-webkit-scrollbar-thumb { background: #4a704a; border-radius: 10px; }
@@ -214,7 +244,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v0.05 · Bug Fix</p>
+    <p>v0.5.1 · Locked Region</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -336,12 +366,15 @@
           <button class="edit-btn" id="editNameBtn" style="flex:1;">✏️ Edit Nama</button>
           <button class="edit-btn" id="upgradeBtn" style="flex:1;">🔗 Upgrade</button>
         </div>
-        <button class="edit-btn" id="editRegionBtn" style="width:100%;">🌍 Atur Wilayah</button>
+
+        <!-- WILAYAH SECTION -->
+        <div id="regionSection"></div>
+
         <button class="edit-btn danger-btn" id="logoutBtn" style="width:100%;">🚪 Logout (Tetap Simpan)</button>
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.05</div>
+      <div class="small-note" style="margin-top: 16px;">Compound Harvest 1 · v0.5.1</div>
     </div>
   </main>
 
@@ -353,7 +386,7 @@
   </div>
 </div>
 
-<!-- MODAL CONFIRM -->
+<!-- MODAL CONFIRM (generic) -->
 <div class="modal-backdrop hidden" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle">⚠️ Konfirmasi</h3>
@@ -362,6 +395,55 @@
     <div class="modal-buttons">
       <button class="modal-cancel" id="modalCancel">Batal</button>
       <button class="modal-confirm" id="modalConfirm">Ya, Lanjut</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REGION FORM -->
+<div class="modal-backdrop hidden" id="regionModalBackdrop">
+  <div class="modal" style="max-width: 460px;">
+    <h3 id="regionModalTitle">🌍 Atur Wilayah</h3>
+    <div id="regionModalStep1">
+      <div class="region-warning" style="margin-bottom: 14px;">
+        ⚠️ Wilayah hanya bisa diatur <b>SEKALI</b>. Setelah disimpan, tidak bisa diubah sendiri!
+      </div>
+      <div class="region-form" style="border: none; padding: 0; background: transparent;">
+        <div class="field">
+          <div class="label">🌍 Negara</div>
+          <input type="text" class="form-input" id="regCountry" placeholder="Indonesia" maxlength="30">
+        </div>
+        <div class="field" style="margin-top: 10px;">
+          <div class="label">🏙️ Provinsi</div>
+          <input type="text" class="form-input" id="regProvince" placeholder="Jawa Tengah" maxlength="30">
+        </div>
+        <div class="field" style="margin-top: 10px;">
+          <div class="label">🏘️ Kabupaten / Kota</div>
+          <input type="text" class="form-input" id="regRegency" placeholder="Kudus" maxlength="30">
+        </div>
+        <div class="field" style="margin-top: 10px;">
+          <div class="label">🏡 Kecamatan</div>
+          <input type="text" class="form-input" id="regDistrict" placeholder="Kota Kudus" maxlength="30">
+        </div>
+      </div>
+      <div class="modal-buttons" style="margin-top: 16px;">
+        <button class="modal-cancel" id="regionModalCancel">Batal</button>
+        <button class="modal-confirm" id="regionModalNext">Lanjut →</button>
+      </div>
+    </div>
+
+    <div id="regionModalStep2" class="hidden">
+      <p style="color: #d0e8c0; font-size: 0.95rem; margin-bottom: 12px; text-align: center;">
+        Apakah wilayah berikut sudah sesuai?
+      </p>
+      <div class="region-preview" id="regionPreview"></div>
+      <div class="warning-box">
+        ⚠️ Setelah dikonfirmasi, wilayah <b>TIDAK BISA DIUBAH</b> sendiri.<br>
+        Hubungi admin kalau salah input.
+      </div>
+      <div class="modal-buttons">
+        <button class="modal-cancel" id="regionModalBack">← Kembali</button>
+        <button class="modal-confirm" id="regionModalConfirm" disabled>Ya (3)</button>
+      </div>
     </div>
   </div>
 </div>
@@ -378,10 +460,8 @@
     linkWithCredential, EmailAuthProvider, sendPasswordResetEmail, deleteUser }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  // ⚠️ GANTI dengan email owner Anda (email Google untuk login Firebase Console)
+  // ⚠️ GANTI dengan email owner Anda
   const OWNER_EMAIL = "kelvinkudus@gmail.com";
-
-  // Kata kunci yang dianggap bot/test untuk cleanup otomatis
   const BOT_KEYWORDS = ['test', 'bot', 'dummy', 'admin', 'player_', 'petani_bot', 'xxx'];
 
   const firebaseConfig = {
@@ -405,6 +485,7 @@
     name: 'Petani', waterSinceFertilizer: 0, skipUsedThisLevel: false,
     uid: null, email: null, isAnonymous: true,
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
+    regionLocked: false,
     isOwner: false,
   });
 
@@ -413,7 +494,7 @@
   let saveTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v05_state';
+  const LOCAL_KEY = 'compoundHarvest_v051_state';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
@@ -451,10 +532,10 @@
   const profileTotalExp = $('profileTotalExp');
   const editNameBtn = $('editNameBtn');
   const upgradeBtn = $('upgradeBtn');
-  const editRegionBtn = $('editRegionBtn');
   const logoutBtn = $('logoutBtn');
   const deleteAccountBtn = $('deleteAccountBtn');
   const adminCleanupBtn = $('adminCleanupBtn');
+  const regionSection = $('regionSection');
   const pageTanam = $('pageTanam');
   const pageLeaderboard = $('pageLeaderboard');
   const pageToko = $('pageToko');
@@ -476,12 +557,27 @@
   const registerSubmitBtn = $('registerSubmitBtn');
   const forgotBtn = $('forgotBtn');
 
+  // Generic modal
   const modalBackdrop = $('modalBackdrop');
   const modalTitle = $('modalTitle');
   const modalMessage = $('modalMessage');
   const modalInput = $('modalInput');
   const modalCancel = $('modalCancel');
   const modalConfirm = $('modalConfirm');
+
+  // Region modal
+  const regionModalBackdrop = $('regionModalBackdrop');
+  const regionModalStep1 = $('regionModalStep1');
+  const regionModalStep2 = $('regionModalStep2');
+  const regionModalCancel = $('regionModalCancel');
+  const regionModalNext = $('regionModalNext');
+  const regionModalBack = $('regionModalBack');
+  const regionModalConfirm = $('regionModalConfirm');
+  const regionPreview = $('regionPreview');
+  const regCountry = $('regCountry');
+  const regProvince = $('regProvince');
+  const regRegency = $('regRegency');
+  const regDistrict = $('regDistrict');
 
   // ===== UTILS =====
   function showToast(msg, duration = 1800) {
@@ -518,18 +614,18 @@
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     }[c]));
   }
+  function hasRegion() {
+    const r = state.region;
+    return !!(r.negara && r.provinsi && r.kabupaten && r.kecamatan);
+  }
 
   // ===== LOCAL STORAGE =====
   function getLocalState() {
     try { const raw = localStorage.getItem(LOCAL_KEY); return raw ? JSON.parse(raw) : null; }
     catch { return null; }
   }
-  function setLocalState(s) {
-    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {}
-  }
-  function clearLocalState() {
-    try { localStorage.removeItem(LOCAL_KEY); } catch {}
-  }
+  function setLocalState(s) { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {} }
+  function clearLocalState() { try { localStorage.removeItem(LOCAL_KEY); } catch {} }
 
   // ===== NAMA UNIK =====
   async function generateUniqueGuestName() {
@@ -539,13 +635,10 @@
       try {
         const nameSnap = await get(ref(db, `nameRegistry/${candidate}`));
         if (!nameSnap.exists()) return candidate;
-      } catch (e) {
-        return candidate;
-      }
+      } catch (e) { return candidate; }
     }
     return `Petani_${Date.now().toString().slice(-5)}`;
   }
-
   function isValidName(name) {
     if (!name || typeof name !== 'string') return false;
     const trimmed = name.trim();
@@ -614,7 +707,42 @@
     if (state.isOwner) adminCleanupBtn.classList.remove('hidden');
     else adminCleanupBtn.classList.add('hidden');
 
+    renderRegionSection();
     renderShop();
+  }
+
+  // ===== RENDER REGION SECTION =====
+  function renderRegionSection() {
+    if (!regionSection) return;
+    const r = state.region;
+    if (!state.regionLocked || !hasRegion()) {
+      // Belum diatur → tampilkan tombol Atur
+      regionSection.innerHTML = `
+        <div class="locked-display">
+          <div class="title" style="color:#ffb060;">⚠️ Wilayah Belum Diatur</div>
+          <div class="small-note" style="margin-top: 4px;">
+            Set <b>SEKALI</b>, tidak bisa diubah sendiri setelah tersimpan.
+          </div>
+          <button class="edit-btn lock-btn" id="setRegionBtn" style="width:100%; margin-top: 6px;">
+            🌍 Atur Wilayah Sekarang
+          </button>
+        </div>
+      `;
+      const btn = $('setRegionBtn');
+      if (btn) btn.addEventListener('click', openRegionModal);
+    } else {
+      // Sudah terkunci
+      regionSection.innerHTML = `
+        <div class="locked-display">
+          <div class="title">🔒 Wilayah Anda (Terkunci)</div>
+          <div class="row"><span class="icon">🌍</span><span>${escapeHtml(r.negara)}</span></div>
+          <div class="row"><span class="icon">🏙️</span><span>${escapeHtml(r.provinsi)}</span></div>
+          <div class="row"><span class="icon">🏘️</span><span>${escapeHtml(r.kabupaten)}</span></div>
+          <div class="row"><span class="icon">🏡</span><span>${escapeHtml(r.kecamatan)}</span></div>
+          <div class="locked-note">Hubungi admin untuk mengubah wilayah</div>
+        </div>
+      `;
+    }
   }
 
   // ===== SAVE / LOAD =====
@@ -637,6 +765,7 @@
         exp: state.exp, level: state.level,
         planterPoints: state.planterPoints, totalExp: state.totalExp,
         region: state.region,
+        regionLocked: state.regionLocked,    // ← baru
         waterSinceFertilizer: state.waterSinceFertilizer,
         skipUsedThisLevel: state.skipUsedThisLevel,
         email: state.email || null, isAnonymous: state.isAnonymous,
@@ -657,8 +786,6 @@
     const userRef = ref(db, 'users/' + uid);
     dbRef = userRef;
 
-    // ⚠️ PENTING: Reset state ke default DULU sebelum load
-    // Biar tidak ada residu dari akun sebelumnya
     const savedMeta = {
       uid: state.uid,
       email: state.email,
@@ -680,16 +807,17 @@
           waterSinceFertilizer: data.waterSinceFertilizer ?? 0,
           skipUsedThisLevel: data.skipUsedThisLevel ?? false,
           region: data.region || { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
+          regionLocked: data.regionLocked === true,
         });
-        showToast('☁️ Data dimuat dari cloud');
+        showToast('☁️ Data dimuat');
       } else {
-        // Akun benar-benar baru
+        // Akun baru
         if (state.isAnonymous && !isValidName(state.name)) {
           state.name = await generateUniqueGuestName();
           try { await set(ref(db, `nameRegistry/${state.name}`), { uid, ts: Date.now() }); } catch {}
         }
-        // Pastikan money default 1500
         state.money = 1500;
+        state.regionLocked = false;
         await saveToCloud();
         showToast(`🌱 Selamat datang, ${state.name}!`);
       }
@@ -697,7 +825,6 @@
       updateLeaderboardEntries().catch(() => {});
     } catch (e) {
       console.error('Load error:', e);
-      // Fallback: pakai localStorage HANYA kalau uid sama
       const local = getLocalState();
       if (local && local.uid === uid) {
         Object.assign(state, local);
@@ -747,7 +874,7 @@
 
     const path = getLbPath();
     if (!path) {
-      lbList.innerHTML = `<div class="lb-empty">🌍 Atur wilayah Anda di halaman <b>Akun → Atur Wilayah</b> untuk melihat peringkat ${lbView.region}.</div>`;
+      lbList.innerHTML = `<div class="lb-empty">🌍 Wilayah <b>${lbView.region}</b> belum diatur.<br>Set di <b>Akun → Atur Wilayah</b>.</div>`;
       return;
     }
 
@@ -774,7 +901,7 @@
 
   function renderLeaderboard(rows) {
     if (!rows || rows.length === 0) {
-      lbList.innerHTML = `<div class="lb-empty">📭 Belum ada data untuk wilayah ini. Jadilah yang pertama! 🌱</div>`;
+      lbList.innerHTML = `<div class="lb-empty">📭 Belum ada data. Jadilah yang pertama! 🌱</div>`;
       return;
     }
     const cat = lbView.category;
@@ -963,12 +1090,13 @@
     loadLeaderboard();
   });
 
-  // ===== MODAL =====
+  // ===== GENERIC MODAL =====
   let modalCallback = null;
-  function showModal(title, message, confirmText, callback, requireWord) {
+  function showModal(title, message, confirmText, callback, requireWord, danger) {
     modalTitle.textContent = title;
     modalMessage.textContent = message;
     modalConfirm.textContent = confirmText || 'Ya, Lanjut';
+    modalConfirm.classList.toggle('modal-danger', !!danger);
     if (requireWord) {
       modalInput.classList.remove('hidden');
       modalInput.value = '';
@@ -999,6 +1127,114 @@
     if (e.target === modalBackdrop) hideModal();
   });
 
+  // ===== REGION MODAL =====
+  let regionCountdownTimer = null;
+
+  function openRegionModal() {
+    // Kalau sudah terkunci, jangan buka
+    if (state.regionLocked && hasRegion()) {
+      showToast('🔒 Wilayah sudah terkunci. Hubungi admin.');
+      return;
+    }
+    // Reset form
+    regionModalStep1.classList.remove('hidden');
+    regionModalStep2.classList.add('hidden');
+    regCountry.value = state.region.negara || 'Indonesia';
+    regProvince.value = state.region.provinsi || '';
+    regRegency.value = state.region.kabupaten || '';
+    regDistrict.value = state.region.kecamatan || '';
+    if (regionCountdownTimer) { clearInterval(regionCountdownTimer); regionCountdownTimer = null; }
+    regionModalBackdrop.classList.remove('hidden');
+    setTimeout(() => regProvince.focus(), 100);
+  }
+
+  function closeRegionModal() {
+    regionModalBackdrop.classList.add('hidden');
+    if (regionCountdownTimer) { clearInterval(regionCountdownTimer); regionCountdownTimer = null; }
+  }
+
+  function goToRegionConfirm() {
+    const negara = regCountry.value.trim();
+    const provinsi = regProvince.value.trim();
+    const kabupaten = regRegency.value.trim();
+    const kecamatan = regDistrict.value.trim();
+
+    if (!negara || !provinsi || !kabupaten || !kecamatan) {
+      showToast('❌ Semua field wajib diisi!');
+      return;
+    }
+
+    // Tampilkan preview
+    regionPreview.innerHTML = `
+      <div class="row"><span>🌍</span><span>${escapeHtml(negara)}</span></div>
+      <div class="row"><span>🏙️</span><span>${escapeHtml(provinsi)}</span></div>
+      <div class="row"><span>🏘️</span><span>${escapeHtml(kabupaten)}</span></div>
+      <div class="row"><span>🏡</span><span>${escapeHtml(kecamatan)}</span></div>
+    `;
+
+    regionModalStep1.classList.add('hidden');
+    regionModalStep2.classList.remove('hidden');
+
+    // Countdown 3 detik
+    let count = 3;
+    regionModalConfirm.disabled = true;
+    regionModalConfirm.textContent = `Ya (${count})`;
+    if (regionCountdownTimer) clearInterval(regionCountdownTimer);
+    regionCountdownTimer = setInterval(() => {
+      count--;
+      if (count > 0) {
+        regionModalConfirm.textContent = `Ya (${count})`;
+      } else {
+        clearInterval(regionCountdownTimer);
+        regionCountdownTimer = null;
+        regionModalConfirm.disabled = false;
+        regionModalConfirm.textContent = '✅ Ya, Kunci Permanen';
+      }
+    }, 1000);
+  }
+
+  async function confirmRegionLock() {
+    if (state.regionLocked && hasRegion()) {
+      showToast('🔒 Wilayah sudah terkunci.');
+      closeRegionModal();
+      return;
+    }
+    const negara = regCountry.value.trim();
+    const provinsi = regProvince.value.trim();
+    const kabupaten = regRegency.value.trim();
+    const kecamatan = regDistrict.value.trim();
+
+    if (!negara || !provinsi || !kabupaten || !kecamatan) {
+      showToast('❌ Semua field wajib diisi!');
+      return;
+    }
+
+    // Kunci!
+    state.region = { negara, provinsi, kabupaten, kecamatan };
+    state.regionLocked = true;
+
+    closeRegionModal();
+    updateUI();
+    await saveToCloud();
+    await updateLeaderboardEntries().catch(() => {});
+
+    showToast('🔒 Wilayah tersimpan & terkunci!');
+  }
+
+  regionModalCancel.addEventListener('click', closeRegionModal);
+  regionModalNext.addEventListener('click', goToRegionConfirm);
+  regionModalBack.addEventListener('click', () => {
+    if (regionCountdownTimer) { clearInterval(regionCountdownTimer); regionCountdownTimer = null; }
+    regionModalStep1.classList.remove('hidden');
+    regionModalStep2.classList.add('hidden');
+    regionModalConfirm.disabled = true;
+    regionModalConfirm.textContent = 'Ya (3)';
+  });
+  regionModalConfirm.addEventListener('click', confirmRegionLock);
+  regionModalBackdrop.addEventListener('click', e => {
+    if (e.target === regionModalBackdrop) closeRegionModal();
+  });
+
   // ===== AUTH =====
   function switchLoginTab(tab) {
     if (tab === 'login') {
@@ -1019,7 +1255,6 @@
     guestBtn.disabled = true;
     guestBtn.innerHTML = '<span class="loading-spinner"></span> Memuat...';
     try {
-      // PENTING: clear localStorage sebelum login guest baru
       clearLocalState();
       state = DEFAULT_STATE();
       await signInAnonymously(auth);
@@ -1106,39 +1341,16 @@
     }
   }
 
-  async function handleEditRegion() {
-    const current = state.region;
-    const negara = prompt('Negara:', current.negara || 'Indonesia');
-    if (negara === null) return;
-    const provinsi = prompt('Provinsi:', current.provinsi || '');
-    if (provinsi === null) return;
-    const kabupaten = prompt('Kabupaten/Kota:', current.kabupaten || '');
-    if (kabupaten === null) return;
-    const kecamatan = prompt('Kecamatan:', current.kecamatan || '');
-    if (kecamatan === null) return;
-    state.region = {
-      negara: (negara || '').trim(),
-      provinsi: (provinsi || '').trim(),
-      kabupaten: (kabupaten || '').trim(),
-      kecamatan: (kecamatan || '').trim(),
-    };
-    debouncedSave();
-    updateUI();
-    lbRegionInfo.textContent = getLbRegionLabel();
-    showToast('🌍 Wilayah tersimpan');
-    updateLeaderboardEntries().catch(() => {});
-  }
-
   async function handleLogout() {
     if (!confirm('Logout? Data tetap tersimpan di cloud.')) return;
     if (saveTimer) clearTimeout(saveTimer);
     await saveToCloud();
     if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
-    clearLocalState();  // ← PENTING: hapus cache lokal
+    clearLocalState();
     await signOut(auth);
   }
 
-  // ===== HAPUS AKUN (GUEST) =====
+  // ===== HAPUS AKUN =====
   async function handleDeleteAccount() {
     if (!state.isAnonymous) { showToast('Hanya untuk Guest.'); return; }
     const uidToDelete = state.uid;
@@ -1147,16 +1359,12 @@
 
     showModal(
       '⚠️ Hapus Data Permainan?',
-      `Semua progress "${nameToDelete}" akan DIHAPUS PERMANEN. Tidak bisa dikembalikan. Ketik "HAPUS" untuk konfirmasi.`,
+      `Semua progress "${nameToDelete}" akan DIHAPUS PERMANEN. Ketik "HAPUS" untuk konfirmasi.`,
       'Ya, Hapus',
       async () => {
         try {
-          showToast('🗑️ Menghapus data...', 3000);
-
-          // 1. Hapus user data
-          try { await remove(ref(db, `users/${uidToDelete}`)); } catch (e) { console.warn('users:', e); }
-
-          // 2. Hapus entry leaderboard (semua wilayah)
+          showToast('🗑️ Menghapus...', 3000);
+          try { await remove(ref(db, `users/${uidToDelete}`)); } catch (e) {}
           const paths = [
             `leaderboard/global/exp/${uidToDelete}`,
             `leaderboard/global/points/${uidToDelete}`,
@@ -1169,42 +1377,32 @@
             }
           }
           for (const p of paths) {
-            try { await remove(ref(db, p)); } catch (e) { console.warn('Skip:', p); }
+            try { await remove(ref(db, p)); } catch (e) {}
           }
-
-          // 3. Hapus name registry
           if (nameToDelete) {
             try { await remove(ref(db, `nameRegistry/${nameToDelete}`)); } catch {}
           }
-
-          // 4. Hapus localStorage
           clearLocalState();
-
-          // 5. Reset state in-memory
           state = DEFAULT_STATE();
-
-          // 6. Hapus akun auth (anonymous)
           try {
             if (auth.currentUser) await deleteUser(auth.currentUser);
           } catch (e) {
-            console.warn('deleteUser gagal, fallback logout:', e);
             try { await signOut(auth); } catch {}
           }
-
-          showToast('✅ Data berhasil dihapus', 2500);
+          showToast('✅ Data dihapus', 2500);
         } catch (e) {
           console.error('Delete error:', e);
           clearLocalState();
           try { await signOut(auth); } catch {}
-          showToast('⚠️ Logout paksa. Cek Firebase manual.');
+          showToast('⚠️ Logout paksa.');
         }
       },
-      'HAPUS'
+      'HAPUS',
+      true
     );
   }
 
-  // ===== ADMIN CLEANUP OTOMATIS =====
-  // Deteksi apakah nama termasuk bot/test
+  // ===== ADMIN CLEANUP =====
   function isBotName(name) {
     if (!name) return false;
     const lower = name.toLowerCase().trim();
@@ -1214,32 +1412,23 @@
     return false;
   }
 
-  // Cleanup bot otomatis (untuk owner)
   async function autoCleanupBots() {
     if (!state.isOwner) return;
     try {
-      console.log('🧹 Auto-cleanup bots...');
-      // Ambil semua data user
       const usersSnap = await get(ref(db, 'users'));
-      if (!usersSnap.exists()) { console.log('Tidak ada users'); return; }
-
+      if (!usersSnap.exists()) return;
       const tasks = [];
       let count = 0;
       const ownUid = state.uid;
-
       usersSnap.forEach(child => {
         const uid = child.key;
-        if (uid === ownUid) return; // jangan hapus diri sendiri
+        if (uid === ownUid) return;
         const data = child.val() || {};
         const name = data.name || '';
         if (isBotName(name)) {
-          console.log(`🗑️ Hapus bot: ${name} (${uid})`);
-          // Hapus dari users
           tasks.push(remove(ref(db, `users/${uid}`)).catch(() => {}));
-          // Hapus dari leaderboard
           tasks.push(remove(ref(db, `leaderboard/global/exp/${uid}`)).catch(() => {}));
           tasks.push(remove(ref(db, `leaderboard/global/points/${uid}`)).catch(() => {}));
-          // Hapus dari region
           const region = data.region || {};
           for (const r of ['negara', 'provinsi', 'kabupaten', 'kecamatan']) {
             const key = sanitizeKey(region[r]);
@@ -1248,35 +1437,25 @@
               tasks.push(remove(ref(db, `leaderboard/${r}/${key}/points/${uid}`)).catch(() => {}));
             }
           }
-          // Hapus name registry
-          if (name) {
-            tasks.push(remove(ref(db, `nameRegistry/${name}`)).catch(() => {}));
-          }
+          if (name) tasks.push(remove(ref(db, `nameRegistry/${name}`)).catch(() => {}));
           count++;
         }
       });
-
       await Promise.all(tasks);
       if (count > 0) {
-        showToast(`🧹 ${count} akun bot dihapus otomatis`, 3000);
-        if (lbView.unsubscribe) {
-          // Refresh leaderboard setelah cleanup
-          setTimeout(() => loadLeaderboard(), 500);
-        }
-      } else {
-        console.log('✅ Tidak ada bot ditemukan');
+        showToast(`🧹 ${count} akun bot dihapus`, 3000);
+        if (lbView.unsubscribe) setTimeout(() => loadLeaderboard(), 500);
       }
     } catch (e) {
-      console.warn('Auto-cleanup error (mungkin permission):', e);
+      console.warn('Auto-cleanup error:', e);
     }
   }
 
-  // Manual cleanup (tombol admin)
   async function handleAdminCleanup() {
     if (!state.isOwner) return;
     showModal(
-      '🧹 Bersihkan Data Bot/Test?',
-      `Hapus SEMUA akun yang namanya mengandung: ${BOT_KEYWORDS.join(', ')}. Lanjutkan?`,
+      '🧹 Bersihkan Data Bot?',
+      `Hapus akun dengan kata kunci: ${BOT_KEYWORDS.join(', ')}. Lanjutkan?`,
       'Ya, Bersihkan',
       async () => {
         showToast('🧹 Memindai...', 3000);
@@ -1322,7 +1501,6 @@
   // ===== AUTH STATE =====
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      // ⚠️ RESET total state dulu
       const oldUid = state.uid;
       state = DEFAULT_STATE();
       state.uid = user.uid;
@@ -1331,20 +1509,14 @@
       state.isOwner = (user.email === OWNER_EMAIL);
       if (user.displayName) state.name = user.displayName;
 
-      // Kalau user berbeda dari sebelumnya, pastikan localStorage bersih
-      if (oldUid && oldUid !== user.uid) {
-        clearLocalState();
-      }
+      if (oldUid && oldUid !== user.uid) clearLocalState();
 
       loginScreen.classList.add('hidden');
       gameContainer.style.display = 'flex';
       await loadFromCloud(user.uid);
       updateUI();
 
-      // Auto-cleanup untuk owner (delay biar load selesai dulu)
-      if (state.isOwner) {
-        setTimeout(() => autoCleanupBots(), 2000);
-      }
+      if (state.isOwner) setTimeout(() => autoCleanupBots(), 2000);
     } else {
       loginScreen.classList.remove('hidden');
       gameContainer.style.display = 'none';
@@ -1374,19 +1546,19 @@
 
   editNameBtn.addEventListener('click', handleEditName);
   upgradeBtn.addEventListener('click', handleUpgrade);
-  editRegionBtn.addEventListener('click', handleEditRegion);
   logoutBtn.addEventListener('click', handleLogout);
   deleteAccountBtn.addEventListener('click', handleDeleteAccount);
   adminCleanupBtn.addEventListener('click', handleAdminCleanup);
 
   $('loginPassword').addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
   $('regPassword2').addEventListener('keypress', e => { if (e.key === 'Enter') handleRegister(); });
+  regDistrict.addEventListener('keypress', e => { if (e.key === 'Enter') goToRegionConfirm(); });
 
   window.addEventListener('online', () => { isOnline = true; setCloudStatus('saved'); saveToCloud(); });
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v0.05 ready');
+  console.log('🌳 Compound Harvest v0.5.1 ready');
 </script>
 </body>
 </html>
