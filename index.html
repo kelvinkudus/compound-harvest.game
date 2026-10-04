@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#1e2b1e">
-  <title>Compound Harvest 1 · v11.0</title>
+  <title>Compound Harvest 1 · v12.0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { height: 100%; overflow: hidden; }
@@ -27,7 +27,6 @@
     }
     #gameContainer.active { display: flex; }
 
-    /* LOGIN */
     #loginScreen {
       position: absolute; top: 0; left: 50%;
       transform: translateX(-50%);
@@ -67,7 +66,6 @@
       font-size: 0.85rem; text-align: center; border: 1px solid #a04040; }
     .error-msg.hidden { display: none; }
 
-    /* STATUS BAR */
     .status-bar { flex-shrink: 0; background: #0f1a0f; padding: 10px 14px;
       display: flex; justify-content: space-between; align-items: center;
       color: #e0f0d0; border-bottom: 2px solid #3a6b3a; gap: 6px;
@@ -84,75 +82,39 @@
     .cloud-status.saved { color: #a0f0a0; }
     .cloud-status.offline { color: #ff9090; }
 
-    /* MENU BUTTON */
     .menu-btn {
-      flex-shrink: 0;
-      background: #1d2e1d;
-      border: 1px solid #4f7a4f;
-      color: #e0f0d0;
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      font-size: 1.3rem; font-weight: 700;
+      flex-shrink: 0; background: #1d2e1d; border: 1px solid #4f7a4f;
+      color: #e0f0d0; width: 38px; height: 38px;
+      border-radius: 50%; font-size: 1.3rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; touch-action: manipulation;
     }
     .menu-btn:active { background: #2a3f2a; }
     .menu-btn.active { background: #4a7a4a; border-color: #a0d0a0; }
 
-    /* DROPDOWN MENGAMBANG */
     .dropdown-menu {
-      position: absolute;
-      top: 55px;
-      right: 14px;
-      background: #1a2a1a;
-      border: 2px solid #5b875b;
-      border-radius: 18px;
-      padding: 8px;
-      min-width: 200px;
+      position: absolute; top: 55px; right: 14px;
+      background: #1a2a1a; border: 2px solid #5b875b;
+      border-radius: 18px; padding: 8px; min-width: 200px;
       box-shadow: 0 12px 30px rgba(0,0,0,0.7);
-      z-index: 200;
-      opacity: 0;
+      z-index: 200; opacity: 0;
       transform: translateY(-10px) scale(0.95);
       pointer-events: none;
       transition: opacity 0.15s, transform 0.15s;
     }
-    .dropdown-menu.open {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
+    .dropdown-menu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
     .dropdown-item {
       display: flex; align-items: center; gap: 10px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      color: #e0f0d0;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      touch-action: manipulation;
-      background: transparent;
-      border: none;
-      width: 100%;
-      text-align: left;
-      transition: background 0.1s;
+      padding: 12px 14px; border-radius: 12px;
+      color: #e0f0d0; font-weight: 600; font-size: 0.9rem;
+      cursor: pointer; touch-action: manipulation;
+      background: transparent; border: none; width: 100%; text-align: left;
     }
-    .dropdown-item:hover { background: #2a4a2a; }
     .dropdown-item:active { background: #3a5a3a; }
     .dropdown-item .icon { font-size: 1.2rem; }
-    .dropdown-item.disabled { opacity: 0.5; pointer-events: none; }
-    .dropdown-item.danger { color: #ffd0d0; }
-    .dropdown-divider {
-      height: 1px; background: #3a5a3a;
-      margin: 6px 4px;
-    }
-    .dropdown-label {
-      padding: 8px 14px 4px;
-      font-size: 0.7rem;
-      color: #6a8a6a;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-    }
+    .dropdown-divider { height: 1px; background: #3a5a3a; margin: 6px 4px; }
+    .dropdown-label { padding: 8px 14px 4px; font-size: 0.7rem; color: #6a8a6a;
+      text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
 
     main { flex: 1 1 auto; min-height: 0; overflow-y: auto;
       -webkit-overflow-scrolling: touch; padding: 16px;
@@ -163,7 +125,6 @@
     .page { display: none; flex-direction: column; gap: 16px; padding-bottom: 16px; }
     .page.active { display: flex; }
 
-    /* TANAM */
     .tree-card { background: #1b2e1b; border-radius: 32px; padding: 24px 16px;
       box-shadow: inset 0 0 0 2px #3a613a, 0 12px 20px -8px black; text-align: center; }
     .tree-icon { font-size: 4.2rem; line-height: 1; filter: drop-shadow(0 8px 8px rgba(0,0,0,0.5));
@@ -233,6 +194,18 @@
     .lb-badge.github { background: #24292e; color: #fff; border: 1px solid #444c56; }
     .lb-badge.email { background: #3a5a3a; color: #d0f0c0; border: 1px solid #5a8a5a; }
     .lb-badge.guest { background: #3a3a2a; color: #e0d0a0; border: 1px solid #6a6a4a; }
+    .lb-skeleton {
+      display: flex; align-items: center; gap: 10px; padding: 12px;
+      border-radius: 12px; background: #1a2a1a; margin-bottom: 6px;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+    .lb-skeleton .skel-bar {
+      height: 12px; background: #2a3a2a; border-radius: 6px;
+    }
 
     /* INVENTORI */
     .inv-header { background: #162316; border-radius: 20px; padding: 14px 16px;
@@ -269,7 +242,6 @@
       text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
       padding-left: 4px; margin-top: 4px; }
 
-    /* SHOP */
     .shop-item { background: #1e2f1e; border-radius: 20px; padding: 14px 16px;
       display: flex; justify-content: space-between; align-items: center;
       border: 1px solid #497049; box-shadow: 0 4px 0 #0a130a; margin-bottom: 10px; }
@@ -285,7 +257,6 @@
       border-radius: 50px; justify-content: space-around; font-weight: 600;
       color: #d0e8c0; border: 1px solid #527a52; }
 
-    /* PROFILE & AKUN */
     .profile-card { background: #1e2f1e; border-radius: 24px; padding: 16px;
       border: 1px solid #5b875b; display: flex; flex-direction: column; gap: 10px; }
     .profile-row { display: flex; justify-content: space-between; align-items: center;
@@ -334,156 +305,67 @@
       color: #80d0ff; font-weight: 700; font-size: 1.1rem;
       display: flex; align-items: center; gap: 8px;
     }
-    .help-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .help-stat {
-      background: #0c181c;
-      border-radius: 14px;
-      padding: 12px;
-      border: 1px solid #2a4a5a;
-      text-align: center;
-    }
-    .help-stat .label {
-      color: #6a9aaa;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .help-stat .value {
-      color: #80d0ff;
-      font-size: 1.3rem;
-      font-weight: 800;
-    }
-    .help-stat .value small {
-      font-size: 0.8rem;
-      color: #4a8090;
-      font-weight: 600;
-    }
-    .help-list {
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .help-player {
-      background: #162316; border-radius: 18px; padding: 14px;
-      border: 1px solid #3a5a3a;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .help-player.done {
-      opacity: 0.5;
-      background: #0c180c;
-    }
-    .help-avatar {
-      width: 44px; height: 44px; border-radius: 50%;
+    .help-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .help-stat { background: #0c181c; border-radius: 14px; padding: 12px;
+      border: 1px solid #2a4a5a; text-align: center; }
+    .help-stat .label { color: #6a9aaa; font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 4px; }
+    .help-stat .value { color: #80d0ff; font-size: 1.3rem; font-weight: 800; }
+    .help-stat .value small { font-size: 0.8rem; color: #4a8090; font-weight: 600; }
+    .help-list { display: flex; flex-direction: column; gap: 10px; }
+    .help-player { background: #162316; border-radius: 18px; padding: 14px;
+      border: 1px solid #3a5a3a; display: flex; align-items: center; gap: 12px; }
+    .help-player.done { opacity: 0.5; background: #0c180c; }
+    .help-avatar { width: 44px; height: 44px; border-radius: 50%;
       background: #0c180c; border: 2px solid #5b875b;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; flex-shrink: 0; overflow: hidden;
-    }
+      font-size: 1.4rem; flex-shrink: 0; overflow: hidden; }
     .help-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .help-info { flex: 1; min-width: 0; cursor: pointer; }
     .help-info:active { opacity: 0.7; }
-    .help-name {
-      color: #e0f0d0; font-weight: 700; font-size: 0.95rem;
+    .help-name { color: #e0f0d0; font-weight: 700; font-size: 0.95rem;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      display: flex; align-items: center; gap: 4px;
-    }
-    .help-sub {
-      color: #8fa88f; font-size: 0.72rem;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
+      display: flex; align-items: center; gap: 4px; }
+    .help-sub { color: #8fa88f; font-size: 0.72rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .help-sub.done-label { color: #a0f0a0; font-weight: 700; }
-    .help-action-btn {
-      background: #2a6a8a; border: none;
+    .help-action-btn { background: #2a6a8a; border: none;
       padding: 8px 14px; border-radius: 30px;
       font-weight: 700; color: #fff;
       box-shadow: 0 4px 0 #0a3040;
       cursor: pointer; touch-action: manipulation;
-      font-size: 0.85rem; flex-shrink: 0;
-    }
+      font-size: 0.85rem; flex-shrink: 0; }
     .help-action-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3040; }
-    .help-action-btn:disabled {
-      background: #2a4a2a;
-      box-shadow: 0 3px 0 #0a1a0a;
-      color: #6a8a6a;
-      pointer-events: none;
-    }
-    .help-empty {
-      text-align: center; padding: 40px 20px;
-      color: #6a8a6a; font-size: 0.9rem;
-      line-height: 1.6;
-    }
-    .help-cooldown {
-      background: #3a2a1e;
-      border: 1px solid #a08040;
-      border-radius: 14px;
-      padding: 10px 14px;
-      color: #ffd980;
-      font-size: 0.85rem;
-      text-align: center;
-      font-weight: 600;
-    }
+    .help-action-btn:disabled { background: #2a4a2a; box-shadow: 0 3px 0 #0a1a0a;
+      color: #6a8a6a; pointer-events: none; }
+    .help-empty { text-align: center; padding: 40px 20px;
+      color: #6a8a6a; font-size: 0.9rem; line-height: 1.6; }
+    .help-cooldown { background: #3a2a1e; border: 1px solid #a08040;
+      border-radius: 14px; padding: 10px 14px; color: #ffd980;
+      font-size: 0.85rem; text-align: center; font-weight: 600; }
 
-    /* BANTUAN DITERIMA (di Akun) */
-    .received-section {
-      background: #162316;
-      border-radius: 20px;
-      padding: 14px;
-      border: 1px solid #3a5a3a;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .received-section .title {
-      color: #80d0ff;
-      font-weight: 700;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
-    }
-    .received-row {
-      background: #0c180c;
-      border-radius: 14px;
-      padding: 10px 12px;
-      border: 1px solid #2a4a5a;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .received-section { background: #162316; border-radius: 20px;
+      padding: 14px; border: 1px solid #3a5a3a;
+      display: flex; flex-direction: column; gap: 10px; }
+    .received-section .title { color: #80d0ff; font-weight: 700;
+      font-size: 1rem; display: flex; align-items: center;
+      gap: 6px; margin-bottom: 4px; }
+    .received-row { background: #0c180c; border-radius: 14px;
+      padding: 10px 12px; border: 1px solid #2a4a5a;
+      display: flex; align-items: center; gap: 10px; }
     .received-row .info { flex: 1; min-width: 0; }
-    .received-row .sender {
-      color: #e0f0d0; font-weight: 700; font-size: 0.9rem;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .received-row .amount {
-      color: #80d0ff; font-size: 0.8rem;
-      font-weight: 600;
-    }
-    .received-row .reply-btn {
-      background: #3a5a8a;
-      border: 1px solid #5a8aaa;
-      padding: 6px 12px;
-      border-radius: 20px;
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.78rem;
-      cursor: pointer;
-      touch-action: manipulation;
-      flex-shrink: 0;
-    }
+    .received-row .sender { color: #e0f0d0; font-weight: 700; font-size: 0.9rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .received-row .amount { color: #80d0ff; font-size: 0.8rem; font-weight: 600; }
+    .received-row .reply-btn { background: #3a5a8a;
+      border: 1px solid #5a8aaa; padding: 6px 12px;
+      border-radius: 20px; color: #fff; font-weight: 700;
+      font-size: 0.78rem; cursor: pointer;
+      touch-action: manipulation; flex-shrink: 0; }
     .received-row .reply-btn:active { background: #2a4a6a; }
-    .received-row .reply-btn:disabled {
-      background: #2a3a2a;
-      border-color: #4a5a4a;
-      color: #6a7a6a;
-      pointer-events: none;
-    }
+    .received-row .reply-btn:disabled { background: #2a3a2a;
+      border-color: #4a5a4a; color: #6a7a6a; pointer-events: none; }
 
-    /* BOTTOM NAV */
     .bottom-nav { flex-shrink: 0; background: #0f1a0f; display: flex;
       border-top: 2px solid #3f6b3f; padding: 8px 0;
       padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
@@ -500,7 +382,6 @@
     .nav-label { display: block; font-size: 0.68rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.3px; }
 
-    /* TOAST */
     .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
       background: #2d4a2d; color: #f0ffe0; padding: 12px 24px; border-radius: 50px;
       font-weight: 600; box-shadow: 0 8px 20px black; border: 1px solid #a0d0a0;
@@ -515,9 +396,11 @@
     .loading-spinner { display: inline-block; width: 16px; height: 16px;
       border: 2px solid #a0d0a0; border-radius: 50%; border-top-color: transparent;
       animation: spin 0.8s linear infinite; }
+    .loading-spinner-lg { display: inline-block; width: 32px; height: 32px;
+      border: 3px solid #a0d0a0; border-radius: 50%; border-top-color: transparent;
+      animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* MODALS */
     .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85); z-index: 9998; display: flex;
       align-items: center; justify-content: center; padding: 20px; }
@@ -547,7 +430,6 @@
     .modal-confirm:disabled { background: #2a3a2a; color: #6a7a6a; cursor: not-allowed; }
     .modal-danger { background: #8a2a2a; color: #fff; }
 
-    /* PROFILE MODAL */
     .profile-modal {
       background: linear-gradient(160deg, #1e2f1e, #162316);
       border-radius: 28px; padding: 24px 20px;
@@ -639,11 +521,8 @@
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
     .profile-modal-help-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3040; }
-    .profile-modal-help-btn:disabled {
-      background: #2a3a2a; color: #6a7a6a;
-      box-shadow: 0 3px 0 #1a1a1a;
-      pointer-events: none;
-    }
+    .profile-modal-help-btn:disabled { background: #2a3a2a; color: #6a7a6a;
+      box-shadow: 0 3px 0 #1a1a1a; pointer-events: none; }
     .profile-modal-close-full {
       width: 100%; padding: 12px;
       background: #3a5a3a; color: #fff;
@@ -654,7 +533,6 @@
     }
     .profile-modal-close-full:active { background: #2a4a2a; }
 
-    /* HELP MODAL */
     .help-modal {
       background: linear-gradient(160deg, #1e3a3e, #162c2e);
       border-radius: 28px; padding: 24px 20px;
@@ -664,113 +542,68 @@
       position: relative;
       animation: profilePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .help-modal h3 {
-      color: #80d0ff;
-      text-align: center;
-      margin-bottom: 8px;
-      font-size: 1.2rem;
-    }
-    .help-modal .target-info {
-      text-align: center;
-      color: #d0e8c0;
-      font-size: 0.95rem;
-      margin-bottom: 16px;
-    }
+    .help-modal h3 { color: #80d0ff; text-align: center; margin-bottom: 8px; font-size: 1.2rem; }
+    .help-modal .target-info { text-align: center; color: #d0e8c0; font-size: 0.95rem; margin-bottom: 16px; }
     .help-modal .target-info b { color: #fff; }
-    .help-modal .input-section {
-      background: #0c181c;
-      border-radius: 16px;
-      padding: 16px;
-      border: 1px solid #2a4a5a;
-      margin-bottom: 14px;
-    }
-    .help-modal .input-section .label {
-      color: #6a9aaa;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      text-align: center;
-    }
+    .help-modal .input-section { background: #0c181c; border-radius: 16px;
+      padding: 16px; border: 1px solid #2a4a5a; margin-bottom: 14px; }
+    .help-modal .input-section .label { color: #6a9aaa; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+      margin-bottom: 8px; text-align: center; }
     .help-modal input[type="number"] {
-      width: 100%;
-      padding: 14px;
-      border-radius: 40px;
-      border: 2px solid #2a6a8a;
-      background: #061018;
-      color: #80d0ff;
-      font-size: 1.8rem;
-      font-weight: 800;
-      outline: none;
-      text-align: center;
+      width: 100%; padding: 14px; border-radius: 40px;
+      border: 2px solid #2a6a8a; background: #061018;
+      color: #80d0ff; font-size: 1.8rem; font-weight: 800;
+      outline: none; text-align: center;
       -moz-appearance: textfield;
     }
     .help-modal input[type="number"]::-webkit-outer-spin-button,
     .help-modal input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
+      -webkit-appearance: none; margin: 0;
     }
-    .help-modal .quick-select {
-      display: flex;
-      gap: 6px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .help-modal .quick-btn {
-      flex: 1;
-      min-width: 60px;
-      padding: 10px;
-      border-radius: 30px;
-      border: 1px solid #2a6a8a;
-      background: #162c2e;
-      color: #80d0ff;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
+    .help-modal .quick-select { display: flex; gap: 6px; margin-top: 12px;
+      flex-wrap: wrap; justify-content: center; }
+    .help-modal .quick-btn { flex: 1; min-width: 60px;
+      padding: 10px; border-radius: 30px;
+      border: 1px solid #2a6a8a; background: #162c2e;
+      color: #80d0ff; font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; touch-action: manipulation; }
     .help-modal .quick-btn:active { background: #2a4a5a; }
-    .help-modal .info-box {
-      background: #0c180c;
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
-      font-size: 0.8rem;
-      color: #8fa88f;
-      line-height: 1.5;
-    }
+    .help-modal .info-box { background: #0c180c; border-radius: 12px;
+      padding: 10px 14px; margin-bottom: 14px;
+      font-size: 0.8rem; color: #8fa88f; line-height: 1.5; }
     .help-modal .info-box b { color: #80d0ff; }
-    .help-modal .help-modal-buttons {
-      display: flex;
-      gap: 10px;
-    }
-    .help-modal .help-modal-buttons button {
-      flex: 1;
-      padding: 14px;
-      border-radius: 40px;
-      border: none;
-      font-weight: 700;
-      cursor: pointer;
-      touch-action: manipulation;
-      font-size: 0.95rem;
-    }
+    .help-modal .help-modal-buttons { display: flex; gap: 10px; }
+    .help-modal .help-modal-buttons button { flex: 1;
+      padding: 14px; border-radius: 40px;
+      border: none; font-weight: 700;
+      cursor: pointer; touch-action: manipulation;
+      font-size: 0.95rem; }
     .help-modal .help-cancel { background: #3a5a3a; color: #fff; }
     .help-modal .help-confirm {
       background: linear-gradient(160deg, #2a7a9a, #1a5a7a);
-      color: #fff;
-      box-shadow: 0 4px 0 #0a3040;
-    }
-    .help-modal .help-confirm:active {
-      transform: translateY(4px);
-      box-shadow: 0 0 0 #0a3040;
-    }
-    .help-modal .help-confirm:disabled {
-      background: #2a3a2a; color: #6a7a6a;
-      box-shadow: 0 3px 0 #1a1a1a;
-      pointer-events: none;
-    }
+      color: #fff; box-shadow: 0 4px 0 #0a3040; }
+    .help-modal .help-confirm:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3040; }
+    .help-modal .help-confirm:disabled { background: #2a3a2a; color: #6a7a6a;
+      box-shadow: 0 3px 0 #1a1a1a; pointer-events: none; }
+
+    .daily-modal { background: linear-gradient(160deg, #3a2e1e, #1e2f1e);
+      border: 2px solid #ffd980; border-radius: 28px; padding: 24px 20px;
+      text-align: center; max-width: 360px; width: 100%;
+      box-shadow: 0 20px 60px rgba(255, 217, 128, 0.4); }
+    .daily-modal .gift-icon { font-size: 4rem; margin-bottom: 8px;
+      animation: dailyBounce 1s ease infinite; }
+    @keyframes dailyBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .daily-modal h2 { color: #ffd980; font-size: 1.4rem; margin-bottom: 6px; }
+    .daily-modal .reward-amount { color: #fff; font-size: 2rem;
+      font-weight: 800; margin: 12px 0; }
+    .daily-modal .reward-sub { color: #d0e8c0; font-size: 0.85rem; margin-bottom: 16px; }
+    .daily-modal .claim-btn { width: 100%; padding: 14px;
+      background: linear-gradient(160deg, #ffd980, #c9a23f);
+      color: #1e2b0e; border: none; border-radius: 40px;
+      font-weight: 800; font-size: 1.05rem; cursor: pointer;
+      touch-action: manipulation; box-shadow: 0 6px 0 #7a5e1e; }
+    .daily-modal .claim-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #7a5e1e; }
 
     @media (max-width: 360px) {
       .nav-item { font-size: 0.6rem; }
@@ -786,7 +619,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v11.0 · Bantu Siram</p>
+    <p>v12.0 · Fast Load</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -831,27 +664,16 @@
       <div class="cloud-status" id="cloudStatus">☁️ Sync</div>
     </div>
     <button class="menu-btn" id="menuBtn" aria-label="Menu">⋮</button>
-    <!-- DROPDOWN -->
     <div class="dropdown-menu" id="dropdownMenu">
       <div class="dropdown-label">Aksi</div>
-      <button class="dropdown-item" id="menuHelpBtn">
-        <span class="icon">💧</span>
-        <span>Bantu Siram</span>
-      </button>
-      <button class="dropdown-item" id="menuEmptyBtn">
-        <span class="icon">📦</span>
-        <span>Tab Kosong</span>
-      </button>
+      <button class="dropdown-item" id="menuHelpBtn"><span class="icon">💧</span><span>Bantu Siram</span></button>
+      <button class="dropdown-item" id="menuEmptyBtn"><span class="icon">📦</span><span>Tab Kosong</span></button>
       <div class="dropdown-divider"></div>
-      <button class="dropdown-item" id="menuCloseBtn">
-        <span class="icon">✖️</span>
-        <span>Tutup Menu</span>
-      </button>
+      <button class="dropdown-item" id="menuCloseBtn"><span class="icon">✖️</span><span>Tutup Menu</span></button>
     </div>
   </div>
 
   <main id="mainContent">
-    <!-- TANAM -->
     <div id="pageTanam" class="page active">
       <div class="tree-card">
         <div class="tree-icon" id="treeIcon">🌰</div>
@@ -874,7 +696,6 @@
       <div class="small-note" id="pupukNote">Beri pupuk tiap 10 siram agar efek tetap 10 exp/L</div>
     </div>
 
-    <!-- LEADERBOARD -->
     <div id="pageLeaderboard" class="page">
       <div class="lb-controls">
         <div>
@@ -902,7 +723,6 @@
       <div class="small-note">👆 Tap nama untuk lihat profil</div>
     </div>
 
-    <!-- INVENTORI -->
     <div id="pageInventori" class="page">
       <div class="inv-header">
         <div class="title">🎒 Inventori</div>
@@ -913,13 +733,11 @@
       <div class="inv-tip">💡 Item bertambah dari pembelian di Toko & hadiah panen</div>
     </div>
 
-    <!-- TOKO -->
     <div id="pageToko" class="page">
       <h3 style="color:#c0e0b0; margin-bottom: 8px;">🛒 Toko</h3>
       <div id="shopItemsContainer"></div>
     </div>
 
-    <!-- BANTU SIRAM -->
     <div id="pageHelp" class="page">
       <div class="help-header">
         <div class="title">💧 Bantu Siram</div>
@@ -941,7 +759,6 @@
       <div class="small-note">💡 Daftar di-refresh otomatis tiap 24 jam</div>
     </div>
 
-    <!-- AKUN -->
     <div id="pageAkun" class="page">
       <div class="profile-card">
         <div class="profile-avatar" id="profileAvatar">👤</div>
@@ -974,20 +791,15 @@
           <button class="edit-btn" id="upgradeBtn" style="flex:1;">🔗 Upgrade</button>
         </div>
         <div id="regionSection"></div>
-
-        <!-- BANTUAN DITERIMA -->
         <div class="received-section" id="receivedSection">
           <div class="title">💧 Bantuan Diterima Hari Ini</div>
-          <div id="receivedList">
-            <div class="small-note">Belum ada bantuan hari ini</div>
-          </div>
+          <div id="receivedList"><div class="small-note">Belum ada bantuan hari ini</div></div>
         </div>
-
         <button class="edit-btn danger-btn" id="logoutBtn" style="width:100%;">🚪 Logout (Tetap Simpan)</button>
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note">Compound Harvest 1 · v11.0</div>
+      <div class="small-note">Compound Harvest 1 · v12.0</div>
     </div>
   </main>
 
@@ -1000,7 +812,7 @@
   </nav>
 </div>
 
-<!-- GENERIC MODAL -->
+<!-- MODALS -->
 <div class="modal-backdrop hidden" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle">⚠️ Konfirmasi</h3>
@@ -1013,31 +825,16 @@
   </div>
 </div>
 
-<!-- REGION MODAL -->
 <div class="modal-backdrop hidden" id="regionModalBackdrop">
   <div class="modal" style="max-width: 460px;">
     <h3>🌍 Atur Wilayah</h3>
     <div id="regionModalStep1">
-      <div class="region-warning" style="margin-bottom: 14px;">
-        ⚠️ Wilayah hanya bisa diatur <b>SEKALI</b>. Setelah disimpan, tidak bisa diubah sendiri!
-      </div>
+      <div class="region-warning" style="margin-bottom: 14px;">⚠️ Wilayah hanya bisa diatur <b>SEKALI</b>.</div>
       <div class="region-form" style="border: none; padding: 0; background: transparent;">
-        <div class="field">
-          <div class="label">🌍 Negara</div>
-          <input type="text" class="form-input" id="regCountry" placeholder="Indonesia" maxlength="30">
-        </div>
-        <div class="field" style="margin-top: 10px;">
-          <div class="label">🏙️ Provinsi</div>
-          <input type="text" class="form-input" id="regProvince" placeholder="Jawa Tengah" maxlength="30">
-        </div>
-        <div class="field" style="margin-top: 10px;">
-          <div class="label">🏘️ Kabupaten / Kota</div>
-          <input type="text" class="form-input" id="regRegency" placeholder="Kudus" maxlength="30">
-        </div>
-        <div class="field" style="margin-top: 10px;">
-          <div class="label">🏡 Kecamatan</div>
-          <input type="text" class="form-input" id="regDistrict" placeholder="Kota Kudus" maxlength="30">
-        </div>
+        <div class="field"><div class="label">🌍 Negara</div><input type="text" class="form-input" id="regCountry" placeholder="Indonesia" maxlength="30"></div>
+        <div class="field" style="margin-top: 10px;"><div class="label">🏙️ Provinsi</div><input type="text" class="form-input" id="regProvince" placeholder="Jawa Tengah" maxlength="30"></div>
+        <div class="field" style="margin-top: 10px;"><div class="label">🏘️ Kabupaten / Kota</div><input type="text" class="form-input" id="regRegency" placeholder="Kudus" maxlength="30"></div>
+        <div class="field" style="margin-top: 10px;"><div class="label">🏡 Kecamatan</div><input type="text" class="form-input" id="regDistrict" placeholder="Kota Kudus" maxlength="30"></div>
       </div>
       <div class="modal-buttons" style="margin-top: 16px;">
         <button class="modal-cancel" id="regionModalCancel">Batal</button>
@@ -1045,13 +842,9 @@
       </div>
     </div>
     <div id="regionModalStep2" class="hidden">
-      <p style="color: #d0e8c0; font-size: 0.95rem; margin-bottom: 12px; text-align: center;">
-        Apakah wilayah berikut sudah sesuai?
-      </p>
+      <p style="color: #d0e8c0; font-size: 0.95rem; margin-bottom: 12px; text-align: center;">Apakah wilayah berikut sudah sesuai?</p>
       <div class="region-preview" id="regionPreview"></div>
-      <div class="warning-box">
-        ⚠️ Setelah dikonfirmasi, wilayah <b>TIDAK BISA DIUBAH</b> sendiri.
-      </div>
+      <div class="warning-box">⚠️ Setelah dikonfirmasi, wilayah <b>TIDAK BISA DIUBAH</b> sendiri.</div>
       <div class="modal-buttons">
         <button class="modal-cancel" id="regionModalBack">← Kembali</button>
         <button class="modal-confirm" id="regionModalConfirm" disabled>Ya (3)</button>
@@ -1060,7 +853,6 @@
   </div>
 </div>
 
-<!-- DAILY REWARD MODAL -->
 <div class="modal-backdrop hidden" id="dailyRewardBackdrop">
   <div class="daily-modal">
     <div class="gift-icon">🎁</div>
@@ -1071,9 +863,8 @@
   </div>
 </div>
 
-<!-- PROFILE MODAL -->
 <div class="modal-backdrop hidden" id="profileModalBackdrop">
-  <div class="profile-modal" id="profileModal">
+  <div class="profile-modal">
     <button class="close-btn" id="profileModalClose">✕</button>
     <div class="profile-modal-avatar" id="pmAvatar">👤</div>
     <div class="profile-modal-name" id="pmName">-</div>
@@ -1084,10 +875,7 @@
     <div class="profile-modal-rows">
       <div class="profile-modal-row">
         <span class="label">🆔 UID</span>
-        <span class="value">
-          <span id="pmUid">-</span>
-          <button class="copy-btn" id="pmCopyBtn">📋</button>
-        </span>
+        <span class="value"><span id="pmUid">-</span><button class="copy-btn" id="pmCopyBtn">📋</button></span>
       </div>
       <div class="profile-modal-row">
         <span class="label">🏷️ Tipe</span>
@@ -1099,13 +887,10 @@
   </div>
 </div>
 
-<!-- HELP MODAL -->
 <div class="modal-backdrop hidden" id="helpModalBackdrop">
   <div class="help-modal">
     <h3>💧 Bantu Siram</h3>
-    <div class="target-info" id="helpTargetInfo">
-      Anda akan membantu <b>-</b>
-    </div>
+    <div class="target-info" id="helpTargetInfo">Anda akan membantu <b>-</b></div>
     <div class="input-section">
       <div class="label">Jumlah Air (1-10 L)</div>
       <input type="number" id="helpWaterInput" min="1" max="10" value="1" step="1">
@@ -1143,15 +928,17 @@
   const OWNER_EMAIL = "kelvinkudus@gmail.com";
   const BOT_KEYWORDS = ['test', 'bot', 'dummy', 'admin', 'player_', 'petani_bot', 'xxx'];
   const DAILY_REWARD_AMOUNT = 500;
-  const HEARTBEAT_INTERVAL = 30000;
+  const HEARTBEAT_INTERVAL = 45000;      // 45s (dari 30s)
   const ONLINE_THRESHOLD = 90000;
 
-  const HELP_MAX_PLAYERS = 10;       // Maks 10 pemain unik per hari
-  const HELP_MAX_PER_PLAYER = 1;     // 1x per pemain per hari
-  const HELP_WATER_MIN = 1;          // Min 1L
-  const HELP_WATER_MAX = 10;         // Max 10L
-  const HELP_COOLDOWN_MS = 10000;    // 10 detik
-  const HELP_EXP_PER_LITER = 10;     // 1L = +10 exp
+  const HELP_MAX_PLAYERS = 10;
+  const HELP_WATER_MIN = 1;
+  const HELP_WATER_MAX = 10;
+  const HELP_COOLDOWN_MS = 10000;
+  const HELP_EXP_PER_LITER = 10;
+
+  // Cache pool harian
+  const HELP_POOL_CACHE_KEY = 'helpPoolCache_v1';
 
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
@@ -1184,16 +971,18 @@
   let heartbeatTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v110_state';
+  const LOCAL_KEY = 'compoundHarvest_v120_state';
 
-  // Help system state
   let helpQuota = { totalSent: 0, playersHelped: {}, date: '' };
-  let helpPool = [];        // Daftar 10 pemain (UID)
+  let helpPool = [];
   let helpCooldownUntil = 0;
-  let currentHelpTarget = null;   // UID
+  let currentHelpTarget = null;
   let currentHelpTargetName = '';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
+
+  // ===== CACHE lb DATA =====
+  let lbDataCache = {};
 
   const LEVELS = [
     { level: 1, name: 'Benih', min: 0, max: 499 },
@@ -1252,14 +1041,12 @@
   const invGrid = $('invGrid');
   const invItemCount = $('invItemCount');
 
-  // Menu
   const menuBtn = $('menuBtn');
   const dropdownMenu = $('dropdownMenu');
   const menuHelpBtn = $('menuHelpBtn');
   const menuEmptyBtn = $('menuEmptyBtn');
   const menuCloseBtn = $('menuCloseBtn');
 
-  // Profile modal
   const profileModalBackdrop = $('profileModalBackdrop');
   const profileModalClose = $('profileModalClose');
   const profileModalCloseFull = $('profileModalCloseFull');
@@ -1271,14 +1058,12 @@
   const pmCopyBtn = $('pmCopyBtn');
   const pmHelpBtn = $('pmHelpBtn');
 
-  // Help system
   const helpList = $('helpList');
   const helpPlayersCount = $('helpPlayersCount');
   const helpTotalWater = $('helpTotalWater');
   const helpCooldown = $('helpCooldown');
   const helpCooldownTime = $('helpCooldownTime');
 
-  // Help modal
   const helpModalBackdrop = $('helpModalBackdrop');
   const helpTargetInfo = $('helpTargetInfo');
   const helpWaterInput = $('helpWaterInput');
@@ -1286,7 +1071,6 @@
   const helpModalCancel = $('helpModalCancel');
   const helpModalConfirm = $('helpModalConfirm');
 
-  // Received section
   const receivedSection = $('receivedSection');
   const receivedList = $('receivedList');
 
@@ -1385,6 +1169,21 @@
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
+  function showLbSkeleton(count = 5) {
+    let html = '';
+    for (let i = 0; i < count; i++) {
+      html += `
+        <div class="lb-skeleton">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #2a3a2a; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <div class="skel-bar" style="width: 60%; margin-bottom: 6px;"></div>
+            <div class="skel-bar" style="width: 30%; height: 8px;"></div>
+          </div>
+          <div class="skel-bar" style="width: 60px;"></div>
+        </div>`;
+    }
+    lbList.innerHTML = html;
+  }
 
   // ===== HEARTBEAT =====
   function startHeartbeat() {
@@ -1401,6 +1200,7 @@
   async function updateHeartbeat() {
     if (!auth.currentUser) return;
     try {
+      // Heartbeat pakai update partial — TIDAK overwrite seluruh /users/{uid}
       await update(ref(db, `users/${auth.currentUser.uid}`), {
         online: true, lastSeen: Date.now()
       });
@@ -1410,7 +1210,6 @@
     if (!auth.currentUser) return;
     try {
       set(ref(db, `users/${auth.currentUser.uid}/online`), false);
-      set(ref(db, `users/${auth.currentUser.uid}/lastSeen`), Date.now());
     } catch (e) {}
   }
 
@@ -1437,7 +1236,6 @@
     closeMenu();
     showToast('📦 Tab Kosong — Coming Soon', 2000);
   });
-  // Close dropdown when click outside
   document.addEventListener('click', e => {
     if (dropdownMenu.classList.contains('open') &&
         !dropdownMenu.contains(e.target) &&
@@ -1446,24 +1244,48 @@
     }
   });
 
-  // ===== HELP SYSTEM =====
-  function generateHelpPool() {
-    // Ambil 10 UID dari leaderboard/global/exp (yang bukan diri sendiri)
-    return get(query(ref(db, 'leaderboard/global/exp'), orderByChild('value'), limitToLast(100)))
-      .then(snap => {
-        const all = [];
-        snap.forEach(child => {
-          if (child.key !== state.uid) all.push(child.key);
-        });
-        // Shuffle & ambil 10
-        for (let i = all.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [all[i], all[j]] = [all[j], all[i]];
-        }
-        return all.slice(0, 10);
-      });
+  // ===== HELP POOL CACHE =====
+  function getCachedHelpPool() {
+    try {
+      const raw = localStorage.getItem(HELP_POOL_CACHE_KEY);
+      if (!raw) return null;
+      const cached = JSON.parse(raw);
+      if (cached.date !== getTodayKey()) return null;
+      return cached.pool || null;
+    } catch (e) { return null; }
+  }
+  function setCachedHelpPool(pool) {
+    try {
+      localStorage.setItem(HELP_POOL_CACHE_KEY, JSON.stringify({
+        date: getTodayKey(), pool
+      }));
+    } catch (e) {}
   }
 
+  async function generateHelpPool() {
+    // Cek cache dulu
+    const cached = getCachedHelpPool();
+    if (cached && cached.length > 0) {
+      // Filter yang bukan diri sendiri & masih ada
+      const filtered = cached.filter(uid => uid !== state.uid);
+      if (filtered.length > 0) return filtered;
+    }
+    // Query fresh
+    const snap = await get(query(ref(db, 'leaderboard/global/exp'), orderByChild('value'), limitToLast(100)));
+    const all = [];
+    snap.forEach(child => {
+      if (child.key !== state.uid) all.push(child.key);
+    });
+    for (let i = all.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [all[i], all[j]] = [all[j], all[i]];
+    }
+    const pool = all.slice(0, 10);
+    setCachedHelpPool(pool);
+    return pool;
+  }
+
+  // ===== HELP QUOTA =====
   async function loadHelpQuota() {
     if (!state.uid) return;
     const today = getTodayKey();
@@ -1480,22 +1302,7 @@
         helpQuota = { totalSent: 0, playersHelped: {}, date: today };
       }
     } catch (e) {
-      console.warn('Load quota error:', e);
       helpQuota = { totalSent: 0, playersHelped: {}, date: today };
-    }
-  }
-
-  async function saveHelpQuota() {
-    if (!state.uid) return;
-    const today = getTodayKey();
-    try {
-      await set(ref(db, `helpQuota/${state.uid}/${today}`), {
-        totalSent: helpQuota.totalSent,
-        playersHelped: helpQuota.playersHelped,
-        date: today
-      });
-    } catch (e) {
-      console.warn('Save quota error:', e);
     }
   }
 
@@ -1503,22 +1310,17 @@
     return Object.keys(helpQuota.playersHelped || {}).length;
   }
 
+  // ===== HELP PAGE (OPTIMIZED: BULK FETCH) =====
   async function renderHelpPage() {
     if (!helpList) return;
-
-    // Update stats
     const helpedCount = countPlayersHelped();
     helpPlayersCount.innerHTML = `${helpedCount}<small>/${HELP_MAX_PLAYERS}</small>`;
     helpTotalWater.innerHTML = `${helpQuota.totalSent || 0}<small>L</small>`;
-
-    // Loading
     helpList.innerHTML = `<div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat daftar pemain...</div></div>`;
 
-    // Generate pool
     try {
       helpPool = await generateHelpPool();
     } catch (e) {
-      console.warn('Pool error:', e);
       helpPool = [];
     }
 
@@ -1527,28 +1329,26 @@
       return;
     }
 
-    // Fetch profile semua pemain di pool
-    const playersData = [];
-    for (const uid of helpPool) {
-      try {
-        const snap = await get(ref(db, `users/${uid}`));
-        if (snap.exists()) {
+    // ✅ BULK FETCH — semua paralel, bukan sequential
+    const promises = helpPool.map(uid =>
+      get(ref(db, `users/${uid}`))
+        .then(snap => {
+          if (!snap.exists()) return null;
           const data = snap.val() || {};
-          playersData.push({
+          return {
             uid,
             name: data.name || 'Petani',
             photoURL: data.photoURL || '',
             provider: data.provider || 'guest',
-            level: data.level || 1,
             totalExp: data.totalExp || 0,
-          });
-        }
-      } catch (e) {
-        // Skip user yang tidak bisa dibaca
-      }
-    }
+          };
+        })
+        .catch(() => null)
+    );
 
-    // Render list
+    const results = await Promise.all(promises);
+    const playersData = results.filter(p => p !== null);
+
     let html = '';
     playersData.forEach(p => {
       const alreadyHelped = !!helpQuota.playersHelped[p.uid];
@@ -1573,24 +1373,18 @@
     });
 
     if (html === '') {
-      helpList.innerHTML = `<div class="help-empty">📭 Tidak ada pemain yang bisa dibantu saat ini.</div>`;
+      helpList.innerHTML = `<div class="help-empty">📭 Tidak ada pemain yang bisa dibantu.</div>`;
     } else {
       helpList.innerHTML = html;
-
-      // Attach event listeners
       helpList.querySelectorAll('.help-info').forEach(el => {
         el.addEventListener('click', () => {
-          const uid = el.dataset.uid;
-          const name = el.dataset.name;
-          openProfile(uid, { name });
+          openProfile(el.dataset.uid, { name: el.dataset.name });
         });
       });
       helpList.querySelectorAll('.help-action-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          const uid = btn.dataset.uid;
-          const name = btn.dataset.name;
-          openHelpModal(uid, name);
+          openHelpModal(btn.dataset.uid, btn.dataset.name);
         });
       });
     }
@@ -1599,16 +1393,12 @@
   async function openHelpModal(targetUid, targetName) {
     if (!state.uid) return;
     if (targetUid === state.uid) { showToast('❌ Tidak bisa bantu diri sendiri'); return; }
-
-    // Cek cooldown
     const now = Date.now();
     if (now < helpCooldownUntil) {
       const sec = Math.ceil((helpCooldownUntil - now) / 1000);
       showToast(`⏱️ Tunggu ${sec} detik lagi`);
       return;
     }
-
-    // Cek quota
     const helpedCount = countPlayersHelped();
     if (helpedCount >= HELP_MAX_PLAYERS) {
       showToast(`❌ Kuota harian habis (${HELP_MAX_PLAYERS} pemain/hari)`);
@@ -1618,12 +1408,8 @@
       showToast('❌ Sudah bantu pemain ini hari ini');
       return;
     }
-
-    // Set current target
     currentHelpTarget = targetUid;
     currentHelpTargetName = targetName;
-
-    // Update modal
     helpTargetInfo.innerHTML = `Anda akan membantu <b>${escapeHtml(targetName)}</b>`;
     helpWaterInput.value = 1;
     helpRemainingQuota.textContent = `${HELP_MAX_PLAYERS - helpedCount}`;
@@ -1640,23 +1426,17 @@
     if (!currentHelpTarget) return;
     const targetUid = currentHelpTarget;
     const targetName = currentHelpTargetName;
-
-    // Validate input
     let amount = parseInt(helpWaterInput.value, 10);
     if (isNaN(amount) || amount < HELP_WATER_MIN) amount = HELP_WATER_MIN;
     if (amount > HELP_WATER_MAX) amount = HELP_WATER_MAX;
-
-    // Re-check quota & cooldown
     if (Date.now() < helpCooldownUntil) {
-      const sec = Math.ceil((helpCooldownUntil - Date.now()) / 1000);
-      showToast(`⏱️ Tunggu ${sec} detik lagi`);
+      showToast(`⏱️ Tunggu ${Math.ceil((helpCooldownUntil - Date.now()) / 1000)} detik lagi`);
       return;
     }
     const helpedCount = countPlayersHelped();
     if (helpedCount >= HELP_MAX_PLAYERS) { showToast('❌ Kuota habis'); closeHelpModal(); return; }
     if (helpQuota.playersHelped[targetUid]) { showToast('❌ Sudah bantu'); closeHelpModal(); return; }
 
-    // Disable tombol sementara
     helpModalConfirm.disabled = true;
     helpModalConfirm.textContent = '⏳ Memproses...';
 
@@ -1665,7 +1445,6 @@
       const today = getTodayKey();
       const updates = {};
 
-      // 1. Update quota pengirim
       helpQuota.totalSent += amount;
       helpQuota.playersHelped[targetUid] = amount;
       updates[`helpQuota/${state.uid}/${today}`] = {
@@ -1673,20 +1452,11 @@
         playersHelped: helpQuota.playersHelped,
         date: today
       };
-
-      // 2. Catat di helpReceived target
       updates[`helpReceived/${targetUid}/${today}/${state.uid}`] = {
         name: state.name || 'Petani',
         amount: amount,
         ts: now
       };
-
-      // 3. Kirim exp ke target (read dulu totalExp & exp saat ini)
-      // ⚠️ Kita tidak bisa tulis langsung ke totalExp user lain (rules)
-      // Solusi: gunakan helpPool sebagai "queue" — target akan baca saat login
-      // Tapi karena Firebase tidak izinkan, kita pakai trik:
-      // Tulis ke /helpPool/{targetUid}/{senderUid} = { amount, expGain }
-      // Target akan apply saat heartbeat / login berikutnya
       updates[`helpPool/${targetUid}/${state.uid}`] = {
         amount: amount,
         expGain: amount * HELP_EXP_PER_LITER,
@@ -1697,13 +1467,9 @@
 
       await update(ref(db), updates);
 
-      // Set cooldown
       helpCooldownUntil = now + HELP_COOLDOWN_MS;
       startCooldownDisplay();
-
       showToast(`💧 Bantu ${targetName} +${amount}L (+${amount * HELP_EXP_PER_LITER} exp)`, 2500);
-
-      // Update UI
       renderHelpPage();
       renderReceivedSection();
     } catch (e) {
@@ -1718,27 +1484,20 @@
 
   function startCooldownDisplay() {
     if (!helpCooldown || !helpCooldownTime) return;
-    if (Date.now() >= helpCooldownUntil) {
-      helpCooldown.classList.add('hidden');
-      return;
-    }
+    if (Date.now() >= helpCooldownUntil) { helpCooldown.classList.add('hidden'); return; }
     helpCooldown.classList.remove('hidden');
     const tick = () => {
       const remaining = Math.ceil((helpCooldownUntil - Date.now()) / 1000);
-      if (remaining <= 0) {
-        helpCooldown.classList.add('hidden');
-        return;
-      }
+      if (remaining <= 0) { helpCooldown.classList.add('hidden'); return; }
       helpCooldownTime.textContent = remaining;
       setTimeout(tick, 500);
     };
     tick();
   }
 
-  // ===== RECEIVED HELP SECTION =====
+  // ===== RECEIVED HELP =====
   async function renderReceivedSection() {
-    if (!receivedList) return;
-    if (!state.uid) return;
+    if (!receivedList || !state.uid) return;
     const today = getTodayKey();
     try {
       const snap = await get(ref(db, `helpReceived/${state.uid}/${today}`));
@@ -1750,12 +1509,10 @@
       const entries = Object.entries(data).map(([senderUid, v]) => ({
         senderUid, ...v
       })).sort((a, b) => (b.ts || 0) - (a.ts || 0));
-
       if (entries.length === 0) {
         receivedList.innerHTML = `<div class="small-note">Belum ada bantuan hari ini</div>`;
         return;
       }
-
       let html = '';
       entries.forEach(e => {
         const alreadyReplied = !!helpQuota.playersHelped[e.senderUid];
@@ -1771,13 +1528,9 @@
           </div>`;
       });
       receivedList.innerHTML = html;
-
-      // Attach listeners
       receivedList.querySelectorAll('.reply-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const uid = btn.dataset.uid;
-          const name = btn.dataset.name;
-          openHelpModal(uid, name);
+          openHelpModal(btn.dataset.uid, btn.dataset.name);
         });
       });
     } catch (e) {
@@ -1785,7 +1538,7 @@
     }
   }
 
-  // ===== APPLY PENDING HELP (dari helpPool) =====
+  // ===== APPLY PENDING HELP =====
   async function applyPendingHelp() {
     if (!state.uid) return;
     try {
@@ -1793,17 +1546,14 @@
       if (!snap.exists()) return;
       const pool = snap.val() || {};
       let totalExpGain = 0;
-      let appliedCount = 0;
       const updates = {};
       for (const [senderUid, v] of Object.entries(pool)) {
         if (v.applied === false) {
           totalExpGain += (v.expGain || 0);
           updates[`helpPool/${state.uid}/${senderUid}/applied`] = true;
-          appliedCount++;
         }
       }
       if (totalExpGain > 0) {
-        // Apply exp ke state — tidak pengaruh ke waterSinceFertilizer
         const oldLevel = state.level;
         state.exp = Math.min(state.exp + totalExpGain, 3000);
         state.totalExp += totalExpGain;
@@ -1816,7 +1566,6 @@
         debouncedSave();
         showToast(`💧 +${totalExpGain} Exp dari bantuan teman!`, 2500, true);
       }
-      // Tandai applied
       if (Object.keys(updates).length > 0) {
         await update(ref(db), updates);
       }
@@ -1825,11 +1574,13 @@
     }
   }
 
-  // ===== PROFILE MODAL =====
+  // ===== PROFILE MODAL (OPTIMIZED: INSTANT) =====
   let currentProfileUid = null;
-  async function openProfile(uid, fallbackData) {
+  function openProfile(uid, fallbackData) {
     currentProfileUid = uid;
     profileModalBackdrop.classList.remove('hidden');
+
+    // Set default dari fallback SEKARANG — instant
     if (fallbackData) {
       pmName.textContent = fallbackData.name || 'Petani';
       pmType.textContent = '-';
@@ -1837,53 +1588,56 @@
     }
     pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>Memuat...</span>`;
     pmUid.textContent = uid.substring(0, 12) + '...';
-    // Reset help button
-    pmHelpBtn.disabled = false;
-    pmHelpBtn.textContent = '💧 Bantu Siram';
+    pmHelpBtn.disabled = true;
+    pmHelpBtn.textContent = '⏳ Memuat...';
 
-    try {
-      const snap = await get(ref(db, `users/${uid}`));
-      if (!snap.exists()) {
-        showToast('❌ Profil tidak ditemukan');
-        closeProfileModal();
-        return;
-      }
-      const data = snap.val() || {};
-      pmName.textContent = data.name || 'Petani';
-      const provider = data.provider || 'guest';
-      pmType.textContent = getProviderLabel(provider);
-      if (data.photoURL) {
-        pmAvatar.innerHTML = `<img src="${escapeHtml(data.photoURL)}" alt="avatar" onerror="this.style.display='none';this.parentElement.textContent='${getProviderBadge(provider)}'">`;
-      } else {
-        pmAvatar.textContent = getProviderBadge(provider);
-      }
-      const now = Date.now();
-      const lastSeen = data.lastSeen || 0;
-      const onlineFlag = data.online === true;
-      const isCurrentlyOnline = onlineFlag && (now - lastSeen < ONLINE_THRESHOLD);
-      if (isCurrentlyOnline) {
-        pmStatus.innerHTML = `<span class="status-dot status-online"></span><span class="status-online">🟢 Online</span>`;
-      } else {
-        pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span class="status-offline">⚪ Offline · ${formatRelativeTime(lastSeen)}</span>`;
-      }
-
-      // Disable tombol bantu kalau diri sendiri / sudah dibantu / kuota habis
-      if (uid === state.uid) {
+    // Fetch async — biar modal muncul dulu
+    (async () => {
+      try {
+        const snap = await get(ref(db, `users/${uid}`));
+        if (!snap.exists()) {
+          showToast('❌ Profil tidak ditemukan');
+          closeProfileModal();
+          return;
+        }
+        const data = snap.val() || {};
+        pmName.textContent = data.name || 'Petani';
+        const provider = data.provider || 'guest';
+        pmType.textContent = getProviderLabel(provider);
+        if (data.photoURL) {
+          pmAvatar.innerHTML = `<img src="${escapeHtml(data.photoURL)}" alt="avatar" onerror="this.style.display='none';this.parentElement.textContent='${getProviderBadge(provider)}'">`;
+        } else {
+          pmAvatar.textContent = getProviderBadge(provider);
+        }
+        const now = Date.now();
+        const lastSeen = data.lastSeen || 0;
+        const onlineFlag = data.online === true;
+        const isCurrentlyOnline = onlineFlag && (now - lastSeen < ONLINE_THRESHOLD);
+        if (isCurrentlyOnline) {
+          pmStatus.innerHTML = `<span class="status-dot status-online"></span><span class="status-online">🟢 Online</span>`;
+        } else {
+          pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span class="status-offline">⚪ Offline · ${formatRelativeTime(lastSeen)}</span>`;
+        }
+        if (uid === state.uid) {
+          pmHelpBtn.disabled = true;
+          pmHelpBtn.textContent = '❌ Tidak bisa bantu diri sendiri';
+        } else if (helpQuota.playersHelped[uid]) {
+          pmHelpBtn.disabled = true;
+          pmHelpBtn.textContent = '✅ Sudah dibantu hari ini';
+        } else if (countPlayersHelped() >= HELP_MAX_PLAYERS) {
+          pmHelpBtn.disabled = true;
+          pmHelpBtn.textContent = '❌ Kuota harian habis';
+        } else {
+          pmHelpBtn.disabled = false;
+          pmHelpBtn.textContent = '💧 Bantu Siram';
+        }
+      } catch (e) {
+        console.error('Profile error:', e);
+        pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>⚠️ Gagal memuat</span>`;
         pmHelpBtn.disabled = true;
-        pmHelpBtn.textContent = '❌ Tidak bisa bantu diri sendiri';
-      } else if (helpQuota.playersHelped[uid]) {
-        pmHelpBtn.disabled = true;
-        pmHelpBtn.textContent = '✅ Sudah dibantu hari ini';
-      } else if (countPlayersHelped() >= HELP_MAX_PLAYERS) {
-        pmHelpBtn.disabled = true;
-        pmHelpBtn.textContent = '❌ Kuota harian habis';
-      } else {
-        pmHelpBtn.disabled = false;
-        pmHelpBtn.textContent = '💧 Bantu Siram';
+        pmHelpBtn.textContent = '❌ Gagal';
       }
-    } catch (e) {
-      pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>⚠️ Gagal memuat profil</span>`;
-    }
+    })();
   }
   function closeProfileModal() {
     profileModalBackdrop.classList.add('hidden');
@@ -1957,12 +1711,8 @@
         <div class="inv-card ${item.className}">
           <div class="inv-icon">${item.icon}</div>
           <div class="inv-name">${escapeHtml(item.name)}</div>
-          <div class="inv-amount ${item.className}">
-            ${formatNumber(item.amount)}<span class="inv-unit">${item.unit}</span>
-          </div>
-          <div class="inv-bar">
-            <div class="inv-bar-fill ${item.className}" style="width: ${pct}%;"></div>
-          </div>
+          <div class="inv-amount ${item.className}">${formatNumber(item.amount)}<span class="inv-unit">${item.unit}</span></div>
+          <div class="inv-bar"><div class="inv-bar-fill ${item.className}" style="width: ${pct}%;"></div></div>
           <div class="inv-desc">${escapeHtml(item.desc)}</div>
         </div>`;
     }).join('');
@@ -1977,11 +1727,8 @@
     waterDisplay.textContent = state.water;
     fertilizerDisplay.textContent = state.fertilizer;
     totalExpBadge.textContent = `🌟 Total Exp: ${formatNumber(state.totalExp)}`;
-    if (state.lastDailyReward) {
-      dailyBadge.textContent = `🎁 Daily: terakhir ${state.lastDailyReward}`;
-    } else {
-      dailyBadge.textContent = `🎁 Daily: belum pernah`;
-    }
+    if (state.lastDailyReward) dailyBadge.textContent = `🎁 Daily: terakhir ${state.lastDailyReward}`;
+    else dailyBadge.textContent = `🎁 Daily: belum pernah`;
     const currentLevelData = getLevelData(state.exp);
     state.level = currentLevelData.level;
     if (state.level === 5) state.exp = Math.min(state.exp, 3000);
@@ -1989,10 +1736,8 @@
     treeIcon.textContent = icons[state.level - 1] || '🌰';
     levelBadge.textContent = `Lv.${state.level} ${currentLevelData.name}`;
     let percentage = 0;
-    if (state.level === 5) {
-      percentage = 100;
-      expText.textContent = `3000 / 3000 Exp (Siap panen)`;
-    } else {
+    if (state.level === 5) { percentage = 100; expText.textContent = `3000 / 3000 Exp (Siap panen)`; }
+    else {
       const min = currentLevelData.min;
       const max = currentLevelData.max;
       const range = max - min + 1;
@@ -2017,17 +1762,12 @@
     profileUid.textContent = state.uid ? state.uid.substring(0, 20) + '...' : '-';
     if (state.provider === 'github') {
       profileType.textContent = '🐙 GitHub';
-      if (state.photoURL) {
-        profileAvatar.innerHTML = `<img src="${escapeHtml(state.photoURL)}" alt="avatar" onerror="this.style.display='none';this.parentElement.textContent='🐙'">`;
-      } else {
-        profileAvatar.textContent = '🐙';
-      }
+      if (state.photoURL) profileAvatar.innerHTML = `<img src="${escapeHtml(state.photoURL)}" alt="avatar" onerror="this.style.display='none';this.parentElement.textContent='🐙'">`;
+      else profileAvatar.textContent = '🐙';
     } else if (state.provider === 'email') {
-      profileType.textContent = '📧 Email';
-      profileAvatar.textContent = '👤';
+      profileType.textContent = '📧 Email'; profileAvatar.textContent = '👤';
     } else {
-      profileType.textContent = '🎮 Guest';
-      profileAvatar.textContent = '👤';
+      profileType.textContent = '🎮 Guest'; profileAvatar.textContent = '👤';
     }
     profileTotalExp.textContent = formatNumber(state.totalExp);
     if (state.lastDailyReward) {
@@ -2039,19 +1779,10 @@
         profileDaily.textContent = `Terakhir: ${state.lastDailyReward}`;
         profileDaily.style.color = '#ffd980';
       }
-    } else {
-      profileDaily.textContent = 'Belum pernah';
-      profileDaily.style.color = '#8fa88f';
-    }
-    if (state.provider === 'guest') {
-      upgradeBtn.style.display = 'block';
-      upgradeBtn.textContent = '🔗 Upgrade Akun';
-    } else if (state.provider === 'email') {
-      upgradeBtn.style.display = 'block';
-      upgradeBtn.textContent = '🐙 Link ke GitHub';
-    } else {
-      upgradeBtn.style.display = 'none';
-    }
+    } else { profileDaily.textContent = 'Belum pernah'; profileDaily.style.color = '#8fa88f'; }
+    if (state.provider === 'guest') { upgradeBtn.style.display = 'block'; upgradeBtn.textContent = '🔗 Upgrade Akun'; }
+    else if (state.provider === 'email') { upgradeBtn.style.display = 'block'; upgradeBtn.textContent = '🐙 Link ke GitHub'; }
+    else upgradeBtn.style.display = 'none';
     if (state.provider === 'guest') deleteAccountBtn.classList.remove('hidden');
     else deleteAccountBtn.classList.add('hidden');
     if (state.isOwner) adminCleanupBtn.classList.remove('hidden');
@@ -2090,7 +1821,7 @@
   function debouncedSave() {
     setLocalState(state);
     if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => { saveToCloud(); }, 800);
+    saveTimer = setTimeout(() => { saveToCloud(); }, 1000);
   }
   async function saveToCloud() {
     if (!dbRef || !state.uid) return;
@@ -2119,9 +1850,7 @@
     } catch (e) {
       console.error('Save error:', e);
       setCloudStatus('offline');
-    } finally {
-      isSaving = false;
-    }
+    } finally { isSaving = false; }
   }
   async function loadFromCloud(uid) {
     const userRef = ref(db, 'users/' + uid);
@@ -2168,10 +1897,11 @@
       updateUI();
       updateLeaderboardEntries().catch(() => {});
       startHeartbeat();
-      // Load help quota + apply pending help + received section
-      await loadHelpQuota();
-      await applyPendingHelp();
-      renderReceivedSection();
+      // Load help system paralel — tidak blocking UI
+      loadHelpQuota().then(() => {
+        applyPendingHelp();
+        renderReceivedSection();
+      }).catch(() => {});
       setTimeout(() => checkAndShowDailyReward(), isNewAccount ? 800 : 500);
     } catch (e) {
       console.error('Load error:', e);
@@ -2180,7 +1910,7 @@
     }
   }
 
-  // ===== LEADERBOARD UPDATE =====
+  // ===== LEADERBOARD (OPTIMIZED) =====
   async function updateLeaderboardEntries() {
     if (!state.uid) return;
     const entryExp = { uid: state.uid, name: state.name || 'Petani', value: state.totalExp || 0, region: state.region, provider: state.provider || 'guest' };
@@ -2195,6 +1925,91 @@
       updates[`leaderboard/${r}/${key}/points/${state.uid}`] = entryPts;
     }
     await update(ref(db), updates);
+  }
+  function getLbPath() {
+    const cat = lbView.category;
+    if (lbView.region === 'global') return `leaderboard/global/${cat}`;
+    const key = sanitizeKey(state.region[lbView.region]);
+    if (!key) return null;
+    return `leaderboard/${lbView.region}/${key}/${cat}`;
+  }
+  function getLbRegionLabel() {
+    const r = lbView.region;
+    if (r === 'global') return '🌍 Menampilkan peringkat global';
+    const val = state.region[r] || '(belum diatur)';
+    const label = { negara: 'Negara', provinsi: 'Provinsi', kabupaten: 'Kabupaten', kecamatan: 'Kecamatan' }[r];
+    return `${label}: ${val || '(belum diatur)'}`;
+  }
+  async function loadLeaderboard() {
+    if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
+    showLbSkeleton(5);  // ← Tampil skeleton, bukan spinner
+    lbRegionInfo.textContent = getLbRegionLabel();
+    const path = getLbPath();
+    if (!path) {
+      lbList.innerHTML = `<div class="lb-empty">🌍 Wilayah <b>${lbView.region}</b> belum diatur.</div>`;
+      return;
+    }
+    try {
+      // ✅ Query dengan limitToLast 100 — Firebase harus ada indexOn value
+      const q = query(ref(db, path), orderByChild('value'), limitToLast(100));
+      const unsubscribe = onValue(q, (snapshot) => {
+        const rows = [];
+        snapshot.forEach(child => {
+          const v = child.val() || {};
+          rows.push({ uid: child.key, name: v.name || 'Petani', value: v.value || 0, provider: v.provider || 'guest' });
+        });
+        rows.sort((a, b) => b.value - a.value);
+        renderLeaderboard(rows);
+      }, (err) => {
+        console.error('LB error:', err);
+        lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${err.message}</div>`;
+      });
+      lbView.unsubscribe = unsubscribe;
+    } catch (e) {
+      console.error('LB query error:', e);
+      lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${e.message}</div>`;
+    }
+  }
+  function renderLeaderboard(rows) {
+    if (!rows || rows.length === 0) {
+      lbList.innerHTML = `<div class="lb-empty">📭 Belum ada data. Jadilah yang pertama! 🌱</div>`;
+      return;
+    }
+    const cat = lbView.category;
+    const unit = cat === 'exp' ? 'Exp' : 'PP';
+    let html = '';
+    rows.forEach((row, idx) => {
+      const rank = idx + 1;
+      let rankClass = '', rankIcon = rank;
+      if (rank === 1) { rankClass = 'gold'; rankIcon = '🥇'; }
+      else if (rank === 2) { rankClass = 'silver'; rankIcon = '🥈'; }
+      else if (rank === 3) { rankClass = 'bronze'; rankIcon = '🥉'; }
+      const isMe = row.uid === state.uid;
+      let badge = '';
+      if (row.provider === 'github') badge = `<span class="lb-badge github">🐙</span>`;
+      else if (row.provider === 'email') badge = `<span class="lb-badge email">📧</span>`;
+      else badge = `<span class="lb-badge guest">🎮</span>`;
+      const safeName = escapeHtml(row.name).replace(/"/g, '&quot;');
+      html += `
+        <div class="lb-row ${isMe ? 'me' : ''}">
+          <div class="lb-rank ${rankClass}">${rankIcon}</div>
+          <div class="lb-info" data-uid="${row.uid}" data-name="${safeName}" data-provider="${row.provider}">
+            <div class="lb-name ${isMe ? 'me' : ''}">${badge} ${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}</div>
+            <div class="lb-sub">#${rank} · Tap untuk profil</div>
+          </div>
+          <div class="lb-value ${cat}">${formatNumber(row.value)} ${unit}</div>
+        </div>`;
+    });
+    lbList.innerHTML = html;
+    document.querySelectorAll('.lb-info').forEach(el => {
+      el.addEventListener('click', () => {
+        const uid = el.dataset.uid;
+        const name = el.dataset.name;
+        const provider = el.dataset.provider;
+        if (!uid) return;
+        openProfile(uid, { name, provider });
+      });
+    });
   }
 
   // ===== DAILY =====
@@ -2408,7 +2223,6 @@
     if (e.target === modalBackdrop) hideModal();
   });
 
-  // ===== PROFILE MODAL EVENTS =====
   profileModalClose.addEventListener('click', closeProfileModal);
   profileModalCloseFull.addEventListener('click', closeProfileModal);
   profileModalBackdrop.addEventListener('click', e => {
@@ -2416,9 +2230,7 @@
   });
   pmCopyBtn.addEventListener('click', () => {
     if (!currentProfileUid) return;
-    navigator.clipboard.writeText(currentProfileUid).then(() => {
-      showToast('📋 UID disalin');
-    }).catch(() => showToast('❌ Gagal copy'));
+    navigator.clipboard.writeText(currentProfileUid).then(() => showToast('📋 UID disalin')).catch(() => showToast('❌ Gagal copy'));
   });
   pmHelpBtn.addEventListener('click', () => {
     if (!currentProfileUid) return;
@@ -2427,19 +2239,14 @@
     openHelpModal(currentProfileUid, name);
   });
 
-  // ===== HELP MODAL EVENTS =====
   helpModalCancel.addEventListener('click', closeHelpModal);
   helpModalConfirm.addEventListener('click', executeHelpWater);
   helpModalBackdrop.addEventListener('click', e => {
     if (e.target === helpModalBackdrop) closeHelpModal();
   });
-  // Quick select buttons
   document.querySelectorAll('.help-modal .quick-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      helpWaterInput.value = btn.dataset.amount;
-    });
+    btn.addEventListener('click', () => { helpWaterInput.value = btn.dataset.amount; });
   });
-  // Input validation
   helpWaterInput.addEventListener('input', () => {
     let v = parseInt(helpWaterInput.value, 10);
     if (isNaN(v) || v < 1) v = 1;
@@ -2522,7 +2329,6 @@
     if (e.target === regionModalBackdrop) closeRegionModal();
   });
 
-  // ===== DAILY EVENTS =====
   dailyClaimBtn.addEventListener('click', claimDailyReward);
   dailyRewardBackdrop.addEventListener('click', e => {
     if (e.target === dailyRewardBackdrop) showToast('Klik "Klaim & Lanjut" untuk lanjut');
@@ -2825,7 +2631,7 @@
       gameContainer.classList.add('active');
       await loadFromCloud(user.uid);
       updateUI();
-      if (state.isOwner) setTimeout(() => autoCleanupBots(), 2000);
+      if (state.isOwner) setTimeout(() => autoCleanupBots(), 3000);
     } else {
       loginScreen.classList.remove('hidden');
       gameContainer.classList.remove('active');
@@ -2881,7 +2687,7 @@
   });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v11.0 ready');
+  console.log('🌳 Compound Harvest v12.0 ready');
 </script>
 </body>
 </html>
