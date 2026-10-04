@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#1e2b1e">
-  <title>Compound Harvest 1 · v12.0</title>
+  <title>Compound Harvest 1 · v13.0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { height: 100%; overflow: hidden; }
@@ -154,7 +154,6 @@
     .btn-harvest { background: #c9a23f; color: #1e2b0e; border-color: #f5e56b;
       grid-column: span 2; font-size: 1.3rem; box-shadow: 0 6px 0 #7a5e1e; }
 
-    /* LEADERBOARD */
     .lb-controls { background: #162316; border-radius: 20px; padding: 12px; border: 1px solid #3a5a3a;
       display: flex; flex-direction: column; gap: 10px; }
     .lb-section-label { font-size: 0.75rem; color: #8fa88f; font-weight: 600;
@@ -199,15 +198,9 @@
       border-radius: 12px; background: #1a2a1a; margin-bottom: 6px;
       animation: shimmer 1.5s infinite;
     }
-    @keyframes shimmer {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.8; }
-    }
-    .lb-skeleton .skel-bar {
-      height: 12px; background: #2a3a2a; border-radius: 6px;
-    }
+    @keyframes shimmer { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+    .lb-skeleton .skel-bar { height: 12px; background: #2a3a2a; border-radius: 6px; }
 
-    /* INVENTORI */
     .inv-header { background: #162316; border-radius: 20px; padding: 14px 16px;
       border: 1px solid #3a5a3a; display: flex; justify-content: space-between;
       align-items: center; gap: 10px; }
@@ -279,13 +272,11 @@
     .lock-btn { background: #4a3a1e; border-color: #a08040; color: #ffd980; }
     .locked-display { background: #1e2f1e; border: 1px solid #5b875b; border-radius: 24px;
       padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-    .locked-display .title { color: #ffd980; font-weight: 700; font-size: 0.95rem;
-      margin-bottom: 4px; }
+    .locked-display .title { color: #ffd980; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
     .locked-display .row { display: flex; align-items: center; gap: 8px;
       background: #162316; padding: 10px 14px; border-radius: 14px;
       color: #e0f0d0; font-size: 0.9rem; border: 1px solid #3f5f3f; }
-    .locked-note { color: #8fa88f; font-size: 0.78rem;
-      text-align: center; margin-top: 6px; font-style: italic; }
+    .locked-note { color: #8fa88f; font-size: 0.78rem; text-align: center; margin-top: 6px; font-style: italic; }
     .region-form { background: #1e2f1e; border: 1px solid #5b875b; border-radius: 24px;
       padding: 16px; display: flex; flex-direction: column; gap: 12px; }
     .region-form .label { color: #8fa88f; font-size: 0.75rem; font-weight: 600;
@@ -294,17 +285,14 @@
     .region-warning { background: #5a3e1e; border: 1px solid #a08040; border-radius: 12px;
       padding: 10px 14px; color: #ffe0a0; font-size: 0.82rem; line-height: 1.5; }
 
-    /* BANTU SIRAM */
     .help-header {
       background: linear-gradient(160deg, #1e3a3e, #162c2e);
       border-radius: 20px; padding: 16px;
       border: 1px solid #4a7a8a;
       display: flex; flex-direction: column; gap: 10px;
     }
-    .help-header .title {
-      color: #80d0ff; font-weight: 700; font-size: 1.1rem;
-      display: flex; align-items: center; gap: 8px;
-    }
+    .help-header .title { color: #80d0ff; font-weight: 700; font-size: 1.1rem;
+      display: flex; align-items: center; gap: 8px; }
     .help-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .help-stat { background: #0c181c; border-radius: 14px; padding: 12px;
       border: 1px solid #2a4a5a; text-align: center; }
@@ -395,9 +383,6 @@
     .small-note { font-size: 0.75rem; color: #8fa88f; text-align: center; margin-top: 6px; }
     .loading-spinner { display: inline-block; width: 16px; height: 16px;
       border: 2px solid #a0d0a0; border-radius: 50%; border-top-color: transparent;
-      animation: spin 0.8s linear infinite; }
-    .loading-spinner-lg { display: inline-block; width: 32px; height: 32px;
-      border: 3px solid #a0d0a0; border-radius: 50%; border-top-color: transparent;
       animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -614,12 +599,11 @@
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v12.0 · Fast Load</p>
+    <p>v13.0 · Bug Fix</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -652,7 +636,6 @@
   </div>
 </div>
 
-<!-- GAME -->
 <div id="gameContainer">
   <div class="status-bar">
     <div class="status-left">
@@ -799,7 +782,7 @@
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note">Compound Harvest 1 · v12.0</div>
+      <div class="small-note">Compound Harvest 1 · v13.0</div>
     </div>
   </main>
 
@@ -812,7 +795,6 @@
   </nav>
 </div>
 
-<!-- MODALS -->
 <div class="modal-backdrop hidden" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle">⚠️ Konfirmasi</h3>
@@ -914,7 +896,6 @@
 
 <div id="toast" class="toast"></div>
 
-<!-- FIREBASE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getDatabase, ref, get, set, update, remove, query, orderByChild, limitToLast, onValue }
@@ -928,7 +909,7 @@
   const OWNER_EMAIL = "kelvinkudus@gmail.com";
   const BOT_KEYWORDS = ['test', 'bot', 'dummy', 'admin', 'player_', 'petani_bot', 'xxx'];
   const DAILY_REWARD_AMOUNT = 500;
-  const HEARTBEAT_INTERVAL = 45000;      // 45s (dari 30s)
+  const HEARTBEAT_INTERVAL = 45000;
   const ONLINE_THRESHOLD = 90000;
 
   const HELP_MAX_PLAYERS = 10;
@@ -936,9 +917,7 @@
   const HELP_WATER_MAX = 10;
   const HELP_COOLDOWN_MS = 10000;
   const HELP_EXP_PER_LITER = 10;
-
-  // Cache pool harian
-  const HELP_POOL_CACHE_KEY = 'helpPoolCache_v1';
+  const HELP_POOL_SIZE = 10;
 
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
@@ -971,7 +950,7 @@
   let heartbeatTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v120_state';
+  const LOCAL_KEY = 'compoundHarvest_v130_state';
 
   let helpQuota = { totalSent: 0, playersHelped: {}, date: '' };
   let helpPool = [];
@@ -980,9 +959,6 @@
   let currentHelpTargetName = '';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
-
-  // ===== CACHE lb DATA =====
-  let lbDataCache = {};
 
   const LEVELS = [
     { level: 1, name: 'Benih', min: 0, max: 499 },
@@ -1200,7 +1176,6 @@
   async function updateHeartbeat() {
     if (!auth.currentUser) return;
     try {
-      // Heartbeat pakai update partial — TIDAK overwrite seluruh /users/{uid}
       await update(ref(db, `users/${auth.currentUser.uid}`), {
         online: true, lastSeen: Date.now()
       });
@@ -1213,79 +1188,64 @@
     } catch (e) {}
   }
 
-  // ===== MENU DROPDOWN =====
-  function openMenu() {
-    dropdownMenu.classList.add('open');
-    menuBtn.classList.add('active');
-  }
-  function closeMenu() {
-    dropdownMenu.classList.remove('open');
-    menuBtn.classList.remove('active');
-  }
+  // ===== MENU =====
+  function openMenu() { dropdownMenu.classList.add('open'); menuBtn.classList.add('active'); }
+  function closeMenu() { dropdownMenu.classList.remove('open'); menuBtn.classList.remove('active'); }
   menuBtn.addEventListener('click', e => {
     e.stopPropagation();
     if (dropdownMenu.classList.contains('open')) closeMenu();
     else openMenu();
   });
   menuCloseBtn.addEventListener('click', () => closeMenu());
-  menuHelpBtn.addEventListener('click', () => {
-    closeMenu();
-    switchPage('help');
-  });
-  menuEmptyBtn.addEventListener('click', () => {
-    closeMenu();
-    showToast('📦 Tab Kosong — Coming Soon', 2000);
-  });
+  menuHelpBtn.addEventListener('click', () => { closeMenu(); switchPage('help'); });
+  menuEmptyBtn.addEventListener('click', () => { closeMenu(); showToast('📦 Tab Kosong — Coming Soon', 2000); });
   document.addEventListener('click', e => {
-    if (dropdownMenu.classList.contains('open') &&
-        !dropdownMenu.contains(e.target) &&
-        e.target !== menuBtn) {
-      closeMenu();
-    }
+    if (dropdownMenu.classList.contains('open') && !dropdownMenu.contains(e.target) && e.target !== menuBtn) closeMenu();
   });
 
-  // ===== HELP POOL CACHE =====
-  function getCachedHelpPool() {
-    try {
-      const raw = localStorage.getItem(HELP_POOL_CACHE_KEY);
-      if (!raw) return null;
-      const cached = JSON.parse(raw);
-      if (cached.date !== getTodayKey()) return null;
-      return cached.pool || null;
-    } catch (e) { return null; }
-  }
-  function setCachedHelpPool(pool) {
-    try {
-      localStorage.setItem(HELP_POOL_CACHE_KEY, JSON.stringify({
-        date: getTodayKey(), pool
-      }));
-    } catch (e) {}
-  }
-
+  // ===== HELP POOL — FIX: Ambil dari /users juga =====
   async function generateHelpPool() {
-    // Cek cache dulu
-    const cached = getCachedHelpPool();
-    if (cached && cached.length > 0) {
-      // Filter yang bukan diri sendiri & masih ada
-      const filtered = cached.filter(uid => uid !== state.uid);
-      if (filtered.length > 0) return filtered;
+    const myUid = state.uid;
+    const candidates = new Set();
+
+    // 1. Ambil dari leaderboard/global/exp (pemain aktif)
+    try {
+      const snap = await get(query(ref(db, 'leaderboard/global/exp'), orderByChild('value'), limitToLast(200)));
+      snap.forEach(child => {
+        if (child.key !== myUid) candidates.add(child.key);
+      });
+    } catch (e) {
+      console.warn('LB pool fetch error:', e);
     }
-    // Query fresh
-    const snap = await get(query(ref(db, 'leaderboard/global/exp'), orderByChild('value'), limitToLast(100)));
-    const all = [];
-    snap.forEach(child => {
-      if (child.key !== state.uid) all.push(child.key);
-    });
+
+    // 2. ✅ Ambil dari /users juga (semua akun terdaftar)
+    try {
+      const usersSnap = await get(ref(db, 'users'));
+      if (usersSnap.exists()) {
+        usersSnap.forEach(child => {
+          if (child.key !== myUid) candidates.add(child.key);
+        });
+      }
+    } catch (e) {
+      console.warn('Users pool fetch error:', e);
+    }
+
+    // Konversi Set ke Array
+    let all = Array.from(candidates);
+
+    // Kalau masih kosong, berarti cuma Anda sendiri di game
+    if (all.length === 0) {
+      return [];
+    }
+
+    // Shuffle & ambil 10
     for (let i = all.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [all[i], all[j]] = [all[j], all[i]];
     }
-    const pool = all.slice(0, 10);
-    setCachedHelpPool(pool);
-    return pool;
+    return all.slice(0, HELP_POOL_SIZE);
   }
 
-  // ===== HELP QUOTA =====
   async function loadHelpQuota() {
     if (!state.uid) return;
     const today = getTodayKey();
@@ -1310,7 +1270,7 @@
     return Object.keys(helpQuota.playersHelped || {}).length;
   }
 
-  // ===== HELP PAGE (OPTIMIZED: BULK FETCH) =====
+  // ===== HELP PAGE =====
   async function renderHelpPage() {
     if (!helpList) return;
     const helpedCount = countPlayersHelped();
@@ -1321,15 +1281,21 @@
     try {
       helpPool = await generateHelpPool();
     } catch (e) {
+      console.warn('Pool error:', e);
       helpPool = [];
     }
 
     if (helpPool.length === 0) {
-      helpList.innerHTML = `<div class="help-empty">📭 Belum ada pemain lain.<br>Ajak teman main dulu! 🌱</div>`;
+      helpList.innerHTML = `<div class="help-empty">
+        📭 Belum ada pemain lain di game.<br>
+        <small style="color: #6a8a6a; font-size: 0.8rem; display: block; margin-top: 8px;">
+          Ajak teman untuk daftar / main dulu ya! 🌱
+        </small>
+      </div>`;
       return;
     }
 
-    // ✅ BULK FETCH — semua paralel, bukan sequential
+    // Bulk fetch paralel
     const promises = helpPool.map(uid =>
       get(ref(db, `users/${uid}`))
         .then(snap => {
@@ -1345,9 +1311,13 @@
         })
         .catch(() => null)
     );
-
     const results = await Promise.all(promises);
     const playersData = results.filter(p => p !== null);
+
+    if (playersData.length === 0) {
+      helpList.innerHTML = `<div class="help-empty">📭 Tidak ada pemain yang bisa dibantu saat ini.</div>`;
+      return;
+    }
 
     let html = '';
     playersData.forEach(p => {
@@ -1371,23 +1341,19 @@
           </button>
         </div>`;
     });
+    helpList.innerHTML = html;
 
-    if (html === '') {
-      helpList.innerHTML = `<div class="help-empty">📭 Tidak ada pemain yang bisa dibantu.</div>`;
-    } else {
-      helpList.innerHTML = html;
-      helpList.querySelectorAll('.help-info').forEach(el => {
-        el.addEventListener('click', () => {
-          openProfile(el.dataset.uid, { name: el.dataset.name });
-        });
+    helpList.querySelectorAll('.help-info').forEach(el => {
+      el.addEventListener('click', () => {
+        openProfile(el.dataset.uid, { name: el.dataset.name });
       });
-      helpList.querySelectorAll('.help-action-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openHelpModal(btn.dataset.uid, btn.dataset.name);
-        });
+    });
+    helpList.querySelectorAll('.help-action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openHelpModal(btn.dataset.uid, btn.dataset.name);
       });
-    }
+    });
   }
 
   async function openHelpModal(targetUid, targetName) {
@@ -1495,7 +1461,7 @@
     tick();
   }
 
-  // ===== RECEIVED HELP =====
+  // ===== RECEIVED =====
   async function renderReceivedSection() {
     if (!receivedList || !state.uid) return;
     const today = getTodayKey();
@@ -1538,7 +1504,7 @@
     }
   }
 
-  // ===== APPLY PENDING HELP =====
+  // ===== APPLY PENDING =====
   async function applyPendingHelp() {
     if (!state.uid) return;
     try {
@@ -1574,13 +1540,13 @@
     }
   }
 
-  // ===== PROFILE MODAL (OPTIMIZED: INSTANT) =====
+  // ===== PROFILE =====
   let currentProfileUid = null;
   function openProfile(uid, fallbackData) {
     currentProfileUid = uid;
     profileModalBackdrop.classList.remove('hidden');
 
-    // Set default dari fallback SEKARANG — instant
+    // Set fallback INSTANT
     if (fallbackData) {
       pmName.textContent = fallbackData.name || 'Petani';
       pmType.textContent = '-';
@@ -1591,7 +1557,7 @@
     pmHelpBtn.disabled = true;
     pmHelpBtn.textContent = '⏳ Memuat...';
 
-    // Fetch async — biar modal muncul dulu
+    // Fetch async
     (async () => {
       try {
         const snap = await get(ref(db, `users/${uid}`));
@@ -1817,7 +1783,6 @@
     }
   }
 
-  // ===== SAVE / LOAD =====
   function debouncedSave() {
     setLocalState(state);
     if (saveTimer) clearTimeout(saveTimer);
@@ -1897,7 +1862,6 @@
       updateUI();
       updateLeaderboardEntries().catch(() => {});
       startHeartbeat();
-      // Load help system paralel — tidak blocking UI
       loadHelpQuota().then(() => {
         applyPendingHelp();
         renderReceivedSection();
@@ -1910,7 +1874,6 @@
     }
   }
 
-  // ===== LEADERBOARD (OPTIMIZED) =====
   async function updateLeaderboardEntries() {
     if (!state.uid) return;
     const entryExp = { uid: state.uid, name: state.name || 'Petani', value: state.totalExp || 0, region: state.region, provider: state.provider || 'guest' };
@@ -1942,7 +1905,7 @@
   }
   async function loadLeaderboard() {
     if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
-    showLbSkeleton(5);  // ← Tampil skeleton, bukan spinner
+    showLbSkeleton(5);
     lbRegionInfo.textContent = getLbRegionLabel();
     const path = getLbPath();
     if (!path) {
@@ -1950,7 +1913,6 @@
       return;
     }
     try {
-      // ✅ Query dengan limitToLast 100 — Firebase harus ada indexOn value
       const q = query(ref(db, path), orderByChild('value'), limitToLast(100));
       const unsubscribe = onValue(q, (snapshot) => {
         const rows = [];
@@ -2012,7 +1974,6 @@
     });
   }
 
-  // ===== DAILY =====
   function hasClaimedDailyToday() { return state.lastDailyReward === getTodayKey(); }
   function showDailyRewardModal() { dailyRewardBackdrop.classList.remove('hidden'); }
   function hideDailyRewardModal() { dailyRewardBackdrop.classList.add('hidden'); }
@@ -2031,7 +1992,6 @@
     showDailyRewardModal();
   }
 
-  // ===== GAME =====
   function addExp(amount) {
     if (state.level === 5) return;
     state.exp = Math.min(state.exp + amount, 3000);
@@ -2077,7 +2037,6 @@
     showToast('🎉 Panen! +$5.000 · +1000L · +30💎 · +50PP');
   }
 
-  // ===== SHOP =====
   const shopCatalog = [
     { id: 'water5', name: '💧 Air 5 Liter', priceMoney: 250, type: 'water', amount: 5 },
     { id: 'water10', name: '💧 Air 10 Liter', priceMoney: 400, type: 'water', amount: 10 },
@@ -2153,7 +2112,6 @@
     debouncedSave();
   }
 
-  // ===== NAV =====
   function switchPage(pageId) {
     [pageTanam, pageLeaderboard, pageInventori, pageToko, pageHelp, pageAkun].forEach(p => p.classList.remove('active'));
     if (pageId === 'tanam') pageTanam.classList.add('active');
@@ -2186,7 +2144,6 @@
     loadLeaderboard();
   });
 
-  // ===== MODAL =====
   let modalCallback = null;
   function showModal(title, message, confirmText, callback, requireWord, danger) {
     modalTitle.textContent = title;
@@ -2254,7 +2211,6 @@
     helpWaterInput.value = v;
   });
 
-  // ===== REGION MODAL =====
   let regionCountdownTimer = null;
   function openRegionModal() {
     if (state.regionLocked && hasRegion()) { showToast('🔒 Wilayah sudah terkunci.'); return; }
@@ -2334,7 +2290,6 @@
     if (e.target === dailyRewardBackdrop) showToast('Klik "Klaim & Lanjut" untuk lanjut');
   });
 
-  // ===== AUTH =====
   function switchLoginTab(tab) {
     if (tab === 'login') {
       tabLoginBtn.classList.add('active');
@@ -2606,7 +2561,6 @@
     });
   }
 
-  // ===== AUTH STATE =====
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const oldUid = state.uid;
@@ -2658,7 +2612,6 @@
     if (redirectResult && redirectResult.user) console.log('✅ Redirect login berhasil:', redirectResult.user.displayName);
   } catch (e) { console.warn('Redirect result error:', e); }
 
-  // ===== EVENTS =====
   waterBtn.addEventListener('click', waterTree);
   fertilizeBtn.addEventListener('click', fertilizeTree);
   harvestBtn.addEventListener('click', harvest);
@@ -2687,7 +2640,7 @@
   });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v12.0 ready');
+  console.log('🌳 Compound Harvest v13.0 ready');
 </script>
 </body>
 </html>
