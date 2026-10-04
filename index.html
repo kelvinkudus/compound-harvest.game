@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#1e2b1e">
-  <title>Compound Harvest 1 · v13.0</title>
+  <title>Compound Harvest 1 · v14.0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { height: 100%; overflow: hidden; }
@@ -154,6 +154,7 @@
     .btn-harvest { background: #c9a23f; color: #1e2b0e; border-color: #f5e56b;
       grid-column: span 2; font-size: 1.3rem; box-shadow: 0 6px 0 #7a5e1e; }
 
+    /* LEADERBOARD */
     .lb-controls { background: #162316; border-radius: 20px; padding: 12px; border: 1px solid #3a5a3a;
       display: flex; flex-direction: column; gap: 10px; }
     .lb-section-label { font-size: 0.75rem; color: #8fa88f; font-weight: 600;
@@ -164,12 +165,140 @@
       cursor: pointer; touch-action: manipulation; white-space: nowrap; }
     .chip.active { background: #4a7a4a; color: #fff; border-color: #a0d0a0;
       box-shadow: 0 0 8px rgba(160, 208, 160, 0.4); }
-    .lb-list { background: #162316; border-radius: 20px; border: 1px solid #3a5a3a; padding: 8px; min-height: 100px; }
-    .lb-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-      border-radius: 12px; border-bottom: 1px solid #1f2f1f; }
+    .lb-list { background: #162316; border-radius: 20px; border: 1px solid #3a5a3a; padding: 8px; min-height: 100px;
+      position: relative; overflow: hidden; }
+
+    /* ============================================ */
+    /* ===== FLIP ANIMATION (v14.0) ===== */
+    /* ============================================ */
+    .lb-row {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      border-radius: 12px; border-bottom: 1px solid #1f2f1f;
+      position: relative;
+      will-change: transform;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
     .lb-row:last-child { border-bottom: none; }
     .lb-row.me { background: #2a4a2a; border: 1px solid #7fb07f; }
-    .lb-rank { min-width: 36px; text-align: center; font-weight: 800; font-size: 1.05rem; color: #a0d0a0; }
+
+    /* Highlight card Anda saat naik rank */
+    .lb-row.me.rank-up {
+      animation: rankUpGlow 1.5s ease;
+      z-index: 5;
+    }
+    @keyframes rankUpGlow {
+      0% {
+        background: #2a4a2a;
+        box-shadow: 0 0 0 rgba(255, 217, 128, 0);
+        transform: scale(1);
+      }
+      30% {
+        background: #4a6a3a;
+        box-shadow: 0 0 30px rgba(255, 217, 128, 1), 0 0 60px rgba(255, 217, 128, 0.5);
+        transform: scale(1.03);
+      }
+      60% {
+        background: #3a5a3a;
+        box-shadow: 0 0 20px rgba(255, 217, 128, 0.7);
+        transform: scale(1.01);
+      }
+      100% {
+        background: #2a4a2a;
+        box-shadow: 0 0 0 rgba(255, 217, 128, 0);
+        transform: scale(1);
+      }
+    }
+
+    /* Highlight card Anda saat turun rank */
+    .lb-row.me.rank-down {
+      animation: rankDownBlink 1s ease;
+    }
+    @keyframes rankDownBlink {
+      0%, 100% { background: #2a4a2a; }
+      50% { background: #3a3a2a; opacity: 0.7; }
+    }
+
+    /* Rank icon bounce saat berubah */
+    .lb-rank.bounce {
+      animation: rankBounce 0.6s ease;
+    }
+    @keyframes rankBounce {
+      0%, 100% { transform: scale(1); }
+      30% { transform: scale(1.4); color: #ffd980; text-shadow: 0 0 10px #ffd980; }
+      60% { transform: scale(1.1); }
+    }
+
+    /* Top 3 efek khusus: hover glow */
+    .lb-row.top-1 { border: 1px solid #ffd700; box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1); }
+    .lb-row.top-2 { border: 1px solid #c0c0c0; box-shadow: inset 0 0 20px rgba(192, 192, 192, 0.1); }
+    .lb-row.top-3 { border: 1px solid #cd7f32; box-shadow: inset 0 0 20px rgba(205, 127, 50, 0.1); }
+
+    /* Top 3 saat user naik ke top */
+    .lb-row.top-1.rank-up { animation: top1Glow 2s ease; }
+    @keyframes top1Glow {
+      0% { box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1), 0 0 0 rgba(255, 215, 0, 0); }
+      30% { box-shadow: inset 0 0 30px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.8); transform: scale(1.05); }
+      100% { box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1), 0 0 0 rgba(255, 215, 0, 0); transform: scale(1); }
+    }
+    .lb-row.top-2.rank-up { animation: top2Glow 2s ease; }
+    @keyframes top2Glow {
+      0% { box-shadow: inset 0 0 20px rgba(192, 192, 192, 0.1), 0 0 0 rgba(192, 192, 192, 0); }
+      30% { box-shadow: inset 0 0 30px rgba(192, 192, 192, 0.5), 0 0 40px rgba(192, 192, 192, 0.6); transform: scale(1.05); }
+      100% { box-shadow: inset 0 0 20px rgba(192, 192, 192, 0.1), 0 0 0 rgba(192, 192, 192, 0); transform: scale(1); }
+    }
+    .lb-row.top-3.rank-up { animation: top3Glow 2s ease; }
+    @keyframes top3Glow {
+      0% { box-shadow: inset 0 0 20px rgba(205, 127, 50, 0.1), 0 0 0 rgba(205, 127, 50, 0); }
+      30% { box-shadow: inset 0 0 30px rgba(205, 127, 50, 0.5), 0 0 40px rgba(205, 127, 50, 0.6); transform: scale(1.05); }
+      100% { box-shadow: inset 0 0 20px rgba(205, 127, 50, 0.1), 0 0 0 rgba(205, 127, 50, 0); transform: scale(1); }
+    }
+
+    /* Confetti kecil untuk Top 3 */
+    .confetti-particle {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10;
+      animation: confettiFly 1.2s ease-out forwards;
+    }
+    @keyframes confettiFly {
+      0% { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+    }
+
+    /* Rank up toast */
+    .rank-toast {
+      position: fixed;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: linear-gradient(160deg, #4a6a3a, #2a4a2a);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 2px solid #ffd980;
+      box-shadow: 0 8px 24px rgba(255, 217, 128, 0.4);
+      z-index: 9997;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+      white-space: nowrap;
+    }
+    .rank-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .rank-toast.down {
+      background: linear-gradient(160deg, #5a3a3a, #2a1a1a);
+      border-color: #a07070;
+      box-shadow: 0 8px 24px rgba(200, 100, 100, 0.3);
+    }
+
+    .lb-rank { min-width: 36px; text-align: center; font-weight: 800; font-size: 1.05rem; color: #a0d0a0;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
     .lb-rank.gold { color: #ffd700; text-shadow: 0 0 6px #ffd70080; }
     .lb-rank.silver { color: #c0c0c0; }
     .lb-rank.bronze { color: #cd7f32; }
@@ -201,6 +330,7 @@
     @keyframes shimmer { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
     .lb-skeleton .skel-bar { height: 12px; background: #2a3a2a; border-radius: 6px; }
 
+    /* INVENTORI */
     .inv-header { background: #162316; border-radius: 20px; padding: 14px 16px;
       border: 1px solid #3a5a3a; display: flex; justify-content: space-between;
       align-items: center; gap: 10px; }
@@ -235,6 +365,7 @@
       text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
       padding-left: 4px; margin-top: 4px; }
 
+    /* SHOP */
     .shop-item { background: #1e2f1e; border-radius: 20px; padding: 14px 16px;
       display: flex; justify-content: space-between; align-items: center;
       border: 1px solid #497049; box-shadow: 0 4px 0 #0a130a; margin-bottom: 10px; }
@@ -250,6 +381,7 @@
       border-radius: 50px; justify-content: space-around; font-weight: 600;
       color: #d0e8c0; border: 1px solid #527a52; }
 
+    /* PROFILE */
     .profile-card { background: #1e2f1e; border-radius: 24px; padding: 16px;
       border: 1px solid #5b875b; display: flex; flex-direction: column; gap: 10px; }
     .profile-row { display: flex; justify-content: space-between; align-items: center;
@@ -285,6 +417,7 @@
     .region-warning { background: #5a3e1e; border: 1px solid #a08040; border-radius: 12px;
       padding: 10px 14px; color: #ffe0a0; font-size: 0.82rem; line-height: 1.5; }
 
+    /* HELP */
     .help-header {
       background: linear-gradient(160deg, #1e3a3e, #162c2e);
       border-radius: 20px; padding: 16px;
@@ -603,7 +736,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v13.0 · Bug Fix</p>
+    <p>v14.0 · Rank Animation</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -782,7 +915,7 @@
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note">Compound Harvest 1 · v13.0</div>
+      <div class="small-note">Compound Harvest 1 · v14.0</div>
     </div>
   </main>
 
@@ -795,6 +928,7 @@
   </nav>
 </div>
 
+<!-- MODALS -->
 <div class="modal-backdrop hidden" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle">⚠️ Konfirmasi</h3>
@@ -895,6 +1029,7 @@
 </div>
 
 <div id="toast" class="toast"></div>
+<div id="rankToast" class="rank-toast"></div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -918,6 +1053,12 @@
   const HELP_COOLDOWN_MS = 10000;
   const HELP_EXP_PER_LITER = 10;
   const HELP_POOL_SIZE = 10;
+
+  // ===== ANIMATION CONFIG (v14.0) =====
+  const ANIM_DURATION = 400;          // ms — FLIP transition duration
+  const ANIM_THROTTLE = 500;          // ms — min jarak antar animasi
+  const RANK_UP_TOAST_DURATION = 3000; // ms — durasi toast rank up
+  const CONFETTI_COUNT = 12;          // jumlah confetti top 3
 
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
@@ -950,7 +1091,7 @@
   let heartbeatTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v130_state';
+  const LOCAL_KEY = 'compoundHarvest_v140_state';
 
   let helpQuota = { totalSent: 0, playersHelped: {}, date: '' };
   let helpPool = [];
@@ -959,6 +1100,12 @@
   let currentHelpTargetName = '';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
+
+  // ===== RANK ANIMATION STATE (v14.0) =====
+  let previousRanks = {};             // { uid: rank }
+  let myPreviousRank = null;
+  let lastAnimationTime = 0;
+  let isInitialRender = true;
 
   const LEVELS = [
     { level: 1, name: 'Benih', min: 0, max: 499 },
@@ -1009,6 +1156,7 @@
   const pageAkun = $('pageAkun');
   const navItems = document.querySelectorAll('.nav-item');
   const toastEl = $('toast');
+  const rankToastEl = $('rankToast');
   const errorMsg = $('errorMsg');
   const lbList = $('lbList');
   const lbCategoryChips = $('lbCategoryChips');
@@ -1091,6 +1239,15 @@
     clearTimeout(window.toastTimeout);
     window.toastTimeout = setTimeout(() => toastEl.classList.remove('show'), duration);
   }
+
+  function showRankToast(msg, isDown = false) {
+    rankToastEl.textContent = msg;
+    rankToastEl.classList.toggle('down', isDown);
+    rankToastEl.classList.add('show');
+    clearTimeout(window.rankToastTimeout);
+    window.rankToastTimeout = setTimeout(() => rankToastEl.classList.remove('show'), RANK_UP_TOAST_DURATION);
+  }
+
   function showError(msg) {
     errorMsg.textContent = msg;
     errorMsg.classList.remove('hidden');
@@ -1161,6 +1318,46 @@
     lbList.innerHTML = html;
   }
 
+  // ===== CONFETTI (Top 3) =====
+  function spawnConfetti(rowEl, color = '#ffd700') {
+    if (!rowEl) return;
+    const colors = [color, '#ffd980', '#ff8c40', '#ffffc0'];
+    for (let i = 0; i < CONFETTI_COUNT; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'confetti-particle';
+      particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      particle.style.left = '50%';
+      particle.style.top = '50%';
+      const angle = (Math.PI * 2 * i) / CONFETTI_COUNT + Math.random() * 0.5;
+      const dist = 60 + Math.random() * 80;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      particle.style.setProperty('--dx', dx + 'px');
+      particle.style.setProperty('--dy', dy + 'px');
+      rowEl.appendChild(particle);
+      setTimeout(() => {
+        if (particle.parentNode) particle.parentNode.removeChild(particle);
+      }, 1300);
+    }
+  }
+
+  // ===== RANK CHANGE DETECTION & TOAST =====
+  function detectRankChanges(oldRanks, newRows) {
+    const changes = { up: [], down: [] };
+    newRows.forEach((row, idx) => {
+      const newRank = idx + 1;
+      const oldRank = oldRanks[row.uid];
+      if (oldRank !== undefined && oldRank !== newRank) {
+        if (newRank < oldRank) {
+          changes.up.push({ uid: row.uid, from: oldRank, to: newRank, delta: oldRank - newRank });
+        } else {
+          changes.down.push({ uid: row.uid, from: oldRank, to: newRank, delta: newRank - oldRank });
+        }
+      }
+    });
+    return changes;
+  }
+
   // ===== HEARTBEAT =====
   function startHeartbeat() {
     stopHeartbeat();
@@ -1203,42 +1400,22 @@
     if (dropdownMenu.classList.contains('open') && !dropdownMenu.contains(e.target) && e.target !== menuBtn) closeMenu();
   });
 
-  // ===== HELP POOL — FIX: Ambil dari /users juga =====
+  // ===== HELP POOL =====
   async function generateHelpPool() {
     const myUid = state.uid;
     const candidates = new Set();
-
-    // 1. Ambil dari leaderboard/global/exp (pemain aktif)
     try {
       const snap = await get(query(ref(db, 'leaderboard/global/exp'), orderByChild('value'), limitToLast(200)));
-      snap.forEach(child => {
-        if (child.key !== myUid) candidates.add(child.key);
-      });
-    } catch (e) {
-      console.warn('LB pool fetch error:', e);
-    }
-
-    // 2. ✅ Ambil dari /users juga (semua akun terdaftar)
+      snap.forEach(child => { if (child.key !== myUid) candidates.add(child.key); });
+    } catch (e) { console.warn('LB pool fetch error:', e); }
     try {
       const usersSnap = await get(ref(db, 'users'));
       if (usersSnap.exists()) {
-        usersSnap.forEach(child => {
-          if (child.key !== myUid) candidates.add(child.key);
-        });
+        usersSnap.forEach(child => { if (child.key !== myUid) candidates.add(child.key); });
       }
-    } catch (e) {
-      console.warn('Users pool fetch error:', e);
-    }
-
-    // Konversi Set ke Array
+    } catch (e) { console.warn('Users pool fetch error:', e); }
     let all = Array.from(candidates);
-
-    // Kalau masih kosong, berarti cuma Anda sendiri di game
-    if (all.length === 0) {
-      return [];
-    }
-
-    // Shuffle & ambil 10
+    if (all.length === 0) return [];
     for (let i = all.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [all[i], all[j]] = [all[j], all[i]];
@@ -1270,21 +1447,14 @@
     return Object.keys(helpQuota.playersHelped || {}).length;
   }
 
-  // ===== HELP PAGE =====
   async function renderHelpPage() {
     if (!helpList) return;
     const helpedCount = countPlayersHelped();
     helpPlayersCount.innerHTML = `${helpedCount}<small>/${HELP_MAX_PLAYERS}</small>`;
     helpTotalWater.innerHTML = `${helpQuota.totalSent || 0}<small>L</small>`;
     helpList.innerHTML = `<div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat daftar pemain...</div></div>`;
-
-    try {
-      helpPool = await generateHelpPool();
-    } catch (e) {
-      console.warn('Pool error:', e);
-      helpPool = [];
-    }
-
+    try { helpPool = await generateHelpPool(); }
+    catch (e) { helpPool = []; }
     if (helpPool.length === 0) {
       helpList.innerHTML = `<div class="help-empty">
         📭 Belum ada pemain lain di game.<br>
@@ -1294,16 +1464,13 @@
       </div>`;
       return;
     }
-
-    // Bulk fetch paralel
     const promises = helpPool.map(uid =>
       get(ref(db, `users/${uid}`))
         .then(snap => {
           if (!snap.exists()) return null;
           const data = snap.val() || {};
           return {
-            uid,
-            name: data.name || 'Petani',
+            uid, name: data.name || 'Petani',
             photoURL: data.photoURL || '',
             provider: data.provider || 'guest',
             totalExp: data.totalExp || 0,
@@ -1313,12 +1480,10 @@
     );
     const results = await Promise.all(promises);
     const playersData = results.filter(p => p !== null);
-
     if (playersData.length === 0) {
       helpList.innerHTML = `<div class="help-empty">📭 Tidak ada pemain yang bisa dibantu saat ini.</div>`;
       return;
     }
-
     let html = '';
     playersData.forEach(p => {
       const alreadyHelped = !!helpQuota.playersHelped[p.uid];
@@ -1326,7 +1491,6 @@
         ? `<img src="${escapeHtml(p.photoURL)}" alt="" onerror="this.style.display='none';this.parentElement.textContent='${getProviderBadge(p.provider)}'">`
         : getProviderBadge(p.provider);
       const lvData = getLevelData(p.totalExp);
-
       html += `
         <div class="help-player ${alreadyHelped ? 'done' : ''}">
           <div class="help-avatar">${avatarContent}</div>
@@ -1342,11 +1506,8 @@
         </div>`;
     });
     helpList.innerHTML = html;
-
     helpList.querySelectorAll('.help-info').forEach(el => {
-      el.addEventListener('click', () => {
-        openProfile(el.dataset.uid, { name: el.dataset.name });
-      });
+      el.addEventListener('click', () => openProfile(el.dataset.uid, { name: el.dataset.name }));
     });
     helpList.querySelectorAll('.help-action-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -1366,14 +1527,8 @@
       return;
     }
     const helpedCount = countPlayersHelped();
-    if (helpedCount >= HELP_MAX_PLAYERS) {
-      showToast(`❌ Kuota harian habis (${HELP_MAX_PLAYERS} pemain/hari)`);
-      return;
-    }
-    if (helpQuota.playersHelped[targetUid]) {
-      showToast('❌ Sudah bantu pemain ini hari ini');
-      return;
-    }
+    if (helpedCount >= HELP_MAX_PLAYERS) { showToast(`❌ Kuota harian habis (${HELP_MAX_PLAYERS} pemain/hari)`); return; }
+    if (helpQuota.playersHelped[targetUid]) { showToast('❌ Sudah bantu pemain ini hari ini'); return; }
     currentHelpTarget = targetUid;
     currentHelpTargetName = targetName;
     helpTargetInfo.innerHTML = `Anda akan membantu <b>${escapeHtml(targetName)}</b>`;
@@ -1402,15 +1557,12 @@
     const helpedCount = countPlayersHelped();
     if (helpedCount >= HELP_MAX_PLAYERS) { showToast('❌ Kuota habis'); closeHelpModal(); return; }
     if (helpQuota.playersHelped[targetUid]) { showToast('❌ Sudah bantu'); closeHelpModal(); return; }
-
     helpModalConfirm.disabled = true;
     helpModalConfirm.textContent = '⏳ Memproses...';
-
     try {
       const now = Date.now();
       const today = getTodayKey();
       const updates = {};
-
       helpQuota.totalSent += amount;
       helpQuota.playersHelped[targetUid] = amount;
       updates[`helpQuota/${state.uid}/${today}`] = {
@@ -1419,20 +1571,13 @@
         date: today
       };
       updates[`helpReceived/${targetUid}/${today}/${state.uid}`] = {
-        name: state.name || 'Petani',
-        amount: amount,
-        ts: now
+        name: state.name || 'Petani', amount: amount, ts: now
       };
       updates[`helpPool/${targetUid}/${state.uid}`] = {
-        amount: amount,
-        expGain: amount * HELP_EXP_PER_LITER,
-        senderName: state.name || 'Petani',
-        ts: now,
-        applied: false
+        amount: amount, expGain: amount * HELP_EXP_PER_LITER,
+        senderName: state.name || 'Petani', ts: now, applied: false
       };
-
       await update(ref(db), updates);
-
       helpCooldownUntil = now + HELP_COOLDOWN_MS;
       startCooldownDisplay();
       showToast(`💧 Bantu ${targetName} +${amount}L (+${amount * HELP_EXP_PER_LITER} exp)`, 2500);
@@ -1461,7 +1606,6 @@
     tick();
   }
 
-  // ===== RECEIVED =====
   async function renderReceivedSection() {
     if (!receivedList || !state.uid) return;
     const today = getTodayKey();
@@ -1495,16 +1639,13 @@
       });
       receivedList.innerHTML = html;
       receivedList.querySelectorAll('.reply-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          openHelpModal(btn.dataset.uid, btn.dataset.name);
-        });
+        btn.addEventListener('click', () => openHelpModal(btn.dataset.uid, btn.dataset.name));
       });
     } catch (e) {
       receivedList.innerHTML = `<div class="small-note">Gagal memuat bantuan</div>`;
     }
   }
 
-  // ===== APPLY PENDING =====
   async function applyPendingHelp() {
     if (!state.uid) return;
     try {
@@ -1525,9 +1666,7 @@
         state.totalExp += totalExpGain;
         const newLevelData = getLevelData(state.exp);
         state.level = newLevelData.level;
-        if (state.level > oldLevel) {
-          showToast(`🌟 Naik ke Lv.${state.level} ${newLevelData.name}!`);
-        }
+        if (state.level > oldLevel) showToast(`🌟 Naik ke Lv.${state.level} ${newLevelData.name}!`);
         updateUI();
         debouncedSave();
         showToast(`💧 +${totalExpGain} Exp dari bantuan teman!`, 2500, true);
@@ -1545,8 +1684,6 @@
   function openProfile(uid, fallbackData) {
     currentProfileUid = uid;
     profileModalBackdrop.classList.remove('hidden');
-
-    // Set fallback INSTANT
     if (fallbackData) {
       pmName.textContent = fallbackData.name || 'Petani';
       pmType.textContent = '-';
@@ -1556,16 +1693,10 @@
     pmUid.textContent = uid.substring(0, 12) + '...';
     pmHelpBtn.disabled = true;
     pmHelpBtn.textContent = '⏳ Memuat...';
-
-    // Fetch async
     (async () => {
       try {
         const snap = await get(ref(db, `users/${uid}`));
-        if (!snap.exists()) {
-          showToast('❌ Profil tidak ditemukan');
-          closeProfileModal();
-          return;
-        }
+        if (!snap.exists()) { showToast('❌ Profil tidak ditemukan'); closeProfileModal(); return; }
         const data = snap.val() || {};
         pmName.textContent = data.name || 'Petani';
         const provider = data.provider || 'guest';
@@ -1905,6 +2036,10 @@
   }
   async function loadLeaderboard() {
     if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
+    // Reset animation state saat ganti kategori/wilayah
+    previousRanks = {};
+    myPreviousRank = null;
+    isInitialRender = true;
     showLbSkeleton(5);
     lbRegionInfo.textContent = getLbRegionLabel();
     const path = getLbPath();
@@ -1932,11 +2067,28 @@
       lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${e.message}</div>`;
     }
   }
+
+  // ============================================
+  // ===== RENDER LEADERBOARD DENGAN FLIP (v14.0) =====
+  // ============================================
   function renderLeaderboard(rows) {
     if (!rows || rows.length === 0) {
       lbList.innerHTML = `<div class="lb-empty">📭 Belum ada data. Jadilah yang pertama! 🌱</div>`;
+      previousRanks = {};
+      myPreviousRank = null;
+      isInitialRender = true;
       return;
     }
+
+    // ==== STEP 1: FIRST — catat posisi lama ====
+    const oldPositions = {};
+    const oldRows = lbList.querySelectorAll('.lb-row[data-uid]');
+    oldRows.forEach(el => {
+      const uid = el.dataset.uid;
+      if (uid) oldPositions[uid] = el.getBoundingClientRect().top;
+    });
+
+    // ==== STEP 2: LAST — render ulang dengan urutan baru ====
     const cat = lbView.category;
     const unit = cat === 'exp' ? 'Exp' : 'PP';
     let html = '';
@@ -1952,8 +2104,12 @@
       else if (row.provider === 'email') badge = `<span class="lb-badge email">📧</span>`;
       else badge = `<span class="lb-badge guest">🎮</span>`;
       const safeName = escapeHtml(row.name).replace(/"/g, '&quot;');
+      let topClass = '';
+      if (rank === 1) topClass = 'top-1';
+      else if (rank === 2) topClass = 'top-2';
+      else if (rank === 3) topClass = 'top-3';
       html += `
-        <div class="lb-row ${isMe ? 'me' : ''}">
+        <div class="lb-row ${isMe ? 'me' : ''} ${topClass}" data-uid="${row.uid}">
           <div class="lb-rank ${rankClass}">${rankIcon}</div>
           <div class="lb-info" data-uid="${row.uid}" data-name="${safeName}" data-provider="${row.provider}">
             <div class="lb-name ${isMe ? 'me' : ''}">${badge} ${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}</div>
@@ -1963,7 +2119,92 @@
         </div>`;
     });
     lbList.innerHTML = html;
-    document.querySelectorAll('.lb-info').forEach(el => {
+
+    // ==== STEP 3: INVERT — hitung selisih posisi, terapkan transform ====
+    const newRows = lbList.querySelectorAll('.lb-row[data-uid]');
+    if (!isInitialRender) {
+      newRows.forEach(el => {
+        const uid = el.dataset.uid;
+        const oldTop = oldPositions[uid];
+        if (oldTop !== undefined) {
+          const newTop = el.getBoundingClientRect().top;
+          const deltaY = oldTop - newTop;
+          if (Math.abs(deltaY) > 1) {
+            // Terapkan transform, biar terlihat di posisi lama
+            el.style.transition = 'none';
+            el.style.transform = `translateY(${deltaY}px)`;
+          }
+        }
+      });
+
+      // ==== STEP 4: PLAY — animasi ke posisi baru ====
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          newRows.forEach(el => {
+            el.style.transition = `transform ${ANIM_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+            el.style.transform = '';
+          });
+        });
+      });
+    }
+
+    // ==== STEP 5: RANK CHANGE DETECTION & HIGHLIGHT ====
+    const now = Date.now();
+    const canAnimate = (now - lastAnimationTime) > ANIM_THROTTLE;
+
+    if (!isInitialRender && canAnimate) {
+      const changes = detectRankChanges(previousRanks, rows);
+
+      // Cari perubahan rank USER SENDIRI
+      const myChange = changes.up.find(c => c.uid === state.uid) || changes.down.find(c => c.uid === state.uid);
+
+      if (myChange) {
+        // Highlight card user
+        const myEl = lbList.querySelector(`.lb-row[data-uid="${state.uid}"]`);
+        if (myEl) {
+          if (myChange.from > myChange.to) {
+            // NAIK
+            myEl.classList.add('rank-up');
+            showRankToast(`🎉 Naik ke Rank #${myChange.to}! (+${myChange.delta})`, false);
+            // Confetti kalau masuk Top 3
+            if (myChange.to <= 3) {
+              const colors = ['#ffd700', '#c0c0c0', '#cd7f32'];
+              spawnConfetti(myEl, colors[myChange.to - 1]);
+            }
+            setTimeout(() => myEl.classList.remove('rank-up'), 1600);
+          } else {
+            // TURUN
+            myEl.classList.add('rank-down');
+            showRankToast(`📉 Turun ke Rank #${myChange.to}`, true);
+            setTimeout(() => myEl.classList.remove('rank-down'), 1100);
+          }
+        }
+      }
+
+      // Rank icon bounce untuk semua yang berubah rank
+      changes.up.concat(changes.down).forEach(c => {
+        const el = lbList.querySelector(`.lb-row[data-uid="${c.uid}"] .lb-rank`);
+        if (el) {
+          el.classList.add('bounce');
+          setTimeout(() => el.classList.remove('bounce'), 700);
+        }
+      });
+
+      lastAnimationTime = now;
+    }
+
+    // ==== UPDATE STATE ====
+    previousRanks = {};
+    rows.forEach((row, idx) => {
+      previousRanks[row.uid] = idx + 1;
+    });
+    const myIdx = rows.findIndex(r => r.uid === state.uid);
+    if (myIdx >= 0) myPreviousRank = myIdx + 1;
+
+    isInitialRender = false;
+
+    // ==== ATTACH EVENT LISTENERS ====
+    lbList.querySelectorAll('.lb-info').forEach(el => {
       el.addEventListener('click', () => {
         const uid = el.dataset.uid;
         const name = el.dataset.name;
@@ -2581,6 +2822,10 @@
       state.isOwner = (user.email === OWNER_EMAIL);
       if (user.displayName && !state.name) state.name = user.displayName;
       if (oldUid && oldUid !== user.uid) clearLocalState();
+      // Reset animation state
+      previousRanks = {};
+      myPreviousRank = null;
+      isInitialRender = true;
       loginScreen.classList.add('hidden');
       gameContainer.classList.add('active');
       await loadFromCloud(user.uid);
@@ -2596,6 +2841,9 @@
       closeProfileModal();
       closeHelpModal();
       closeMenu();
+      previousRanks = {};
+      myPreviousRank = null;
+      isInitialRender = true;
       guestBtn.disabled = false;
       guestBtn.textContent = '🎮 Main sebagai Guest';
       githubLoginBtn.disabled = false;
@@ -2640,7 +2888,7 @@
   });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v13.0 ready');
+  console.log('🌳 Compound Harvest v14.0 ready — Rank Animation enabled');
 </script>
 </body>
 </html>
