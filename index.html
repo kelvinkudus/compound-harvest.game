@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#1e2b1e">
-  <title>Compound Harvest 1 · v10.0</title>
+  <title>Compound Harvest 1 · v11.0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { height: 100%; overflow: hidden; }
@@ -16,7 +16,6 @@
       user-select: none; -webkit-user-select: none;
       position: relative;
     }
-
     #gameContainer {
       display: none;
       position: absolute; top: 0; left: 50%;
@@ -34,10 +33,8 @@
       transform: translateX(-50%);
       width: 100%; max-width: 500px; height: 100%;
       background: linear-gradient(160deg, #0f1f0f, #1b3b1b);
-      z-index: 100;
-      display: flex; flex-direction: column;
-      padding: 24px 20px; overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      z-index: 100; display: flex; flex-direction: column;
+      padding: 24px 20px; overflow-y: auto; -webkit-overflow-scrolling: touch;
     }
     #loginScreen.hidden { display: none; }
     .login-logo { text-align: center; margin: 20px 0 30px; }
@@ -73,16 +70,89 @@
     /* STATUS BAR */
     .status-bar { flex-shrink: 0; background: #0f1a0f; padding: 10px 14px;
       display: flex; justify-content: space-between; align-items: center;
-      color: #e0f0d0; border-bottom: 2px solid #3a6b3a; flex-wrap: wrap; gap: 6px; }
-    .currency { display: flex; gap: 10px; font-weight: 600; font-size: 0.95rem; }
+      color: #e0f0d0; border-bottom: 2px solid #3a6b3a; gap: 6px;
+      position: relative; }
+    .status-left { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .currency { display: flex; gap: 8px; font-weight: 600; font-size: 0.9rem; }
     .currency span { background: #1d2e1d; padding: 5px 10px; border-radius: 30px;
       border: 1px solid #4f7a4f; display: flex; align-items: center; gap: 4px; }
-    .points { background: #2a3f2a; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; border: 1px solid #6f9e6f; }
-    .cloud-status { font-size: 0.75rem; padding: 3px 10px; border-radius: 20px;
+    .points { background: #2a3f2a; padding: 4px 10px; border-radius: 20px;
+      font-size: 0.8rem; border: 1px solid #6f9e6f; }
+    .cloud-status { font-size: 0.72rem; padding: 3px 10px; border-radius: 20px;
       background: #1d2e1d; color: #8fa88f; border: 1px solid #3a5a3a; }
     .cloud-status.saving { color: #ffe08a; }
     .cloud-status.saved { color: #a0f0a0; }
     .cloud-status.offline { color: #ff9090; }
+
+    /* MENU BUTTON */
+    .menu-btn {
+      flex-shrink: 0;
+      background: #1d2e1d;
+      border: 1px solid #4f7a4f;
+      color: #e0f0d0;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      font-size: 1.3rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; touch-action: manipulation;
+    }
+    .menu-btn:active { background: #2a3f2a; }
+    .menu-btn.active { background: #4a7a4a; border-color: #a0d0a0; }
+
+    /* DROPDOWN MENGAMBANG */
+    .dropdown-menu {
+      position: absolute;
+      top: 55px;
+      right: 14px;
+      background: #1a2a1a;
+      border: 2px solid #5b875b;
+      border-radius: 18px;
+      padding: 8px;
+      min-width: 200px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+      pointer-events: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .dropdown-menu.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .dropdown-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: #e0f0d0;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      touch-action: manipulation;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      transition: background 0.1s;
+    }
+    .dropdown-item:hover { background: #2a4a2a; }
+    .dropdown-item:active { background: #3a5a3a; }
+    .dropdown-item .icon { font-size: 1.2rem; }
+    .dropdown-item.disabled { opacity: 0.5; pointer-events: none; }
+    .dropdown-item.danger { color: #ffd0d0; }
+    .dropdown-divider {
+      height: 1px; background: #3a5a3a;
+      margin: 6px 4px;
+    }
+    .dropdown-label {
+      padding: 8px 14px 4px;
+      font-size: 0.7rem;
+      color: #6a8a6a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
 
     main { flex: 1 1 auto; min-height: 0; overflow-y: auto;
       -webkit-overflow-scrolling: touch; padding: 16px;
@@ -215,7 +285,7 @@
       border-radius: 50px; justify-content: space-around; font-weight: 600;
       color: #d0e8c0; border: 1px solid #527a52; }
 
-    /* PROFILE */
+    /* PROFILE & AKUN */
     .profile-card { background: #1e2f1e; border-radius: 24px; padding: 16px;
       border: 1px solid #5b875b; display: flex; flex-direction: column; gap: 10px; }
     .profile-row { display: flex; justify-content: space-between; align-items: center;
@@ -252,6 +322,166 @@
     .region-form .field { display: flex; flex-direction: column; gap: 4px; }
     .region-warning { background: #5a3e1e; border: 1px solid #a08040; border-radius: 12px;
       padding: 10px 14px; color: #ffe0a0; font-size: 0.82rem; line-height: 1.5; }
+
+    /* BANTU SIRAM */
+    .help-header {
+      background: linear-gradient(160deg, #1e3a3e, #162c2e);
+      border-radius: 20px; padding: 16px;
+      border: 1px solid #4a7a8a;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .help-header .title {
+      color: #80d0ff; font-weight: 700; font-size: 1.1rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .help-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .help-stat {
+      background: #0c181c;
+      border-radius: 14px;
+      padding: 12px;
+      border: 1px solid #2a4a5a;
+      text-align: center;
+    }
+    .help-stat .label {
+      color: #6a9aaa;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .help-stat .value {
+      color: #80d0ff;
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+    .help-stat .value small {
+      font-size: 0.8rem;
+      color: #4a8090;
+      font-weight: 600;
+    }
+    .help-list {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .help-player {
+      background: #162316; border-radius: 18px; padding: 14px;
+      border: 1px solid #3a5a3a;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .help-player.done {
+      opacity: 0.5;
+      background: #0c180c;
+    }
+    .help-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: #0c180c; border: 2px solid #5b875b;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0; overflow: hidden;
+    }
+    .help-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .help-info { flex: 1; min-width: 0; cursor: pointer; }
+    .help-info:active { opacity: 0.7; }
+    .help-name {
+      color: #e0f0d0; font-weight: 700; font-size: 0.95rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .help-sub {
+      color: #8fa88f; font-size: 0.72rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .help-sub.done-label { color: #a0f0a0; font-weight: 700; }
+    .help-action-btn {
+      background: #2a6a8a; border: none;
+      padding: 8px 14px; border-radius: 30px;
+      font-weight: 700; color: #fff;
+      box-shadow: 0 4px 0 #0a3040;
+      cursor: pointer; touch-action: manipulation;
+      font-size: 0.85rem; flex-shrink: 0;
+    }
+    .help-action-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3040; }
+    .help-action-btn:disabled {
+      background: #2a4a2a;
+      box-shadow: 0 3px 0 #0a1a0a;
+      color: #6a8a6a;
+      pointer-events: none;
+    }
+    .help-empty {
+      text-align: center; padding: 40px 20px;
+      color: #6a8a6a; font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .help-cooldown {
+      background: #3a2a1e;
+      border: 1px solid #a08040;
+      border-radius: 14px;
+      padding: 10px 14px;
+      color: #ffd980;
+      font-size: 0.85rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* BANTUAN DITERIMA (di Akun) */
+    .received-section {
+      background: #162316;
+      border-radius: 20px;
+      padding: 14px;
+      border: 1px solid #3a5a3a;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .received-section .title {
+      color: #80d0ff;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .received-row {
+      background: #0c180c;
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid #2a4a5a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .received-row .info { flex: 1; min-width: 0; }
+    .received-row .sender {
+      color: #e0f0d0; font-weight: 700; font-size: 0.9rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .received-row .amount {
+      color: #80d0ff; font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .received-row .reply-btn {
+      background: #3a5a8a;
+      border: 1px solid #5a8aaa;
+      padding: 6px 12px;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      touch-action: manipulation;
+      flex-shrink: 0;
+    }
+    .received-row .reply-btn:active { background: #2a4a6a; }
+    .received-row .reply-btn:disabled {
+      background: #2a3a2a;
+      border-color: #4a5a4a;
+      color: #6a7a6a;
+      pointer-events: none;
+    }
 
     /* BOTTOM NAV */
     .bottom-nav { flex-shrink: 0; background: #0f1a0f; display: flex;
@@ -316,7 +546,6 @@
     .modal-confirm { background: #4a7a4a; color: #fff; }
     .modal-confirm:disabled { background: #2a3a2a; color: #6a7a6a; cursor: not-allowed; }
     .modal-danger { background: #8a2a2a; color: #fff; }
-    .modal-danger:disabled { background: #4a2a2a; color: #888; }
 
     /* PROFILE MODAL */
     .profile-modal {
@@ -360,23 +589,11 @@
       font-weight: 700; margin-bottom: 18px;
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
-    .status-dot {
-      display: inline-block;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      box-shadow: 0 0 6px currentColor;
-    }
-    .status-online { color: #4fe04f; }
+    .status-dot { display: inline-block; width: 10px; height: 10px;
+      border-radius: 50%; box-shadow: 0 0 6px currentColor; }
+    .status-online { color: #4fe04f; animation: pulse 2s ease infinite; }
     .status-offline { color: #8a8a8a; }
-    .profile-modal-status .status-online {
-      color: #4fe04f;
-      animation: pulse 2s ease infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    .profile-modal-status .status-offline { color: #8a8a8a; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     .profile-modal-rows {
       background: #0c180c; border-radius: 16px;
       padding: 8px; display: flex; flex-direction: column; gap: 6px;
@@ -410,6 +627,23 @@
       touch-action: manipulation;
     }
     .copy-btn:active { background: #2a4a2a; }
+    .profile-modal-help-btn {
+      width: 100%; padding: 12px;
+      background: linear-gradient(160deg, #2a7a9a, #1a5a7a);
+      color: #fff;
+      border: none; border-radius: 40px;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; touch-action: manipulation;
+      box-shadow: 0 4px 0 #0a3040;
+      margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .profile-modal-help-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3040; }
+    .profile-modal-help-btn:disabled {
+      background: #2a3a2a; color: #6a7a6a;
+      box-shadow: 0 3px 0 #1a1a1a;
+      pointer-events: none;
+    }
     .profile-modal-close-full {
       width: 100%; padding: 12px;
       background: #3a5a3a; color: #fff;
@@ -419,6 +653,124 @@
       border: 1px solid #7fa07f;
     }
     .profile-modal-close-full:active { background: #2a4a2a; }
+
+    /* HELP MODAL */
+    .help-modal {
+      background: linear-gradient(160deg, #1e3a3e, #162c2e);
+      border-radius: 28px; padding: 24px 20px;
+      max-width: 400px; width: 100%;
+      border: 2px solid #4a7a8a;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+      position: relative;
+      animation: profilePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .help-modal h3 {
+      color: #80d0ff;
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+    }
+    .help-modal .target-info {
+      text-align: center;
+      color: #d0e8c0;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+    .help-modal .target-info b { color: #fff; }
+    .help-modal .input-section {
+      background: #0c181c;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid #2a4a5a;
+      margin-bottom: 14px;
+    }
+    .help-modal .input-section .label {
+      color: #6a9aaa;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .help-modal input[type="number"] {
+      width: 100%;
+      padding: 14px;
+      border-radius: 40px;
+      border: 2px solid #2a6a8a;
+      background: #061018;
+      color: #80d0ff;
+      font-size: 1.8rem;
+      font-weight: 800;
+      outline: none;
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+    .help-modal input[type="number"]::-webkit-outer-spin-button,
+    .help-modal input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .help-modal .quick-select {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .help-modal .quick-btn {
+      flex: 1;
+      min-width: 60px;
+      padding: 10px;
+      border-radius: 30px;
+      border: 1px solid #2a6a8a;
+      background: #162c2e;
+      color: #80d0ff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .help-modal .quick-btn:active { background: #2a4a5a; }
+    .help-modal .info-box {
+      background: #0c180c;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 0.8rem;
+      color: #8fa88f;
+      line-height: 1.5;
+    }
+    .help-modal .info-box b { color: #80d0ff; }
+    .help-modal .help-modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .help-modal .help-modal-buttons button {
+      flex: 1;
+      padding: 14px;
+      border-radius: 40px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-size: 0.95rem;
+    }
+    .help-modal .help-cancel { background: #3a5a3a; color: #fff; }
+    .help-modal .help-confirm {
+      background: linear-gradient(160deg, #2a7a9a, #1a5a7a);
+      color: #fff;
+      box-shadow: 0 4px 0 #0a3040;
+    }
+    .help-modal .help-confirm:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #0a3040;
+    }
+    .help-modal .help-confirm:disabled {
+      background: #2a3a2a; color: #6a7a6a;
+      box-shadow: 0 3px 0 #1a1a1a;
+      pointer-events: none;
+    }
 
     @media (max-width: 360px) {
       .nav-item { font-size: 0.6rem; }
@@ -434,7 +786,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v10.0 · Profil & Online</p>
+    <p>v11.0 · Bantu Siram</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -470,12 +822,32 @@
 <!-- GAME -->
 <div id="gameContainer">
   <div class="status-bar">
-    <div class="currency">
-      <span>💰 $<span id="moneyDisplay">1500</span></span>
-      <span>💎 <span id="diamondDisplay">0</span></span>
+    <div class="status-left">
+      <div class="currency">
+        <span>💰 $<span id="moneyDisplay">1500</span></span>
+        <span>💎 <span id="diamondDisplay">0</span></span>
+      </div>
+      <div class="points" id="planterPointsDisplay">🌱 0 PP</div>
+      <div class="cloud-status" id="cloudStatus">☁️ Sync</div>
     </div>
-    <div class="points" id="planterPointsDisplay">🌱 0 PP</div>
-    <div class="cloud-status" id="cloudStatus">☁️ Sync</div>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">⋮</button>
+    <!-- DROPDOWN -->
+    <div class="dropdown-menu" id="dropdownMenu">
+      <div class="dropdown-label">Aksi</div>
+      <button class="dropdown-item" id="menuHelpBtn">
+        <span class="icon">💧</span>
+        <span>Bantu Siram</span>
+      </button>
+      <button class="dropdown-item" id="menuEmptyBtn">
+        <span class="icon">📦</span>
+        <span>Tab Kosong</span>
+      </button>
+      <div class="dropdown-divider"></div>
+      <button class="dropdown-item" id="menuCloseBtn">
+        <span class="icon">✖️</span>
+        <span>Tutup Menu</span>
+      </button>
+    </div>
   </div>
 
   <main id="mainContent">
@@ -547,6 +919,28 @@
       <div id="shopItemsContainer"></div>
     </div>
 
+    <!-- BANTU SIRAM -->
+    <div id="pageHelp" class="page">
+      <div class="help-header">
+        <div class="title">💧 Bantu Siram</div>
+        <div class="help-stats">
+          <div class="help-stat">
+            <div class="label">Dibantu Hari Ini</div>
+            <div class="value" id="helpPlayersCount">0<small>/10</small></div>
+          </div>
+          <div class="help-stat">
+            <div class="label">Total Air</div>
+            <div class="value" id="helpTotalWater">0<small>L</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="help-cooldown hidden" id="helpCooldown">⏱️ Tunggu <b id="helpCooldownTime">10</b> detik sebelum bantu lagi</div>
+      <div class="help-list" id="helpList">
+        <div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat daftar pemain...</div></div>
+      </div>
+      <div class="small-note">💡 Daftar di-refresh otomatis tiap 24 jam</div>
+    </div>
+
     <!-- AKUN -->
     <div id="pageAkun" class="page">
       <div class="profile-card">
@@ -580,35 +974,29 @@
           <button class="edit-btn" id="upgradeBtn" style="flex:1;">🔗 Upgrade</button>
         </div>
         <div id="regionSection"></div>
+
+        <!-- BANTUAN DITERIMA -->
+        <div class="received-section" id="receivedSection">
+          <div class="title">💧 Bantuan Diterima Hari Ini</div>
+          <div id="receivedList">
+            <div class="small-note">Belum ada bantuan hari ini</div>
+          </div>
+        </div>
+
         <button class="edit-btn danger-btn" id="logoutBtn" style="width:100%;">🚪 Logout (Tetap Simpan)</button>
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note">Compound Harvest 1 · v10.0</div>
+      <div class="small-note">Compound Harvest 1 · v11.0</div>
     </div>
   </main>
 
   <nav class="bottom-nav">
-    <button class="nav-item active" data-page="tanam">
-      <span class="nav-icon">🌳</span>
-      <span class="nav-label">Tanam</span>
-    </button>
-    <button class="nav-item" data-page="leaderboard">
-      <span class="nav-icon">🥇</span>
-      <span class="nav-label">Rank</span>
-    </button>
-    <button class="nav-item" data-page="inventori">
-      <span class="nav-icon">🎒</span>
-      <span class="nav-label">Invent</span>
-    </button>
-    <button class="nav-item" data-page="toko">
-      <span class="nav-icon">🛒</span>
-      <span class="nav-label">Toko</span>
-    </button>
-    <button class="nav-item" data-page="akun">
-      <span class="nav-icon">👤</span>
-      <span class="nav-label">Akun</span>
-    </button>
+    <button class="nav-item active" data-page="tanam"><span class="nav-icon">🌳</span><span class="nav-label">Tanam</span></button>
+    <button class="nav-item" data-page="leaderboard"><span class="nav-icon">🥇</span><span class="nav-label">Rank</span></button>
+    <button class="nav-item" data-page="inventori"><span class="nav-icon">🎒</span><span class="nav-label">Invent</span></button>
+    <button class="nav-item" data-page="toko"><span class="nav-icon">🛒</span><span class="nav-label">Toko</span></button>
+    <button class="nav-item" data-page="akun"><span class="nav-icon">👤</span><span class="nav-label">Akun</span></button>
   </nav>
 </div>
 
@@ -662,8 +1050,7 @@
       </p>
       <div class="region-preview" id="regionPreview"></div>
       <div class="warning-box">
-        ⚠️ Setelah dikonfirmasi, wilayah <b>TIDAK BISA DIUBAH</b> sendiri.<br>
-        Hubungi admin kalau salah input.
+        ⚠️ Setelah dikonfirmasi, wilayah <b>TIDAK BISA DIUBAH</b> sendiri.
       </div>
       <div class="modal-buttons">
         <button class="modal-cancel" id="regionModalBack">← Kembali</button>
@@ -707,7 +1094,36 @@
         <span class="value" id="pmType">-</span>
       </div>
     </div>
+    <button class="profile-modal-help-btn" id="pmHelpBtn">💧 Bantu Siram</button>
     <button class="profile-modal-close-full" id="profileModalCloseFull">Tutup</button>
+  </div>
+</div>
+
+<!-- HELP MODAL -->
+<div class="modal-backdrop hidden" id="helpModalBackdrop">
+  <div class="help-modal">
+    <h3>💧 Bantu Siram</h3>
+    <div class="target-info" id="helpTargetInfo">
+      Anda akan membantu <b>-</b>
+    </div>
+    <div class="input-section">
+      <div class="label">Jumlah Air (1-10 L)</div>
+      <input type="number" id="helpWaterInput" min="1" max="10" value="1" step="1">
+      <div class="quick-select">
+        <button class="quick-btn" data-amount="1">1L</button>
+        <button class="quick-btn" data-amount="3">3L</button>
+        <button class="quick-btn" data-amount="5">5L</button>
+        <button class="quick-btn" data-amount="10">10L</button>
+      </div>
+    </div>
+    <div class="info-box">
+      ℹ️ Air gratis dari game, tidak mengurangi air Anda.<br>
+      📊 Sisa kuota hari ini: <b id="helpRemainingQuota">-</b> pemain
+    </div>
+    <div class="help-modal-buttons">
+      <button class="help-cancel" id="helpModalCancel">Batal</button>
+      <button class="help-confirm" id="helpModalConfirm">💧 Bantu Sekarang</button>
+    </div>
   </div>
 </div>
 
@@ -727,8 +1143,15 @@
   const OWNER_EMAIL = "kelvinkudus@gmail.com";
   const BOT_KEYWORDS = ['test', 'bot', 'dummy', 'admin', 'player_', 'petani_bot', 'xxx'];
   const DAILY_REWARD_AMOUNT = 500;
-  const HEARTBEAT_INTERVAL = 30000;   // 30 detik
-  const ONLINE_THRESHOLD = 90000;     // 90 detik
+  const HEARTBEAT_INTERVAL = 30000;
+  const ONLINE_THRESHOLD = 90000;
+
+  const HELP_MAX_PLAYERS = 10;       // Maks 10 pemain unik per hari
+  const HELP_MAX_PER_PLAYER = 1;     // 1x per pemain per hari
+  const HELP_WATER_MIN = 1;          // Min 1L
+  const HELP_WATER_MAX = 10;         // Max 10L
+  const HELP_COOLDOWN_MS = 10000;    // 10 detik
+  const HELP_EXP_PER_LITER = 10;     // 1L = +10 exp
 
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
@@ -761,7 +1184,14 @@
   let heartbeatTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v100_state';
+  const LOCAL_KEY = 'compoundHarvest_v110_state';
+
+  // Help system state
+  let helpQuota = { totalSent: 0, playersHelped: {}, date: '' };
+  let helpPool = [];        // Daftar 10 pemain (UID)
+  let helpCooldownUntil = 0;
+  let currentHelpTarget = null;   // UID
+  let currentHelpTargetName = '';
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
@@ -810,6 +1240,7 @@
   const pageLeaderboard = $('pageLeaderboard');
   const pageInventori = $('pageInventori');
   const pageToko = $('pageToko');
+  const pageHelp = $('pageHelp');
   const pageAkun = $('pageAkun');
   const navItems = document.querySelectorAll('.nav-item');
   const toastEl = $('toast');
@@ -821,6 +1252,13 @@
   const invGrid = $('invGrid');
   const invItemCount = $('invItemCount');
 
+  // Menu
+  const menuBtn = $('menuBtn');
+  const dropdownMenu = $('dropdownMenu');
+  const menuHelpBtn = $('menuHelpBtn');
+  const menuEmptyBtn = $('menuEmptyBtn');
+  const menuCloseBtn = $('menuCloseBtn');
+
   // Profile modal
   const profileModalBackdrop = $('profileModalBackdrop');
   const profileModalClose = $('profileModalClose');
@@ -831,6 +1269,26 @@
   const pmUid = $('pmUid');
   const pmType = $('pmType');
   const pmCopyBtn = $('pmCopyBtn');
+  const pmHelpBtn = $('pmHelpBtn');
+
+  // Help system
+  const helpList = $('helpList');
+  const helpPlayersCount = $('helpPlayersCount');
+  const helpTotalWater = $('helpTotalWater');
+  const helpCooldown = $('helpCooldown');
+  const helpCooldownTime = $('helpCooldownTime');
+
+  // Help modal
+  const helpModalBackdrop = $('helpModalBackdrop');
+  const helpTargetInfo = $('helpTargetInfo');
+  const helpWaterInput = $('helpWaterInput');
+  const helpRemainingQuota = $('helpRemainingQuota');
+  const helpModalCancel = $('helpModalCancel');
+  const helpModalConfirm = $('helpModalConfirm');
+
+  // Received section
+  const receivedSection = $('receivedSection');
+  const receivedList = $('receivedList');
 
   const tabLoginBtn = $('tabLoginBtn');
   const tabRegisterBtn = $('tabRegisterBtn');
@@ -923,14 +1381,16 @@
     if (diff < 86400000) return `${Math.floor(diff / 3600000)} jam lalu`;
     return `${Math.floor(diff / 86400000)} hari lalu`;
   }
+  function getTodayKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
 
-  // ===== HEARTBEAT (ONLINE STATUS) =====
+  // ===== HEARTBEAT =====
   function startHeartbeat() {
     stopHeartbeat();
     if (!auth.currentUser) return;
-    // Update langsung
     updateHeartbeat();
-    // Interval tiap 30 detik
     heartbeatTimer = setInterval(() => {
       if (auth.currentUser && isOnline) updateHeartbeat();
     }, HEARTBEAT_INTERVAL);
@@ -942,43 +1402,445 @@
     if (!auth.currentUser) return;
     try {
       await update(ref(db, `users/${auth.currentUser.uid}`), {
-        online: true,
-        lastSeen: Date.now()
+        online: true, lastSeen: Date.now()
       });
-    } catch (e) {
-      // Silent fail — jangan ganggu gameplay
-    }
+    } catch (e) {}
   }
   async function setOffline() {
     if (!auth.currentUser) return;
     try {
-      // Pakai set tanpa await di beforeunload
       set(ref(db, `users/${auth.currentUser.uid}/online`), false);
       set(ref(db, `users/${auth.currentUser.uid}/lastSeen`), Date.now());
     } catch (e) {}
   }
 
-  // ===== PROFILE VIEW =====
+  // ===== MENU DROPDOWN =====
+  function openMenu() {
+    dropdownMenu.classList.add('open');
+    menuBtn.classList.add('active');
+  }
+  function closeMenu() {
+    dropdownMenu.classList.remove('open');
+    menuBtn.classList.remove('active');
+  }
+  menuBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (dropdownMenu.classList.contains('open')) closeMenu();
+    else openMenu();
+  });
+  menuCloseBtn.addEventListener('click', () => closeMenu());
+  menuHelpBtn.addEventListener('click', () => {
+    closeMenu();
+    switchPage('help');
+  });
+  menuEmptyBtn.addEventListener('click', () => {
+    closeMenu();
+    showToast('📦 Tab Kosong — Coming Soon', 2000);
+  });
+  // Close dropdown when click outside
+  document.addEventListener('click', e => {
+    if (dropdownMenu.classList.contains('open') &&
+        !dropdownMenu.contains(e.target) &&
+        e.target !== menuBtn) {
+      closeMenu();
+    }
+  });
+
+  // ===== HELP SYSTEM =====
+  function generateHelpPool() {
+    // Ambil 10 UID dari leaderboard/global/exp (yang bukan diri sendiri)
+    return get(query(ref(db, 'leaderboard/global/exp'), orderByChild('value'), limitToLast(100)))
+      .then(snap => {
+        const all = [];
+        snap.forEach(child => {
+          if (child.key !== state.uid) all.push(child.key);
+        });
+        // Shuffle & ambil 10
+        for (let i = all.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [all[i], all[j]] = [all[j], all[i]];
+        }
+        return all.slice(0, 10);
+      });
+  }
+
+  async function loadHelpQuota() {
+    if (!state.uid) return;
+    const today = getTodayKey();
+    try {
+      const snap = await get(ref(db, `helpQuota/${state.uid}/${today}`));
+      if (snap.exists()) {
+        const data = snap.val() || {};
+        helpQuota = {
+          totalSent: data.totalSent || 0,
+          playersHelped: data.playersHelped || {},
+          date: today
+        };
+      } else {
+        helpQuota = { totalSent: 0, playersHelped: {}, date: today };
+      }
+    } catch (e) {
+      console.warn('Load quota error:', e);
+      helpQuota = { totalSent: 0, playersHelped: {}, date: today };
+    }
+  }
+
+  async function saveHelpQuota() {
+    if (!state.uid) return;
+    const today = getTodayKey();
+    try {
+      await set(ref(db, `helpQuota/${state.uid}/${today}`), {
+        totalSent: helpQuota.totalSent,
+        playersHelped: helpQuota.playersHelped,
+        date: today
+      });
+    } catch (e) {
+      console.warn('Save quota error:', e);
+    }
+  }
+
+  function countPlayersHelped() {
+    return Object.keys(helpQuota.playersHelped || {}).length;
+  }
+
+  async function renderHelpPage() {
+    if (!helpList) return;
+
+    // Update stats
+    const helpedCount = countPlayersHelped();
+    helpPlayersCount.innerHTML = `${helpedCount}<small>/${HELP_MAX_PLAYERS}</small>`;
+    helpTotalWater.innerHTML = `${helpQuota.totalSent || 0}<small>L</small>`;
+
+    // Loading
+    helpList.innerHTML = `<div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat daftar pemain...</div></div>`;
+
+    // Generate pool
+    try {
+      helpPool = await generateHelpPool();
+    } catch (e) {
+      console.warn('Pool error:', e);
+      helpPool = [];
+    }
+
+    if (helpPool.length === 0) {
+      helpList.innerHTML = `<div class="help-empty">📭 Belum ada pemain lain.<br>Ajak teman main dulu! 🌱</div>`;
+      return;
+    }
+
+    // Fetch profile semua pemain di pool
+    const playersData = [];
+    for (const uid of helpPool) {
+      try {
+        const snap = await get(ref(db, `users/${uid}`));
+        if (snap.exists()) {
+          const data = snap.val() || {};
+          playersData.push({
+            uid,
+            name: data.name || 'Petani',
+            photoURL: data.photoURL || '',
+            provider: data.provider || 'guest',
+            level: data.level || 1,
+            totalExp: data.totalExp || 0,
+          });
+        }
+      } catch (e) {
+        // Skip user yang tidak bisa dibaca
+      }
+    }
+
+    // Render list
+    let html = '';
+    playersData.forEach(p => {
+      const alreadyHelped = !!helpQuota.playersHelped[p.uid];
+      const avatarContent = p.photoURL
+        ? `<img src="${escapeHtml(p.photoURL)}" alt="" onerror="this.style.display='none';this.parentElement.textContent='${getProviderBadge(p.provider)}'">`
+        : getProviderBadge(p.provider);
+      const lvData = getLevelData(p.totalExp);
+
+      html += `
+        <div class="help-player ${alreadyHelped ? 'done' : ''}">
+          <div class="help-avatar">${avatarContent}</div>
+          <div class="help-info" data-uid="${p.uid}" data-name="${escapeHtml(p.name)}">
+            <div class="help-name">${escapeHtml(p.name)}</div>
+            <div class="help-sub ${alreadyHelped ? 'done-label' : ''}">
+              ${alreadyHelped ? '✅ Sudah dibantu hari ini' : `Lv.${lvData.level} ${lvData.name}`}
+            </div>
+          </div>
+          <button class="help-action-btn" data-uid="${p.uid}" data-name="${escapeHtml(p.name)}" ${alreadyHelped ? 'disabled' : ''}>
+            ${alreadyHelped ? '✅' : '💧 Bantu'}
+          </button>
+        </div>`;
+    });
+
+    if (html === '') {
+      helpList.innerHTML = `<div class="help-empty">📭 Tidak ada pemain yang bisa dibantu saat ini.</div>`;
+    } else {
+      helpList.innerHTML = html;
+
+      // Attach event listeners
+      helpList.querySelectorAll('.help-info').forEach(el => {
+        el.addEventListener('click', () => {
+          const uid = el.dataset.uid;
+          const name = el.dataset.name;
+          openProfile(uid, { name });
+        });
+      });
+      helpList.querySelectorAll('.help-action-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const uid = btn.dataset.uid;
+          const name = btn.dataset.name;
+          openHelpModal(uid, name);
+        });
+      });
+    }
+  }
+
+  async function openHelpModal(targetUid, targetName) {
+    if (!state.uid) return;
+    if (targetUid === state.uid) { showToast('❌ Tidak bisa bantu diri sendiri'); return; }
+
+    // Cek cooldown
+    const now = Date.now();
+    if (now < helpCooldownUntil) {
+      const sec = Math.ceil((helpCooldownUntil - now) / 1000);
+      showToast(`⏱️ Tunggu ${sec} detik lagi`);
+      return;
+    }
+
+    // Cek quota
+    const helpedCount = countPlayersHelped();
+    if (helpedCount >= HELP_MAX_PLAYERS) {
+      showToast(`❌ Kuota harian habis (${HELP_MAX_PLAYERS} pemain/hari)`);
+      return;
+    }
+    if (helpQuota.playersHelped[targetUid]) {
+      showToast('❌ Sudah bantu pemain ini hari ini');
+      return;
+    }
+
+    // Set current target
+    currentHelpTarget = targetUid;
+    currentHelpTargetName = targetName;
+
+    // Update modal
+    helpTargetInfo.innerHTML = `Anda akan membantu <b>${escapeHtml(targetName)}</b>`;
+    helpWaterInput.value = 1;
+    helpRemainingQuota.textContent = `${HELP_MAX_PLAYERS - helpedCount}`;
+    helpModalBackdrop.classList.remove('hidden');
+  }
+
+  function closeHelpModal() {
+    helpModalBackdrop.classList.add('hidden');
+    currentHelpTarget = null;
+    currentHelpTargetName = '';
+  }
+
+  async function executeHelpWater() {
+    if (!currentHelpTarget) return;
+    const targetUid = currentHelpTarget;
+    const targetName = currentHelpTargetName;
+
+    // Validate input
+    let amount = parseInt(helpWaterInput.value, 10);
+    if (isNaN(amount) || amount < HELP_WATER_MIN) amount = HELP_WATER_MIN;
+    if (amount > HELP_WATER_MAX) amount = HELP_WATER_MAX;
+
+    // Re-check quota & cooldown
+    if (Date.now() < helpCooldownUntil) {
+      const sec = Math.ceil((helpCooldownUntil - Date.now()) / 1000);
+      showToast(`⏱️ Tunggu ${sec} detik lagi`);
+      return;
+    }
+    const helpedCount = countPlayersHelped();
+    if (helpedCount >= HELP_MAX_PLAYERS) { showToast('❌ Kuota habis'); closeHelpModal(); return; }
+    if (helpQuota.playersHelped[targetUid]) { showToast('❌ Sudah bantu'); closeHelpModal(); return; }
+
+    // Disable tombol sementara
+    helpModalConfirm.disabled = true;
+    helpModalConfirm.textContent = '⏳ Memproses...';
+
+    try {
+      const now = Date.now();
+      const today = getTodayKey();
+      const updates = {};
+
+      // 1. Update quota pengirim
+      helpQuota.totalSent += amount;
+      helpQuota.playersHelped[targetUid] = amount;
+      updates[`helpQuota/${state.uid}/${today}`] = {
+        totalSent: helpQuota.totalSent,
+        playersHelped: helpQuota.playersHelped,
+        date: today
+      };
+
+      // 2. Catat di helpReceived target
+      updates[`helpReceived/${targetUid}/${today}/${state.uid}`] = {
+        name: state.name || 'Petani',
+        amount: amount,
+        ts: now
+      };
+
+      // 3. Kirim exp ke target (read dulu totalExp & exp saat ini)
+      // ⚠️ Kita tidak bisa tulis langsung ke totalExp user lain (rules)
+      // Solusi: gunakan helpPool sebagai "queue" — target akan baca saat login
+      // Tapi karena Firebase tidak izinkan, kita pakai trik:
+      // Tulis ke /helpPool/{targetUid}/{senderUid} = { amount, expGain }
+      // Target akan apply saat heartbeat / login berikutnya
+      updates[`helpPool/${targetUid}/${state.uid}`] = {
+        amount: amount,
+        expGain: amount * HELP_EXP_PER_LITER,
+        senderName: state.name || 'Petani',
+        ts: now,
+        applied: false
+      };
+
+      await update(ref(db), updates);
+
+      // Set cooldown
+      helpCooldownUntil = now + HELP_COOLDOWN_MS;
+      startCooldownDisplay();
+
+      showToast(`💧 Bantu ${targetName} +${amount}L (+${amount * HELP_EXP_PER_LITER} exp)`, 2500);
+
+      // Update UI
+      renderHelpPage();
+      renderReceivedSection();
+    } catch (e) {
+      console.error('Help error:', e);
+      showToast('❌ Gagal: ' + (e.message || 'coba lagi'));
+    } finally {
+      helpModalConfirm.disabled = false;
+      helpModalConfirm.textContent = '💧 Bantu Sekarang';
+      closeHelpModal();
+    }
+  }
+
+  function startCooldownDisplay() {
+    if (!helpCooldown || !helpCooldownTime) return;
+    if (Date.now() >= helpCooldownUntil) {
+      helpCooldown.classList.add('hidden');
+      return;
+    }
+    helpCooldown.classList.remove('hidden');
+    const tick = () => {
+      const remaining = Math.ceil((helpCooldownUntil - Date.now()) / 1000);
+      if (remaining <= 0) {
+        helpCooldown.classList.add('hidden');
+        return;
+      }
+      helpCooldownTime.textContent = remaining;
+      setTimeout(tick, 500);
+    };
+    tick();
+  }
+
+  // ===== RECEIVED HELP SECTION =====
+  async function renderReceivedSection() {
+    if (!receivedList) return;
+    if (!state.uid) return;
+    const today = getTodayKey();
+    try {
+      const snap = await get(ref(db, `helpReceived/${state.uid}/${today}`));
+      if (!snap.exists()) {
+        receivedList.innerHTML = `<div class="small-note">Belum ada bantuan hari ini</div>`;
+        return;
+      }
+      const data = snap.val() || {};
+      const entries = Object.entries(data).map(([senderUid, v]) => ({
+        senderUid, ...v
+      })).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+      if (entries.length === 0) {
+        receivedList.innerHTML = `<div class="small-note">Belum ada bantuan hari ini</div>`;
+        return;
+      }
+
+      let html = '';
+      entries.forEach(e => {
+        const alreadyReplied = !!helpQuota.playersHelped[e.senderUid];
+        html += `
+          <div class="received-row">
+            <div class="info">
+              <div class="sender">💧 ${escapeHtml(e.name || 'Petani')}</div>
+              <div class="amount">+${e.amount || 0}L</div>
+            </div>
+            <button class="reply-btn" data-uid="${e.senderUid}" data-name="${escapeHtml(e.name || 'Petani')}" ${alreadyReplied ? 'disabled' : ''}>
+              ${alreadyReplied ? '✅' : '🔁 Balas'}
+            </button>
+          </div>`;
+      });
+      receivedList.innerHTML = html;
+
+      // Attach listeners
+      receivedList.querySelectorAll('.reply-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const uid = btn.dataset.uid;
+          const name = btn.dataset.name;
+          openHelpModal(uid, name);
+        });
+      });
+    } catch (e) {
+      receivedList.innerHTML = `<div class="small-note">Gagal memuat bantuan</div>`;
+    }
+  }
+
+  // ===== APPLY PENDING HELP (dari helpPool) =====
+  async function applyPendingHelp() {
+    if (!state.uid) return;
+    try {
+      const snap = await get(ref(db, `helpPool/${state.uid}`));
+      if (!snap.exists()) return;
+      const pool = snap.val() || {};
+      let totalExpGain = 0;
+      let appliedCount = 0;
+      const updates = {};
+      for (const [senderUid, v] of Object.entries(pool)) {
+        if (v.applied === false) {
+          totalExpGain += (v.expGain || 0);
+          updates[`helpPool/${state.uid}/${senderUid}/applied`] = true;
+          appliedCount++;
+        }
+      }
+      if (totalExpGain > 0) {
+        // Apply exp ke state — tidak pengaruh ke waterSinceFertilizer
+        const oldLevel = state.level;
+        state.exp = Math.min(state.exp + totalExpGain, 3000);
+        state.totalExp += totalExpGain;
+        const newLevelData = getLevelData(state.exp);
+        state.level = newLevelData.level;
+        if (state.level > oldLevel) {
+          showToast(`🌟 Naik ke Lv.${state.level} ${newLevelData.name}!`);
+        }
+        updateUI();
+        debouncedSave();
+        showToast(`💧 +${totalExpGain} Exp dari bantuan teman!`, 2500, true);
+      }
+      // Tandai applied
+      if (Object.keys(updates).length > 0) {
+        await update(ref(db), updates);
+      }
+    } catch (e) {
+      console.warn('Apply pending help error:', e);
+    }
+  }
+
+  // ===== PROFILE MODAL =====
   let currentProfileUid = null;
   async function openProfile(uid, fallbackData) {
     currentProfileUid = uid;
     profileModalBackdrop.classList.remove('hidden');
-
-    // Set default dari fallbackData (dari leaderboard)
     if (fallbackData) {
       pmName.textContent = fallbackData.name || 'Petani';
-      pmType.textContent = getProviderLabel(fallbackData.provider);
-      const icon = getProviderBadge(fallbackData.provider);
-      pmAvatar.textContent = icon;
-    } else {
-      pmName.textContent = 'Memuat...';
       pmType.textContent = '-';
       pmAvatar.textContent = '👤';
     }
-    pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>Memuat status...</span>`;
+    pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>Memuat...</span>`;
     pmUid.textContent = uid.substring(0, 12) + '...';
+    // Reset help button
+    pmHelpBtn.disabled = false;
+    pmHelpBtn.textContent = '💧 Bantu Siram';
 
-    // Fetch full profile dari Firebase
     try {
       const snap = await get(ref(db, `users/${uid}`));
       if (!snap.exists()) {
@@ -987,133 +1849,45 @@
         return;
       }
       const data = snap.val() || {};
-
-      // Update UI
       pmName.textContent = data.name || 'Petani';
-      pmUid.textContent = uid.substring(0, 12) + '...';
-
-      // Provider
       const provider = data.provider || 'guest';
       pmType.textContent = getProviderLabel(provider);
-
-      // Avatar
       if (data.photoURL) {
         pmAvatar.innerHTML = `<img src="${escapeHtml(data.photoURL)}" alt="avatar" onerror="this.style.display='none';this.parentElement.textContent='${getProviderBadge(provider)}'">`;
       } else {
         pmAvatar.textContent = getProviderBadge(provider);
       }
-
-      // Status online
       const now = Date.now();
       const lastSeen = data.lastSeen || 0;
       const onlineFlag = data.online === true;
       const isCurrentlyOnline = onlineFlag && (now - lastSeen < ONLINE_THRESHOLD);
-
       if (isCurrentlyOnline) {
         pmStatus.innerHTML = `<span class="status-dot status-online"></span><span class="status-online">🟢 Online</span>`;
       } else {
-        const rel = formatRelativeTime(lastSeen);
-        pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span class="status-offline">⚪ Offline · ${rel}</span>`;
+        pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span class="status-offline">⚪ Offline · ${formatRelativeTime(lastSeen)}</span>`;
+      }
+
+      // Disable tombol bantu kalau diri sendiri / sudah dibantu / kuota habis
+      if (uid === state.uid) {
+        pmHelpBtn.disabled = true;
+        pmHelpBtn.textContent = '❌ Tidak bisa bantu diri sendiri';
+      } else if (helpQuota.playersHelped[uid]) {
+        pmHelpBtn.disabled = true;
+        pmHelpBtn.textContent = '✅ Sudah dibantu hari ini';
+      } else if (countPlayersHelped() >= HELP_MAX_PLAYERS) {
+        pmHelpBtn.disabled = true;
+        pmHelpBtn.textContent = '❌ Kuota harian habis';
+      } else {
+        pmHelpBtn.disabled = false;
+        pmHelpBtn.textContent = '💧 Bantu Siram';
       }
     } catch (e) {
-      console.error('Load profile error:', e);
       pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>⚠️ Gagal memuat profil</span>`;
     }
   }
-
   function closeProfileModal() {
     profileModalBackdrop.classList.add('hidden');
     currentProfileUid = null;
-  }
-
-  // ===== LEADERBOARD =====
-  function getLbPath() {
-    const cat = lbView.category;
-    if (lbView.region === 'global') return `leaderboard/global/${cat}`;
-    const key = sanitizeKey(state.region[lbView.region]);
-    if (!key) return null;
-    return `leaderboard/${lbView.region}/${key}/${cat}`;
-  }
-  function getLbRegionLabel() {
-    const r = lbView.region;
-    if (r === 'global') return '🌍 Menampilkan peringkat global';
-    const val = state.region[r] || '(belum diatur)';
-    const label = { negara: 'Negara', provinsi: 'Provinsi', kabupaten: 'Kabupaten', kecamatan: 'Kecamatan' }[r];
-    return `${label}: ${val || '(belum diatur)'}`;
-  }
-  async function loadLeaderboard() {
-    if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
-    lbList.innerHTML = `<div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat peringkat...</div></div>`;
-    lbRegionInfo.textContent = getLbRegionLabel();
-    const path = getLbPath();
-    if (!path) {
-      lbList.innerHTML = `<div class="lb-empty">🌍 Wilayah <b>${lbView.region}</b> belum diatur.</div>`;
-      return;
-    }
-    try {
-      const q = query(ref(db, path), orderByChild('value'), limitToLast(100));
-      const unsubscribe = onValue(q, (snapshot) => {
-        const rows = [];
-        snapshot.forEach(child => {
-          const v = child.val() || {};
-          rows.push({ uid: child.key, name: v.name || 'Petani', value: v.value || 0, provider: v.provider || 'guest' });
-        });
-        rows.sort((a, b) => b.value - a.value);
-        renderLeaderboard(rows);
-      }, (err) => {
-        lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${err.message}</div>`;
-      });
-      lbView.unsubscribe = unsubscribe;
-    } catch (e) {
-      lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${e.message}</div>`;
-    }
-  }
-  function renderLeaderboard(rows) {
-    if (!rows || rows.length === 0) {
-      lbList.innerHTML = `<div class="lb-empty">📭 Belum ada data. Jadilah yang pertama! 🌱</div>`;
-      return;
-    }
-    const cat = lbView.category;
-    const unit = cat === 'exp' ? 'Exp' : 'PP';
-    let html = '';
-    rows.forEach((row, idx) => {
-      const rank = idx + 1;
-      let rankClass = '', rankIcon = rank;
-      if (rank === 1) { rankClass = 'gold'; rankIcon = '🥇'; }
-      else if (rank === 2) { rankClass = 'silver'; rankIcon = '🥈'; }
-      else if (rank === 3) { rankClass = 'bronze'; rankIcon = '🥉'; }
-      const isMe = row.uid === state.uid;
-      let badge = '';
-      if (row.provider === 'github') badge = `<span class="lb-badge github">🐙</span>`;
-      else if (row.provider === 'email') badge = `<span class="lb-badge email">📧</span>`;
-      else badge = `<span class="lb-badge guest">🎮</span>`;
-
-      // Escape nama untuk dikirim via data-attribute
-      const safeName = escapeHtml(row.name).replace(/"/g, '&quot;');
-      html += `
-        <div class="lb-row ${isMe ? 'me' : ''}">
-          <div class="lb-rank ${rankClass}">${rankIcon}</div>
-          <div class="lb-info" data-uid="${row.uid}" data-name="${safeName}" data-provider="${row.provider}">
-            <div class="lb-name ${isMe ? 'me' : ''}">
-              ${badge} ${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}
-            </div>
-            <div class="lb-sub">#${rank} · Tap untuk profil</div>
-          </div>
-          <div class="lb-value ${cat}">${formatNumber(row.value)} ${unit}</div>
-        </div>`;
-    });
-    lbList.innerHTML = html;
-
-    // Attach click handler ke .lb-info
-    document.querySelectorAll('.lb-info').forEach(el => {
-      el.addEventListener('click', () => {
-        const uid = el.dataset.uid;
-        const name = el.dataset.name;
-        const provider = el.dataset.provider;
-        if (!uid) return;
-        openProfile(uid, { name, provider });
-      });
-    });
   }
 
   // ===== LOCAL =====
@@ -1124,7 +1898,7 @@
   function setLocalState(s) { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {} }
   function clearLocalState() { try { localStorage.removeItem(LOCAL_KEY); } catch {} }
 
-  // ===== NAMA UNIK =====
+  // ===== NAMA =====
   function sanitizeName(name) {
     if (!name) return '';
     return String(name).replace(/[^a-zA-Z0-9_]/g, '_').substring(0, 15);
@@ -1394,6 +2168,10 @@
       updateUI();
       updateLeaderboardEntries().catch(() => {});
       startHeartbeat();
+      // Load help quota + apply pending help + received section
+      await loadHelpQuota();
+      await applyPendingHelp();
+      renderReceivedSection();
       setTimeout(() => checkAndShowDailyReward(), isNewAccount ? 800 : 500);
     } catch (e) {
       console.error('Load error:', e);
@@ -1420,10 +2198,6 @@
   }
 
   // ===== DAILY =====
-  function getTodayKey() {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  }
   function hasClaimedDailyToday() { return state.lastDailyReward === getTodayKey(); }
   function showDailyRewardModal() { dailyRewardBackdrop.classList.remove('hidden'); }
   function hideDailyRewardModal() { dailyRewardBackdrop.classList.add('hidden'); }
@@ -1566,11 +2340,12 @@
 
   // ===== NAV =====
   function switchPage(pageId) {
-    [pageTanam, pageLeaderboard, pageInventori, pageToko, pageAkun].forEach(p => p.classList.remove('active'));
+    [pageTanam, pageLeaderboard, pageInventori, pageToko, pageHelp, pageAkun].forEach(p => p.classList.remove('active'));
     if (pageId === 'tanam') pageTanam.classList.add('active');
     else if (pageId === 'leaderboard') pageLeaderboard.classList.add('active');
     else if (pageId === 'inventori') { pageInventori.classList.add('active'); renderInventory(); }
     else if (pageId === 'toko') pageToko.classList.add('active');
+    else if (pageId === 'help') { pageHelp.classList.add('active'); renderHelpPage(); }
     else if (pageId === 'akun') pageAkun.classList.add('active');
     navItems.forEach(item => item.classList.toggle('active', item.dataset.page === pageId));
     if (pageId === 'toko') renderShop();
@@ -1643,9 +2418,33 @@
     if (!currentProfileUid) return;
     navigator.clipboard.writeText(currentProfileUid).then(() => {
       showToast('📋 UID disalin');
-    }).catch(() => {
-      showToast('❌ Gagal copy');
+    }).catch(() => showToast('❌ Gagal copy'));
+  });
+  pmHelpBtn.addEventListener('click', () => {
+    if (!currentProfileUid) return;
+    const name = pmName.textContent;
+    closeProfileModal();
+    openHelpModal(currentProfileUid, name);
+  });
+
+  // ===== HELP MODAL EVENTS =====
+  helpModalCancel.addEventListener('click', closeHelpModal);
+  helpModalConfirm.addEventListener('click', executeHelpWater);
+  helpModalBackdrop.addEventListener('click', e => {
+    if (e.target === helpModalBackdrop) closeHelpModal();
+  });
+  // Quick select buttons
+  document.querySelectorAll('.help-modal .quick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      helpWaterInput.value = btn.dataset.amount;
     });
+  });
+  // Input validation
+  helpWaterInput.addEventListener('input', () => {
+    let v = parseInt(helpWaterInput.value, 10);
+    if (isNaN(v) || v < 1) v = 1;
+    if (v > 10) v = 10;
+    helpWaterInput.value = v;
   });
 
   // ===== REGION MODAL =====
@@ -1880,9 +2679,7 @@
         const provider = new GithubAuthProvider();
         await signInWithPopup(auth, provider);
         showToast('🐙 Akun di-link ke GitHub!');
-      } catch (e) {
-        showToast('❌ ' + e.message);
-      }
+      } catch (e) { showToast('❌ ' + e.message); }
     }
   }
   async function handleLogout() {
@@ -2037,6 +2834,8 @@
       stopHeartbeat();
       hideDailyRewardModal();
       closeProfileModal();
+      closeHelpModal();
+      closeMenu();
       guestBtn.disabled = false;
       guestBtn.textContent = '🎮 Main sebagai Guest';
       githubLoginBtn.disabled = false;
@@ -2075,19 +2874,14 @@
   regDistrict.addEventListener('keypress', e => { if (e.key === 'Enter') goToRegionConfirm(); });
   window.addEventListener('online', () => { isOnline = true; setCloudStatus('saved'); saveToCloud(); });
   window.addEventListener('offline', () => { isOnline = false; setCloudStatus('offline'); });
-
-  // Set offline saat user tutup tab
   window.addEventListener('beforeunload', () => {
     if (auth.currentUser) {
-      // Fire and forget
-      try {
-        set(ref(db, `users/${auth.currentUser.uid}/online`), false);
-      } catch (e) {}
+      try { set(ref(db, `users/${auth.currentUser.uid}/online`), false); } catch (e) {}
     }
   });
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v10.0 ready');
+  console.log('🌳 Compound Harvest v11.0 ready');
 </script>
 </body>
 </html>
