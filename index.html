@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#1e2b1e">
-  <title>Compound Harvest 1 · v14.0</title>
+  <title>Compound Harvest 1 · v15.0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { height: 100%; overflow: hidden; }
@@ -65,6 +65,41 @@
     .error-msg { background: #5a1e1e; color: #ffd0d0; padding: 10px 14px; border-radius: 12px;
       font-size: 0.85rem; text-align: center; border: 1px solid #a04040; }
     .error-msg.hidden { display: none; }
+
+    /* Welcome Back banner di login screen */
+    .welcome-banner {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: linear-gradient(160deg, #2a3a2a, #1a2a1a);
+      border: 1px solid #7fa07f;
+      border-radius: 18px;
+      text-align: center;
+      animation: welcomeBannerFade 1.2s ease;
+    }
+    .welcome-banner.show { display: block; }
+    .welcome-banner .wb-icon {
+      font-size: 1.8rem;
+      display: block;
+      margin-bottom: 6px;
+      animation: welcomeBannerFloat 3s ease-in-out infinite;
+    }
+    @keyframes welcomeBannerFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    @keyframes welcomeBannerFade {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .welcome-banner .wb-text {
+      color: #d4f0b0;
+      font-size: 0.9rem;
+      font-style: italic;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+    .welcome-banner .wb-text b { color: #ffe08a; font-style: normal; }
 
     .status-bar { flex-shrink: 0; background: #0f1a0f; padding: 10px 14px;
       display: flex; justify-content: space-between; align-items: center;
@@ -154,7 +189,6 @@
     .btn-harvest { background: #c9a23f; color: #1e2b0e; border-color: #f5e56b;
       grid-column: span 2; font-size: 1.3rem; box-shadow: 0 6px 0 #7a5e1e; }
 
-    /* LEADERBOARD */
     .lb-controls { background: #162316; border-radius: 20px; padding: 12px; border: 1px solid #3a5a3a;
       display: flex; flex-direction: column; gap: 10px; }
     .lb-section-label { font-size: 0.75rem; color: #8fa88f; font-weight: 600;
@@ -168,9 +202,6 @@
     .lb-list { background: #162316; border-radius: 20px; border: 1px solid #3a5a3a; padding: 8px; min-height: 100px;
       position: relative; overflow: hidden; }
 
-    /* ============================================ */
-    /* ===== FLIP ANIMATION (v14.0) ===== */
-    /* ============================================ */
     .lb-row {
       display: flex; align-items: center; gap: 10px; padding: 10px 12px;
       border-radius: 12px; border-bottom: 1px solid #1f2f1f;
@@ -180,60 +211,30 @@
     }
     .lb-row:last-child { border-bottom: none; }
     .lb-row.me { background: #2a4a2a; border: 1px solid #7fb07f; }
-
-    /* Highlight card Anda saat naik rank */
     .lb-row.me.rank-up {
       animation: rankUpGlow 1.5s ease;
       z-index: 5;
     }
     @keyframes rankUpGlow {
-      0% {
-        background: #2a4a2a;
-        box-shadow: 0 0 0 rgba(255, 217, 128, 0);
-        transform: scale(1);
-      }
-      30% {
-        background: #4a6a3a;
-        box-shadow: 0 0 30px rgba(255, 217, 128, 1), 0 0 60px rgba(255, 217, 128, 0.5);
-        transform: scale(1.03);
-      }
-      60% {
-        background: #3a5a3a;
-        box-shadow: 0 0 20px rgba(255, 217, 128, 0.7);
-        transform: scale(1.01);
-      }
-      100% {
-        background: #2a4a2a;
-        box-shadow: 0 0 0 rgba(255, 217, 128, 0);
-        transform: scale(1);
-      }
+      0% { background: #2a4a2a; box-shadow: 0 0 0 rgba(255, 217, 128, 0); transform: scale(1); }
+      30% { background: #4a6a3a; box-shadow: 0 0 30px rgba(255, 217, 128, 1), 0 0 60px rgba(255, 217, 128, 0.5); transform: scale(1.03); }
+      60% { background: #3a5a3a; box-shadow: 0 0 20px rgba(255, 217, 128, 0.7); transform: scale(1.01); }
+      100% { background: #2a4a2a; box-shadow: 0 0 0 rgba(255, 217, 128, 0); transform: scale(1); }
     }
-
-    /* Highlight card Anda saat turun rank */
-    .lb-row.me.rank-down {
-      animation: rankDownBlink 1s ease;
-    }
+    .lb-row.me.rank-down { animation: rankDownBlink 1s ease; }
     @keyframes rankDownBlink {
       0%, 100% { background: #2a4a2a; }
       50% { background: #3a3a2a; opacity: 0.7; }
     }
-
-    /* Rank icon bounce saat berubah */
-    .lb-rank.bounce {
-      animation: rankBounce 0.6s ease;
-    }
+    .lb-rank.bounce { animation: rankBounce 0.6s ease; }
     @keyframes rankBounce {
       0%, 100% { transform: scale(1); }
       30% { transform: scale(1.4); color: #ffd980; text-shadow: 0 0 10px #ffd980; }
       60% { transform: scale(1.1); }
     }
-
-    /* Top 3 efek khusus: hover glow */
     .lb-row.top-1 { border: 1px solid #ffd700; box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1); }
     .lb-row.top-2 { border: 1px solid #c0c0c0; box-shadow: inset 0 0 20px rgba(192, 192, 192, 0.1); }
     .lb-row.top-3 { border: 1px solid #cd7f32; box-shadow: inset 0 0 20px rgba(205, 127, 50, 0.1); }
-
-    /* Top 3 saat user naik ke top */
     .lb-row.top-1.rank-up { animation: top1Glow 2s ease; }
     @keyframes top1Glow {
       0% { box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1), 0 0 0 rgba(255, 215, 0, 0); }
@@ -252,13 +253,9 @@
       30% { box-shadow: inset 0 0 30px rgba(205, 127, 50, 0.5), 0 0 40px rgba(205, 127, 50, 0.6); transform: scale(1.05); }
       100% { box-shadow: inset 0 0 20px rgba(205, 127, 50, 0.1), 0 0 0 rgba(205, 127, 50, 0); transform: scale(1); }
     }
-
-    /* Confetti kecil untuk Top 3 */
     .confetti-particle {
-      position: absolute;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      pointer-events: none;
+      position: absolute; width: 6px; height: 6px;
+      border-radius: 50%; pointer-events: none;
       z-index: 10;
       animation: confettiFly 1.2s ease-out forwards;
     }
@@ -266,37 +263,23 @@
       0% { opacity: 1; transform: translate(0, 0) scale(1); }
       100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
     }
-
-    /* Rank up toast */
     .rank-toast {
-      position: fixed;
-      top: 90px;
-      left: 50%;
+      position: fixed; top: 90px; left: 50%;
       transform: translateX(-50%) translateY(-20px);
       background: linear-gradient(160deg, #4a6a3a, #2a4a2a);
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 0.95rem;
+      color: #fff; padding: 12px 24px; border-radius: 50px;
+      font-weight: 700; font-size: 0.95rem;
       border: 2px solid #ffd980;
       box-shadow: 0 8px 24px rgba(255, 217, 128, 0.4);
-      z-index: 9997;
-      opacity: 0;
-      pointer-events: none;
+      z-index: 9997; opacity: 0; pointer-events: none;
       transition: opacity 0.3s, transform 0.3s;
       white-space: nowrap;
     }
-    .rank-toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .rank-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .rank-toast.down {
       background: linear-gradient(160deg, #5a3a3a, #2a1a1a);
-      border-color: #a07070;
-      box-shadow: 0 8px 24px rgba(200, 100, 100, 0.3);
+      border-color: #a07070; box-shadow: 0 8px 24px rgba(200, 100, 100, 0.3);
     }
-
     .lb-rank { min-width: 36px; text-align: center; font-weight: 800; font-size: 1.05rem; color: #a0d0a0;
       transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
     .lb-rank.gold { color: #ffd700; text-shadow: 0 0 6px #ffd70080; }
@@ -330,7 +313,6 @@
     @keyframes shimmer { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
     .lb-skeleton .skel-bar { height: 12px; background: #2a3a2a; border-radius: 6px; }
 
-    /* INVENTORI */
     .inv-header { background: #162316; border-radius: 20px; padding: 14px 16px;
       border: 1px solid #3a5a3a; display: flex; justify-content: space-between;
       align-items: center; gap: 10px; }
@@ -365,7 +347,6 @@
       text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
       padding-left: 4px; margin-top: 4px; }
 
-    /* SHOP */
     .shop-item { background: #1e2f1e; border-radius: 20px; padding: 14px 16px;
       display: flex; justify-content: space-between; align-items: center;
       border: 1px solid #497049; box-shadow: 0 4px 0 #0a130a; margin-bottom: 10px; }
@@ -381,7 +362,6 @@
       border-radius: 50px; justify-content: space-around; font-weight: 600;
       color: #d0e8c0; border: 1px solid #527a52; }
 
-    /* PROFILE */
     .profile-card { background: #1e2f1e; border-radius: 24px; padding: 16px;
       border: 1px solid #5b875b; display: flex; flex-direction: column; gap: 10px; }
     .profile-row { display: flex; justify-content: space-between; align-items: center;
@@ -417,7 +397,6 @@
     .region-warning { background: #5a3e1e; border: 1px solid #a08040; border-radius: 12px;
       padding: 10px 14px; color: #ffe0a0; font-size: 0.82rem; line-height: 1.5; }
 
-    /* HELP */
     .help-header {
       background: linear-gradient(160deg, #1e3a3e, #162c2e);
       border-radius: 20px; padding: 16px;
@@ -723,10 +702,254 @@
       touch-action: manipulation; box-shadow: 0 6px 0 #7a5e1e; }
     .daily-modal .claim-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #7a5e1e; }
 
+    /* ============================================ */
+    /* ===== WELCOME BACK MODAL (v15.0) ===== */
+    /* ============================================ */
+    .wb-backdrop {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s;
+    }
+    .wb-backdrop.show { opacity: 1; pointer-events: auto; }
+    .wb-backdrop.hidden { display: none; }
+
+    .wb-modal {
+      background: linear-gradient(160deg, #1e2f1e, #162316);
+      border-radius: 32px;
+      padding: 28px 24px;
+      max-width: 400px; width: 100%;
+      border: 2px solid #5b875b;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+      position: relative;
+      text-align: center;
+      transform: scale(0.85);
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-height: 95vh;
+      overflow-y: auto;
+    }
+    .wb-backdrop.show .wb-modal { transform: scale(1); }
+
+    /* Tier variations */
+    .wb-modal.tier1 {
+      border-color: #7fa07f;
+      background: linear-gradient(160deg, #2a3a2a, #1e2e1e);
+      box-shadow: 0 30px 80px rgba(127, 160, 127, 0.3);
+    }
+    .wb-modal.tier2 {
+      border-color: #a0a0a0;
+      background: linear-gradient(160deg, #2e2e2e, #1e1e1e);
+      box-shadow: 0 30px 80px rgba(192, 192, 192, 0.3);
+    }
+    .wb-modal.tier3 {
+      border-color: #ffd700;
+      background: linear-gradient(160deg, #3a2e1e, #2a1e0e);
+      box-shadow: 0 30px 80px rgba(255, 215, 0, 0.4);
+    }
+    .wb-modal.tier4 {
+      border-color: #b980ff;
+      background: linear-gradient(160deg, #2a1e3a, #1e142a);
+      box-shadow: 0 30px 100px rgba(185, 128, 255, 0.5), 0 0 60px rgba(255, 217, 128, 0.2);
+      animation: tier4Pulse 3s ease-in-out infinite;
+    }
+    @keyframes tier4Pulse {
+      0%, 100% { box-shadow: 0 30px 100px rgba(185, 128, 255, 0.5), 0 0 60px rgba(255, 217, 128, 0.2); }
+      50% { box-shadow: 0 30px 120px rgba(185, 128, 255, 0.7), 0 0 90px rgba(255, 217, 128, 0.4); }
+    }
+
+    .wb-icon {
+      font-size: 4.5rem;
+      line-height: 1;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+      animation: wbIconFloat 2.5s ease-in-out infinite;
+    }
+    @keyframes wbIconFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.03); }
+    }
+
+    .wb-title {
+      color: #ffe08a;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 12px rgba(255, 217, 128, 0.4);
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+    }
+    .wb-modal.tier4 .wb-title {
+      color: #d0a8ff;
+      text-shadow: 0 2px 20px rgba(185, 128, 255, 0.7);
+      font-size: 1.6rem;
+    }
+
+    .wb-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #5b875b, transparent);
+      margin: 12px 0;
+    }
+
+    .wb-body {
+      color: #d0e8c0;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      font-style: italic;
+      margin-bottom: 6px;
+      text-align: center;
+      padding: 0 4px;
+      min-height: 60px;
+    }
+    .wb-modal.tier4 .wb-body {
+      color: #e0d0f0;
+      font-size: 0.95rem;
+    }
+    .wb-body p { margin-bottom: 8px; }
+    .wb-body p:last-child { margin-bottom: 0; }
+
+    .wb-name {
+      color: #ffe08a;
+      font-weight: 800;
+      font-style: normal;
+    }
+
+    .wb-reward-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px dashed #7fa07f;
+      border-radius: 20px;
+      padding: 16px 14px;
+      margin: 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .wb-modal.tier3 .wb-reward-box { border-color: #ffd700; }
+    .wb-modal.tier4 .wb-reward-box { border-color: #d0a8ff; }
+
+    .wb-tier-badge {
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #ffe08a;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .wb-modal.tier1 .wb-tier-badge { color: #a0d0a0; }
+    .wb-modal.tier2 .wb-tier-badge { color: #d0d0d0; }
+    .wb-modal.tier3 .wb-tier-badge { color: #ffd700; }
+    .wb-modal.tier4 .wb-tier-badge { color: #d0a8ff; }
+
+    .wb-reward-item {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 4px 0;
+    }
+    .wb-reward-item .wb-reward-icon {
+      font-size: 1.4rem;
+      display: inline-block;
+    }
+    .wb-reward-item .wb-reward-value {
+      color: #ffe08a;
+      font-weight: 800;
+    }
+
+    .wb-footer-quote {
+      color: #8fa88f;
+      font-size: 0.78rem;
+      font-style: italic;
+      margin-bottom: 14px;
+      padding: 0 8px;
+      line-height: 1.5;
+    }
+    .wb-modal.tier4 .wb-footer-quote { color: #b0a0c0; }
+
+    .wb-claim-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(160deg, #4a7a4a, #2a5a2a);
+      color: #fff;
+      border: 2px solid #a0d0a0;
+      border-radius: 40px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
+      touch-action: manipulation;
+      box-shadow: 0 6px 0 #1e3a1e, 0 10px 30px rgba(0,0,0,0.4);
+      transition: transform 0.1s, box-shadow 0.1s;
+      letter-spacing: 0.5px;
+    }
+    .wb-claim-btn:active {
+      transform: translateY(6px);
+      box-shadow: 0 0 0 #1e3a1e;
+    }
+    .wb-modal.tier3 .wb-claim-btn {
+      background: linear-gradient(160deg, #c9a23f, #a0821f);
+      border-color: #ffe08a;
+      box-shadow: 0 6px 0 #6a5010, 0 10px 30px rgba(255, 215, 0, 0.3);
+      color: #1e2b0e;
+    }
+    .wb-modal.tier3 .wb-claim-btn:active { box-shadow: 0 0 0 #6a5010; }
+    .wb-modal.tier4 .wb-claim-btn {
+      background: linear-gradient(160deg, #a870e0, #7a50a0);
+      border-color: #e0c0ff;
+      box-shadow: 0 6px 0 #4a2870, 0 10px 40px rgba(185, 128, 255, 0.5);
+      color: #fff;
+      animation: wbBtnGlow 2s ease-in-out infinite;
+    }
+    @keyframes wbBtnGlow {
+      0%, 100% { box-shadow: 0 6px 0 #4a2870, 0 10px 40px rgba(185, 128, 255, 0.5); }
+      50% { box-shadow: 0 6px 0 #4a2870, 0 10px 60px rgba(185, 128, 255, 0.8), 0 0 30px rgba(255, 217, 128, 0.3); }
+    }
+    .wb-modal.tier4 .wb-claim-btn:active { box-shadow: 0 0 0 #4a2870; }
+
+    /* Typewriter cursor */
+    .wb-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: #ffe08a;
+      animation: wbCursorBlink 0.6s step-end infinite;
+      vertical-align: text-bottom;
+      margin-left: 1px;
+    }
+    @keyframes wbCursorBlink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Floating particles for tier 3/4 */
+    .wb-particle {
+      position: absolute;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes wbParticleFloat {
+      0% { transform: translateY(0) scale(1); opacity: 0.8; }
+      50% { transform: translateY(-60px) scale(1.3); opacity: 1; }
+      100% { transform: translateY(-120px) scale(0.3); opacity: 0; }
+    }
+
     @media (max-width: 360px) {
       .nav-item { font-size: 0.6rem; }
       .nav-icon { font-size: 1.2rem; }
       .nav-label { font-size: 0.6rem; }
+      .wb-title { font-size: 1.3rem; }
+      .wb-body { font-size: 0.85rem; }
     }
   </style>
 </head>
@@ -736,7 +959,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v14.0 · Rank Animation</p>
+    <p>v15.0 · Welcome Back</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -766,6 +989,14 @@
       Masuk dengan GitHub
     </button>
     <div class="small-note">Guest: nama otomatis unik · GitHub: data tersimpan permanen</div>
+
+    <!-- Welcome Back Banner (subtle) -->
+    <div class="welcome-banner" id="welcomeBanner">
+      <span class="wb-icon">🌱</span>
+      <div class="wb-text" id="welcomeBannerText">
+        Kebunmu menunggumu...
+      </div>
+    </div>
   </div>
 </div>
 
@@ -915,7 +1146,7 @@
         <button class="edit-btn delete-btn hidden" id="deleteAccountBtn" style="width:100%;">🗑️ Logout + Hapus Data (Guest)</button>
         <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
       </div>
-      <div class="small-note">Compound Harvest 1 · v14.0</div>
+      <div class="small-note">Compound Harvest 1 · v15.0</div>
     </div>
   </main>
 
@@ -976,6 +1207,26 @@
     <div class="reward-amount">+$500</div>
     <div class="reward-sub">Bonus login harian.<br>Kembali besok untuk reward lagi!</div>
     <button class="claim-btn" id="dailyClaimBtn">✅ Klaim & Lanjut</button>
+  </div>
+</div>
+
+<!-- WELCOME BACK MODAL (v15.0) -->
+<div class="wb-backdrop hidden" id="wbBackdrop">
+  <div class="wb-modal" id="wbModal">
+    <div class="wb-icon" id="wbIcon">🌱</div>
+    <div class="wb-title" id="wbTitle">Selamat Datang Kembali</div>
+    <div class="wb-divider"></div>
+    <div class="wb-body" id="wbBody">
+      <p>...</p>
+    </div>
+    <div class="wb-reward-box">
+      <div class="wb-tier-badge" id="wbTierBadge">TIER 1</div>
+      <div id="wbRewardsList"></div>
+    </div>
+    <div class="wb-footer-quote" id="wbFooterQuote">
+      ...
+    </div>
+    <button class="wb-claim-btn" id="wbClaimBtn">🌱 Kembali ke Kebun</button>
   </div>
 </div>
 
@@ -1054,11 +1305,74 @@
   const HELP_EXP_PER_LITER = 10;
   const HELP_POOL_SIZE = 10;
 
-  // ===== ANIMATION CONFIG (v14.0) =====
-  const ANIM_DURATION = 400;          // ms — FLIP transition duration
-  const ANIM_THROTTLE = 500;          // ms — min jarak antar animasi
-  const RANK_UP_TOAST_DURATION = 3000; // ms — durasi toast rank up
-  const CONFETTI_COUNT = 12;          // jumlah confetti top 3
+  const ANIM_DURATION = 400;
+  const ANIM_THROTTLE = 500;
+  const RANK_UP_TOAST_DURATION = 3000;
+  const CONFETTI_COUNT = 12;
+
+  // ===== WELCOME BACK CONFIG (v15.0) =====
+  const WB_MIN_DAYS = 7;                   // Minimal 7 hari absen
+  const WB_TYPEWRITER_DELAY = 30;          // ms per huruf (Tier 4)
+  const WB_TYPEWRITER_TIER = 4;            // Tier yang pakai typewriter
+
+  // ✏️ EDIT DI SINI — Kustomisasi narasi Welcome Back
+  const WELCOME_BACK_TEXTS = {
+    1: {
+      title: '🌱 Pohonmu Merindukanmu',
+      icon: '🌱',
+      body: (name, days) => [
+        `${days} hari bukan waktu yang singkat, <span class="wb-name">${name}</span>.`,
+        `Daun-daun mulai layu, dan tanah sedikit kering.`,
+        `Tapi kamu kembali — dan itu yang terpenting.`
+      ],
+      quote: `"Selamat datang kembali, ${'${name}'}."`,
+      btnText: '🌱 Kembali ke Kebun'
+    },
+    2: {
+      title: '🌿 Kebun Ini Menunggumu',
+      icon: '🌿',
+      body: (name, days) => [
+        `${days} hari telah berlalu.`,
+        `Angin membawa debu ke tanah yang tak tersentuh.`,
+        `Tapi hari ini, langkahmu kembali ke sini.`
+      ],
+      quote: `"Kebun ini bukan hanya tentang pohon. Ini tentang kamu."`,
+      btnText: '🌿 Lanjutkan Perjalanan'
+    },
+    3: {
+      title: '🌳 Sang Penjaga Telah Kembali',
+      icon: '🌳',
+      body: (name, days) => [
+        `Sebulan lebih, <span class="wb-name">${name}</span>.`,
+        `Setiap pohon menyimpan cerita. Setiap daun menyimpan jejak tanganmu.`,
+        `Tanah ini tidak pernah melupakan siapa yang menanamnya.`,
+        `Hari ini, kamu pulang. Dan itu adalah alasan untuk bersorak.`
+      ],
+      quote: `"Kamu dirindukan, ${'${name}'}."`,
+      btnText: '🌳 Klaim Kehormatanmu'
+    },
+    4: {
+      title: '✨ LEGENDA KEMBALI',
+      icon: '💎',
+      body: (name, days) => [
+        `Mereka bilang kamu sudah pergi.`,
+        `Mereka bilang kebun ini akan sunyi selamanya.`,
+        `Tapi mereka salah.`,
+        `${days} hari tanah menunggu. ${days} hari langit menahan hujan.`,
+        `Kini kamu kembali — dan kebun ini bernafas lagi.`
+      ],
+      quote: `"Beberapa hal memang layak ditunggu, ${'${name}'}."`,
+      btnText: '💎 Klaim Warisan Ini'
+    }
+  };
+
+  // Config reward per tier
+  const WELCOME_BACK_REWARDS = {
+    1: { money: 2000,  diamond: 20,  water: 100, fertilizer: 0,  instantGrow: 0, tierLabel: 'TIER 1' },
+    2: { money: 5000,  diamond: 50,  water: 200, fertilizer: 5,  instantGrow: 0, tierLabel: 'TIER 2' },
+    3: { money: 10000, diamond: 100, water: 300, fertilizer: 10, instantGrow: 0, tierLabel: 'TIER 3' },
+    4: { money: 20000, diamond: 200, water: 500, fertilizer: 20, instantGrow: 1, tierLabel: 'TIER 4' }
+  };
 
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
@@ -1083,6 +1397,7 @@
     provider: 'guest', displayName: '', photoURL: '',
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
     regionLocked: false, lastDailyReward: '', isOwner: false,
+    lastLogin: 0,  // ← BARU
   });
 
   let state = DEFAULT_STATE();
@@ -1091,7 +1406,7 @@
   let heartbeatTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v140_state';
+  const LOCAL_KEY = 'compoundHarvest_v150_state';
 
   let helpQuota = { totalSent: 0, playersHelped: {}, date: '' };
   let helpPool = [];
@@ -1101,11 +1416,14 @@
 
   const lbView = { category: 'exp', region: 'global', unsubscribe: null };
 
-  // ===== RANK ANIMATION STATE (v14.0) =====
-  let previousRanks = {};             // { uid: rank }
+  let previousRanks = {};
   let myPreviousRank = null;
   let lastAnimationTime = 0;
   let isInitialRender = true;
+
+  // Welcome Back state
+  let wbPendingData = null;      // data welcome back yang akan ditampilkan
+  let wbTypewriterTimer = null;  // timer untuk typewriter Tier 4
 
   const LEVELS = [
     { level: 1, name: 'Benih', min: 0, max: 499 },
@@ -1197,6 +1515,19 @@
 
   const receivedSection = $('receivedSection');
   const receivedList = $('receivedList');
+
+  // Welcome Back DOM
+  const wbBackdrop = $('wbBackdrop');
+  const wbModal = $('wbModal');
+  const wbIcon = $('wbIcon');
+  const wbTitle = $('wbTitle');
+  const wbBody = $('wbBody');
+  const wbTierBadge = $('wbTierBadge');
+  const wbRewardsList = $('wbRewardsList');
+  const wbFooterQuote = $('wbFooterQuote');
+  const wbClaimBtn = $('wbClaimBtn');
+  const welcomeBanner = $('welcomeBanner');
+  const welcomeBannerText = $('welcomeBannerText');
 
   const tabLoginBtn = $('tabLoginBtn');
   const tabRegisterBtn = $('tabRegisterBtn');
@@ -1318,44 +1649,337 @@
     lbList.innerHTML = html;
   }
 
-  // ===== CONFETTI (Top 3) =====
-  function spawnConfetti(rowEl, color = '#ffd700') {
-    if (!rowEl) return;
-    const colors = [color, '#ffd980', '#ff8c40', '#ffffc0'];
-    for (let i = 0; i < CONFETTI_COUNT; i++) {
+  // ===== WELCOME BACK LOGIC (v15.0) =====
+  function getWBData(name, days) {
+    // Cek tier berdasarkan lama absen
+    let tier = 1;
+    if (days >= 60) tier = 4;
+    else if (days >= 30) tier = 3;
+    else if (days >= 15) tier = 2;
+    else if (days >= 7) tier = 1;
+    else return null;  // Tidak perlu welcome back
+
+    return { tier, days, name };
+  }
+
+  function showWelcomeBackModal(data) {
+    wbPendingData = data;
+    const { tier, days, name } = data;
+    const texts = WELCOME_BACK_TEXTS[tier];
+    const rewards = WELCOME_BACK_REWARDS[tier];
+
+    // Set class tier
+    wbModal.className = 'wb-modal tier' + tier;
+
+    // Set icon & title
+    wbIcon.textContent = texts.icon;
+    wbTitle.textContent = texts.title;
+    wbTierBadge.textContent = rewards.tierLabel;
+
+    // Body
+    const bodyLines = texts.body(name, days);
+    if (tier === WB_TYPEWRITER_TIER) {
+      // Typewriter effect
+      wbBody.innerHTML = '';
+      startTypewriter(bodyLines, name, days);
+    } else {
+      wbBody.innerHTML = bodyLines.map(line => `<p>${line}</p>`).join('');
+    }
+
+    // Rewards list
+    let rewardHtml = '';
+    if (rewards.money > 0) rewardHtml += `<div class="wb-reward-item"><span class="wb-reward-icon">💰</span> <span class="wb-reward-value">$${formatNumber(rewards.money)}</span></div>`;
+    if (rewards.diamond > 0) rewardHtml += `<div class="wb-reward-item"><span class="wb-reward-icon">💎</span> <span class="wb-reward-value">${rewards.diamond} Diamond</span></div>`;
+    if (rewards.water > 0) rewardHtml += `<div class="wb-reward-item"><span class="wb-reward-icon">💧</span> <span class="wb-reward-value">${rewards.water}L Air</span></div>`;
+    if (rewards.fertilizer > 0) rewardHtml += `<div class="wb-reward-item"><span class="wb-reward-icon">🧪</span> <span class="wb-reward-value">${rewards.fertilizer}kg Pupuk</span></div>`;
+    if (rewards.instantGrow > 0) rewardHtml += `<div class="wb-reward-item"><span class="wb-reward-icon">✨</span> <span class="wb-reward-value">Instant Grow × ${rewards.instantGrow}</span></div>`;
+    wbRewardsList.innerHTML = rewardHtml;
+
+    // Footer quote
+    wbFooterQuote.textContent = texts.quote.replace(/\$\{name\}/g, name);
+
+    // Button text
+    wbClaimBtn.textContent = texts.btnText;
+
+    // Show modal
+    wbBackdrop.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      wbBackdrop.classList.add('show');
+    });
+
+    // Confetti untuk tier 3 & 4
+    if (tier >= 3) {
+      setTimeout(() => {
+        spawnWBConfetti();
+      }, 400);
+    }
+
+    // Particles untuk tier 3 & 4
+    if (tier >= 3) {
+      startWBParticles(tier);
+    }
+  }
+
+  function startTypewriter(lines, name, days) {
+    if (wbTypewriterTimer) clearTimeout(wbTypewriterTimer);
+    wbBody.innerHTML = '';
+    let lineIndex = 0;
+    let charIndex = 0;
+    let currentP = null;
+
+    const tick = () => {
+      if (lineIndex >= lines.length) {
+        // Selesai
+        wbBody.innerHTML = lines.map(l => `<p>${l}</p>`).join('');
+        return;
+      }
+      const line = lines[lineIndex];
+      // Bersihkan HTML tags untuk typewriter (biar tidak ada <p> tengah jalan)
+      // Kita pakai pendekatan: split per "kata", tampilkan HTML utuh
+      const words = line.split(' ');
+      if (charIndex === 0) {
+        currentP = document.createElement('p');
+        wbBody.appendChild(currentP);
+      }
+      if (charIndex < words.length) {
+        const currentText = words.slice(0, charIndex + 1).join(' ');
+        currentP.innerHTML = currentText + '<span class="wb-cursor"></span>';
+        charIndex++;
+        wbTypewriterTimer = setTimeout(tick, 80);
+      } else {
+        // Line selesai
+        currentP.innerHTML = line;
+        lineIndex++;
+        charIndex = 0;
+        wbTypewriterTimer = setTimeout(tick, 300);
+      }
+    };
+    tick();
+  }
+
+  function spawnWBConfetti() {
+    const colors = ['#ffd700', '#ffe08a', '#d0a8ff', '#b980ff', '#ff8c40', '#ffffc0'];
+    const wbModalEl = wbModal;
+    if (!wbModalEl) return;
+    const rect = wbModalEl.getBoundingClientRect();
+    for (let i = 0; i < 24; i++) {
       const particle = document.createElement('div');
       particle.className = 'confetti-particle';
       particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-      particle.style.left = '50%';
-      particle.style.top = '50%';
-      const angle = (Math.PI * 2 * i) / CONFETTI_COUNT + Math.random() * 0.5;
-      const dist = 60 + Math.random() * 80;
+      particle.style.left = (rect.width / 2) + 'px';
+      particle.style.top = (rect.height / 2) + 'px';
+      const angle = (Math.PI * 2 * i) / 24 + Math.random() * 0.5;
+      const dist = 100 + Math.random() * 150;
       const dx = Math.cos(angle) * dist;
       const dy = Math.sin(angle) * dist;
       particle.style.setProperty('--dx', dx + 'px');
       particle.style.setProperty('--dy', dy + 'px');
-      rowEl.appendChild(particle);
+      wbModalEl.appendChild(particle);
       setTimeout(() => {
         if (particle.parentNode) particle.parentNode.removeChild(particle);
-      }, 1300);
+      }, 1400);
     }
   }
 
-  // ===== RANK CHANGE DETECTION & TOAST =====
-  function detectRankChanges(oldRanks, newRows) {
-    const changes = { up: [], down: [] };
-    newRows.forEach((row, idx) => {
-      const newRank = idx + 1;
-      const oldRank = oldRanks[row.uid];
-      if (oldRank !== undefined && oldRank !== newRank) {
-        if (newRank < oldRank) {
-          changes.up.push({ uid: row.uid, from: oldRank, to: newRank, delta: oldRank - newRank });
-        } else {
-          changes.down.push({ uid: row.uid, from: oldRank, to: newRank, delta: newRank - oldRank });
-        }
+  function startWBParticles(tier) {
+    // Cleanup existing particles
+    document.querySelectorAll('.wb-particle').forEach(p => p.remove());
+    const wbModalEl = wbModal;
+    if (!wbModalEl) return;
+    const color = tier === 4 ? '#d0a8ff' : '#ffd700';
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => {
+        const particle = document.createElement('div');
+        particle.className = 'wb-particle';
+        particle.style.background = color;
+        particle.style.left = (Math.random() * 100) + '%';
+        particle.style.bottom = '0';
+        particle.style.boxShadow = `0 0 12px ${color}`;
+        particle.style.animation = `wbParticleFloat ${2 + Math.random() * 2}s ease-out forwards`;
+        wbModalEl.appendChild(particle);
+        setTimeout(() => particle.remove(), 4000);
+      }, i * 250);
+    }
+  }
+
+  async function claimWelcomeBack() {
+    if (!wbPendingData) return;
+    const { tier } = wbPendingData;
+    const rewards = WELCOME_BACK_REWARDS[tier];
+
+    // Apply rewards
+    state.money += rewards.money;
+    state.diamond += rewards.diamond;
+    state.water += rewards.water;
+    state.fertilizer += rewards.fertilizer;
+    // Instant Grow tidak disimpan di state, kita biarkan sebagai bonus visual
+    // (nanti bisa diintegrasikan ke sistem item di v15.1+)
+
+    // Update UI
+    updateUI();
+
+    // Save ke cloud
+    await saveToCloud();
+
+    // Hide modal
+    wbBackdrop.classList.remove('show');
+    setTimeout(() => {
+      wbBackdrop.classList.add('hidden');
+      wbModal.className = 'wb-modal';  // reset class
+      wbPendingData = null;
+      // Cleanup particles & timer
+      if (wbTypewriterTimer) { clearTimeout(wbTypewriterTimer); wbTypewriterTimer = null; }
+      document.querySelectorAll('.wb-particle').forEach(p => p.remove());
+    }, 400);
+
+    // Toast
+    const tierLabel = WELCOME_BACK_REWARDS[tier].tierLabel;
+    showToast(`🎉 ${tierLabel} reward diklaim!`, 3000, true);
+
+    // Setelah welcome back, cek daily reward
+    setTimeout(() => {
+      checkAndShowDailyReward();
+    }, 800);
+  }
+
+  // ===== CHECK WELCOME BACK DI LOGIN SCREEN =====
+  function showWelcomeBannerOnLogin() {
+    // Cek dari localStorage (cache lastLogin)
+    try {
+      const cached = localStorage.getItem('ch_lastLogin_cache');
+      if (!cached) return;
+      const lastLogin = parseInt(cached, 10);
+      if (isNaN(lastLogin) || lastLogin <= 0) return;
+      const daysSince = Math.floor((Date.now() - lastLogin) / (1000 * 60 * 60 * 24));
+      if (daysSince >= WB_MIN_DAYS) {
+        // Tampilkan banner subtle
+        welcomeBanner.classList.add('show');
+        // Tentukan teks berdasarkan tier
+        let msg = '';
+        if (daysSince >= 60) msg = 'Kebunmu telah menunggumu sekian lama. <b>Ada warisan menantimu.</b>';
+        else if (daysSince >= 30) msg = 'Sebulan lebih. <b>Kebun ini tidak melupakanmu.</b>';
+        else if (daysSince >= 15) msg = 'Sudah lama. <b>Pohonmu merindukanmu.</b>';
+        else msg = 'Kebunmu menunggumu... <b>Ada kejutan kecil.</b>';
+        welcomeBannerText.innerHTML = msg;
       }
-    });
-    return changes;
+    } catch (e) {}
+  }
+
+  function cacheLastLogin(ts) {
+    try {
+      localStorage.setItem('ch_lastLogin_cache', String(ts));
+    } catch (e) {}
+  }
+
+  // ===== PROFILE MODAL =====
+  let currentProfileUid = null;
+  function openProfile(uid, fallbackData) {
+    currentProfileUid = uid;
+    profileModalBackdrop.classList.remove('hidden');
+    if (fallbackData) {
+      pmName.textContent = fallbackData.name || 'Petani';
+      pmType.textContent = '-';
+      pmAvatar.textContent = '👤';
+    }
+    pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>Memuat...</span>`;
+    pmUid.textContent = uid.substring(0, 12) + '...';
+    pmHelpBtn.disabled = true;
+    pmHelpBtn.textContent = '⏳ Memuat...';
+    (async () => {
+      try {
+        const snap = await get(ref(db, `users/${uid}`));
+        if (!snap.exists()) { showToast('❌ Profil tidak ditemukan'); closeProfileModal(); return; }
+        const data = snap.val() || {};
+        pmName.textContent = data.name || 'Petani';
+        const provider = data.provider || 'guest';
+        pmType.textContent = getProviderLabel(provider);
+        if (data.photoURL) {
+          pmAvatar.innerHTML = `<img src="${escapeHtml(data.photoURL)}" alt="avatar" onerror="this.style.display='none';this.parentElement.textContent='${getProviderBadge(provider)}'">`;
+        } else {
+          pmAvatar.textContent = getProviderBadge(provider);
+        }
+        const now = Date.now();
+        const lastSeen = data.lastSeen || 0;
+        const onlineFlag = data.online === true;
+        const isCurrentlyOnline = onlineFlag && (now - lastSeen < ONLINE_THRESHOLD);
+        if (isCurrentlyOnline) {
+          pmStatus.innerHTML = `<span class="status-dot status-online"></span><span class="status-online">🟢 Online</span>`;
+        } else {
+          pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span class="status-offline">⚪ Offline · ${formatRelativeTime(lastSeen)}</span>`;
+        }
+        if (uid === state.uid) {
+          pmHelpBtn.disabled = true;
+          pmHelpBtn.textContent = '❌ Tidak bisa bantu diri sendiri';
+        } else if (helpQuota.playersHelped[uid]) {
+          pmHelpBtn.disabled = true;
+          pmHelpBtn.textContent = '✅ Sudah dibantu hari ini';
+        } else if (countPlayersHelped() >= HELP_MAX_PLAYERS) {
+          pmHelpBtn.disabled = true;
+          pmHelpBtn.textContent = '❌ Kuota harian habis';
+        } else {
+          pmHelpBtn.disabled = false;
+          pmHelpBtn.textContent = '💧 Bantu Siram';
+        }
+      } catch (e) {
+        console.error('Profile error:', e);
+        pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>⚠️ Gagal memuat</span>`;
+        pmHelpBtn.disabled = true;
+        pmHelpBtn.textContent = '❌ Gagal';
+      }
+    })();
+  }
+  function closeProfileModal() {
+    profileModalBackdrop.classList.add('hidden');
+    currentProfileUid = null;
+  }
+
+  // ===== LOCAL =====
+  function getLocalState() {
+    try { const raw = localStorage.getItem(LOCAL_KEY); return raw ? JSON.parse(raw) : null; }
+    catch { return null; }
+  }
+  function setLocalState(s) { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {} }
+  function clearLocalState() { try { localStorage.removeItem(LOCAL_KEY); } catch {} }
+
+  // ===== NAMA =====
+  function sanitizeName(name) {
+    if (!name) return '';
+    return String(name).replace(/[^a-zA-Z0-9_]/g, '_').substring(0, 15);
+  }
+  async function generateUniqueName(baseName) {
+    baseName = sanitizeName(baseName) || 'Petani';
+    if (baseName.toLowerCase() === 'petani') {
+      baseName = `Petani_${Math.floor(1000 + Math.random() * 9000)}`;
+    }
+    try {
+      const snap = await get(ref(db, `nameRegistry/${baseName}`));
+      if (!snap.exists()) return baseName;
+    } catch (e) { return baseName; }
+    for (let i = 0; i < 30; i++) {
+      const candidate = `${baseName.substring(0, 11)}_${Math.floor(1000 + Math.random() * 9000)}`;
+      try {
+        const snap = await get(ref(db, `nameRegistry/${candidate}`));
+        if (!snap.exists()) return candidate;
+      } catch (e) { return candidate; }
+    }
+    return `Petani_${Date.now().toString().slice(-5)}`;
+  }
+  async function generateUniqueGuestName() {
+    for (let i = 0; i < 30; i++) {
+      const candidate = `Petani_${Math.floor(1000 + Math.random() * 9000)}`;
+      try {
+        const nameSnap = await get(ref(db, `nameRegistry/${candidate}`));
+        if (!nameSnap.exists()) return candidate;
+      } catch (e) { return candidate; }
+    }
+    return `Petani_${Date.now().toString().slice(-5)}`;
+  }
+  function isValidName(name) {
+    if (!name || typeof name !== 'string') return false;
+    const t = name.trim();
+    if (t.length < 2) return false;
+    if (t.toLowerCase() === 'petani') return false;
+    return true;
   }
 
   // ===== HEARTBEAT =====
@@ -1679,117 +2303,6 @@
     }
   }
 
-  // ===== PROFILE =====
-  let currentProfileUid = null;
-  function openProfile(uid, fallbackData) {
-    currentProfileUid = uid;
-    profileModalBackdrop.classList.remove('hidden');
-    if (fallbackData) {
-      pmName.textContent = fallbackData.name || 'Petani';
-      pmType.textContent = '-';
-      pmAvatar.textContent = '👤';
-    }
-    pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>Memuat...</span>`;
-    pmUid.textContent = uid.substring(0, 12) + '...';
-    pmHelpBtn.disabled = true;
-    pmHelpBtn.textContent = '⏳ Memuat...';
-    (async () => {
-      try {
-        const snap = await get(ref(db, `users/${uid}`));
-        if (!snap.exists()) { showToast('❌ Profil tidak ditemukan'); closeProfileModal(); return; }
-        const data = snap.val() || {};
-        pmName.textContent = data.name || 'Petani';
-        const provider = data.provider || 'guest';
-        pmType.textContent = getProviderLabel(provider);
-        if (data.photoURL) {
-          pmAvatar.innerHTML = `<img src="${escapeHtml(data.photoURL)}" alt="avatar" onerror="this.style.display='none';this.parentElement.textContent='${getProviderBadge(provider)}'">`;
-        } else {
-          pmAvatar.textContent = getProviderBadge(provider);
-        }
-        const now = Date.now();
-        const lastSeen = data.lastSeen || 0;
-        const onlineFlag = data.online === true;
-        const isCurrentlyOnline = onlineFlag && (now - lastSeen < ONLINE_THRESHOLD);
-        if (isCurrentlyOnline) {
-          pmStatus.innerHTML = `<span class="status-dot status-online"></span><span class="status-online">🟢 Online</span>`;
-        } else {
-          pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span class="status-offline">⚪ Offline · ${formatRelativeTime(lastSeen)}</span>`;
-        }
-        if (uid === state.uid) {
-          pmHelpBtn.disabled = true;
-          pmHelpBtn.textContent = '❌ Tidak bisa bantu diri sendiri';
-        } else if (helpQuota.playersHelped[uid]) {
-          pmHelpBtn.disabled = true;
-          pmHelpBtn.textContent = '✅ Sudah dibantu hari ini';
-        } else if (countPlayersHelped() >= HELP_MAX_PLAYERS) {
-          pmHelpBtn.disabled = true;
-          pmHelpBtn.textContent = '❌ Kuota harian habis';
-        } else {
-          pmHelpBtn.disabled = false;
-          pmHelpBtn.textContent = '💧 Bantu Siram';
-        }
-      } catch (e) {
-        console.error('Profile error:', e);
-        pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>⚠️ Gagal memuat</span>`;
-        pmHelpBtn.disabled = true;
-        pmHelpBtn.textContent = '❌ Gagal';
-      }
-    })();
-  }
-  function closeProfileModal() {
-    profileModalBackdrop.classList.add('hidden');
-    currentProfileUid = null;
-  }
-
-  // ===== LOCAL =====
-  function getLocalState() {
-    try { const raw = localStorage.getItem(LOCAL_KEY); return raw ? JSON.parse(raw) : null; }
-    catch { return null; }
-  }
-  function setLocalState(s) { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch {} }
-  function clearLocalState() { try { localStorage.removeItem(LOCAL_KEY); } catch {} }
-
-  // ===== NAMA =====
-  function sanitizeName(name) {
-    if (!name) return '';
-    return String(name).replace(/[^a-zA-Z0-9_]/g, '_').substring(0, 15);
-  }
-  async function generateUniqueName(baseName) {
-    baseName = sanitizeName(baseName) || 'Petani';
-    if (baseName.toLowerCase() === 'petani') {
-      baseName = `Petani_${Math.floor(1000 + Math.random() * 9000)}`;
-    }
-    try {
-      const snap = await get(ref(db, `nameRegistry/${baseName}`));
-      if (!snap.exists()) return baseName;
-    } catch (e) { return baseName; }
-    for (let i = 0; i < 30; i++) {
-      const candidate = `${baseName.substring(0, 11)}_${Math.floor(1000 + Math.random() * 9000)}`;
-      try {
-        const snap = await get(ref(db, `nameRegistry/${candidate}`));
-        if (!snap.exists()) return candidate;
-      } catch (e) { return candidate; }
-    }
-    return `Petani_${Date.now().toString().slice(-5)}`;
-  }
-  async function generateUniqueGuestName() {
-    for (let i = 0; i < 30; i++) {
-      const candidate = `Petani_${Math.floor(1000 + Math.random() * 9000)}`;
-      try {
-        const nameSnap = await get(ref(db, `nameRegistry/${candidate}`));
-        if (!nameSnap.exists()) return candidate;
-      } catch (e) { return candidate; }
-    }
-    return `Petani_${Date.now().toString().slice(-5)}`;
-  }
-  function isValidName(name) {
-    if (!name || typeof name !== 'string') return false;
-    const t = name.trim();
-    if (t.length < 2) return false;
-    if (t.toLowerCase() === 'petani') return false;
-    return true;
-  }
-
   // ===== INVENTORY =====
   function getInventoryItems() {
     return [
@@ -1939,10 +2452,13 @@
         provider: state.provider, displayName: state.displayName || '',
         photoURL: state.photoURL || '',
         online: true, lastSeen: Date.now(),
+        lastLogin: Date.now(),  // ← UPDATE lastLogin
         lastUpdated: Date.now(),
       });
       setCloudStatus('saved');
       updateLeaderboardEntries().catch(e => console.warn(e));
+      // Update cache lokal
+      cacheLastLogin(Date.now());
     } catch (e) {
       console.error('Save error:', e);
       setCloudStatus('offline');
@@ -1958,6 +2474,8 @@
     };
     state = { ...DEFAULT_STATE(), ...savedMeta };
     let isNewAccount = false;
+    let wbData = null;  // ← data Welcome Back
+
     try {
       const snap = await get(userRef);
       if (snap.exists()) {
@@ -1976,7 +2494,19 @@
           provider: data.provider || state.provider,
           displayName: data.displayName || state.displayName,
           photoURL: data.photoURL || state.photoURL,
+          lastLogin: data.lastLogin || 0,
         });
+
+        // ===== CEK WELCOME BACK (v15.0) =====
+        const lastLogin = data.lastLogin || 0;
+        if (lastLogin > 0) {
+          const daysSince = Math.floor((Date.now() - lastLogin) / (1000 * 60 * 60 * 24));
+          if (daysSince >= WB_MIN_DAYS) {
+            wbData = getWBData(state.name, daysSince);
+            console.log(`🎁 Welcome Back detected: ${daysSince} hari absen → Tier ${wbData?.tier}`);
+          }
+        }
+
         showToast('☁️ Data dimuat');
       } else {
         isNewAccount = true;
@@ -1987,6 +2517,7 @@
         }
         try { await set(ref(db, `nameRegistry/${state.name}`), { uid, ts: Date.now() }); } catch {}
         state.money = 1500;
+        state.lastLogin = Date.now();  // Set untuk akun baru
         await saveToCloud();
         showToast(`🌱 Selamat datang, ${state.name}!`);
       }
@@ -1997,7 +2528,18 @@
         applyPendingHelp();
         renderReceivedSection();
       }).catch(() => {});
-      setTimeout(() => checkAndShowDailyReward(), isNewAccount ? 800 : 500);
+
+      // ===== URUTAN MODAL =====
+      // 1. Welcome Back (kalau ada)
+      // 2. Daily Reward (kalau belum klaim hari ini)
+      setTimeout(() => {
+        if (wbData && !isNewAccount) {
+          showWelcomeBackModal(wbData);
+        } else {
+          checkAndShowDailyReward();
+        }
+      }, isNewAccount ? 800 : 500);
+
     } catch (e) {
       console.error('Load error:', e);
       const local = getLocalState();
@@ -2036,7 +2578,6 @@
   }
   async function loadLeaderboard() {
     if (lbView.unsubscribe) { lbView.unsubscribe(); lbView.unsubscribe = null; }
-    // Reset animation state saat ganti kategori/wilayah
     previousRanks = {};
     myPreviousRank = null;
     isInitialRender = true;
@@ -2068,9 +2609,6 @@
     }
   }
 
-  // ============================================
-  // ===== RENDER LEADERBOARD DENGAN FLIP (v14.0) =====
-  // ============================================
   function renderLeaderboard(rows) {
     if (!rows || rows.length === 0) {
       lbList.innerHTML = `<div class="lb-empty">📭 Belum ada data. Jadilah yang pertama! 🌱</div>`;
@@ -2080,7 +2618,7 @@
       return;
     }
 
-    // ==== STEP 1: FIRST — catat posisi lama ====
+    // STEP 1: FIRST
     const oldPositions = {};
     const oldRows = lbList.querySelectorAll('.lb-row[data-uid]');
     oldRows.forEach(el => {
@@ -2088,7 +2626,7 @@
       if (uid) oldPositions[uid] = el.getBoundingClientRect().top;
     });
 
-    // ==== STEP 2: LAST — render ulang dengan urutan baru ====
+    // STEP 2: LAST
     const cat = lbView.category;
     const unit = cat === 'exp' ? 'Exp' : 'PP';
     let html = '';
@@ -2120,7 +2658,7 @@
     });
     lbList.innerHTML = html;
 
-    // ==== STEP 3: INVERT — hitung selisih posisi, terapkan transform ====
+    // STEP 3: INVERT
     const newRows = lbList.querySelectorAll('.lb-row[data-uid]');
     if (!isInitialRender) {
       newRows.forEach(el => {
@@ -2130,14 +2668,11 @@
           const newTop = el.getBoundingClientRect().top;
           const deltaY = oldTop - newTop;
           if (Math.abs(deltaY) > 1) {
-            // Terapkan transform, biar terlihat di posisi lama
             el.style.transition = 'none';
             el.style.transform = `translateY(${deltaY}px)`;
           }
         }
       });
-
-      // ==== STEP 4: PLAY — animasi ke posisi baru ====
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           newRows.forEach(el => {
@@ -2148,40 +2683,30 @@
       });
     }
 
-    // ==== STEP 5: RANK CHANGE DETECTION & HIGHLIGHT ====
+    // STEP 4: RANK CHANGE
     const now = Date.now();
     const canAnimate = (now - lastAnimationTime) > ANIM_THROTTLE;
-
     if (!isInitialRender && canAnimate) {
       const changes = detectRankChanges(previousRanks, rows);
-
-      // Cari perubahan rank USER SENDIRI
       const myChange = changes.up.find(c => c.uid === state.uid) || changes.down.find(c => c.uid === state.uid);
-
       if (myChange) {
-        // Highlight card user
         const myEl = lbList.querySelector(`.lb-row[data-uid="${state.uid}"]`);
         if (myEl) {
           if (myChange.from > myChange.to) {
-            // NAIK
             myEl.classList.add('rank-up');
             showRankToast(`🎉 Naik ke Rank #${myChange.to}! (+${myChange.delta})`, false);
-            // Confetti kalau masuk Top 3
             if (myChange.to <= 3) {
               const colors = ['#ffd700', '#c0c0c0', '#cd7f32'];
               spawnConfetti(myEl, colors[myChange.to - 1]);
             }
             setTimeout(() => myEl.classList.remove('rank-up'), 1600);
           } else {
-            // TURUN
             myEl.classList.add('rank-down');
             showRankToast(`📉 Turun ke Rank #${myChange.to}`, true);
             setTimeout(() => myEl.classList.remove('rank-down'), 1100);
           }
         }
       }
-
-      // Rank icon bounce untuk semua yang berubah rank
       changes.up.concat(changes.down).forEach(c => {
         const el = lbList.querySelector(`.lb-row[data-uid="${c.uid}"] .lb-rank`);
         if (el) {
@@ -2189,21 +2714,17 @@
           setTimeout(() => el.classList.remove('bounce'), 700);
         }
       });
-
       lastAnimationTime = now;
     }
 
-    // ==== UPDATE STATE ====
     previousRanks = {};
     rows.forEach((row, idx) => {
       previousRanks[row.uid] = idx + 1;
     });
     const myIdx = rows.findIndex(r => r.uid === state.uid);
     if (myIdx >= 0) myPreviousRank = myIdx + 1;
-
     isInitialRender = false;
 
-    // ==== ATTACH EVENT LISTENERS ====
     lbList.querySelectorAll('.lb-info').forEach(el => {
       el.addEventListener('click', () => {
         const uid = el.dataset.uid;
@@ -2420,6 +2941,9 @@
   modalBackdrop.addEventListener('click', e => {
     if (e.target === modalBackdrop) hideModal();
   });
+
+  // Welcome Back events
+  wbClaimBtn.addEventListener('click', claimWelcomeBack);
 
   profileModalClose.addEventListener('click', closeProfileModal);
   profileModalCloseFull.addEventListener('click', closeProfileModal);
@@ -2822,12 +3346,13 @@
       state.isOwner = (user.email === OWNER_EMAIL);
       if (user.displayName && !state.name) state.name = user.displayName;
       if (oldUid && oldUid !== user.uid) clearLocalState();
-      // Reset animation state
       previousRanks = {};
       myPreviousRank = null;
       isInitialRender = true;
       loginScreen.classList.add('hidden');
       gameContainer.classList.add('active');
+      // Sembunyikan banner welcome
+      welcomeBanner.classList.remove('show');
       await loadFromCloud(user.uid);
       updateUI();
       if (state.isOwner) setTimeout(() => autoCleanupBots(), 3000);
@@ -2852,6 +3377,8 @@
       loginSubmitBtn.textContent = '🔑 Masuk';
       registerSubmitBtn.disabled = false;
       registerSubmitBtn.textContent = '📝 Daftar';
+      // Tampilkan banner welcome back di login screen
+      showWelcomeBannerOnLogin();
     }
   });
 
@@ -2887,8 +3414,11 @@
     }
   });
 
+  // Tampilkan banner welcome back saat pertama kali login screen muncul (sebelum Firebase load)
+  showWelcomeBannerOnLogin();
+
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v14.0 ready — Rank Animation enabled');
+  console.log('🌳 Compound Harvest v15.0 ready — Welcome Back enabled');
 </script>
 </body>
 </html>
