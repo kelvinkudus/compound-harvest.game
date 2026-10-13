@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#1e2b1e">
-  <title>Compound Harvest 1 · v16.0</title>
+  <title>Compound Harvest 1 · v17.0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { height: 100%; overflow: hidden; }
@@ -66,44 +66,27 @@
       font-size: 0.85rem; text-align: center; border: 1px solid #a04040; }
     .error-msg.hidden { display: none; }
 
-    /* Guest info box di login screen */
     .guest-info-box {
-      margin-top: 8px;
-      padding: 12px 14px;
+      margin-top: 8px; padding: 12px 14px;
       background: linear-gradient(160deg, #3a2e1e, #2a1e0e);
-      border: 1px solid #a08040;
-      border-radius: 14px;
-      text-align: center;
-      font-size: 0.78rem;
-      color: #ffd980;
-      line-height: 1.5;
+      border: 1px solid #a08040; border-radius: 14px;
+      text-align: center; font-size: 0.78rem; color: #ffd980; line-height: 1.5;
     }
     .guest-info-box b { color: #ffe08a; }
     .guest-info-box .info-icon { font-size: 1rem; display: block; margin-bottom: 4px; }
 
-    /* Privacy link di login screen */
     .login-privacy-link {
-      text-align: center;
-      margin-top: 16px;
-      font-size: 0.78rem;
-      color: #6a8a6a;
+      text-align: center; margin-top: 16px;
+      font-size: 0.78rem; color: #6a8a6a;
     }
-    .login-privacy-link a {
-      color: #a0d0a0;
-      text-decoration: underline;
-      cursor: pointer;
-    }
+    .login-privacy-link a { color: #a0d0a0; text-decoration: underline; cursor: pointer; }
 
-    /* Welcome Back banner */
     .welcome-banner {
-      display: none;
-      margin-top: 16px;
+      display: none; margin-top: 16px;
       padding: 14px 16px;
       background: linear-gradient(160deg, #2a3a2a, #1a2a1a);
-      border: 1px solid #7fa07f;
-      border-radius: 18px;
-      text-align: center;
-      animation: welcomeBannerFade 1.2s ease;
+      border: 1px solid #7fa07f; border-radius: 18px;
+      text-align: center; animation: welcomeBannerFade 1.2s ease;
     }
     .welcome-banner.show { display: block; }
     .welcome-banner .wb-icon {
@@ -144,10 +127,25 @@
       color: #e0f0d0; width: 38px; height: 38px;
       border-radius: 50%; font-size: 1.3rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; touch-action: manipulation;
+      cursor: pointer; touch-action: manipulation; position: relative;
     }
     .menu-btn:active { background: #2a3f2a; }
     .menu-btn.active { background: #4a7a4a; border-color: #a0d0a0; }
+
+    /* Dot notif di menu btn */
+    .menu-btn .menu-dot {
+      position: absolute; top: -2px; right: -2px;
+      width: 12px; height: 12px;
+      background: #ff4a4a;
+      border: 2px solid #0f1a0f;
+      border-radius: 50%;
+      animation: dotPulse 1.5s ease infinite;
+    }
+    .menu-btn .menu-dot.hidden { display: none; }
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+    }
 
     .dropdown-menu {
       position: absolute; top: 55px; right: 14px;
@@ -166,9 +164,17 @@
       color: #e0f0d0; font-weight: 600; font-size: 0.9rem;
       cursor: pointer; touch-action: manipulation;
       background: transparent; border: none; width: 100%; text-align: left;
+      position: relative;
     }
     .dropdown-item:active { background: #3a5a3a; }
     .dropdown-item .icon { font-size: 1.2rem; }
+    .dropdown-item .item-dot {
+      position: absolute; top: 8px; right: 8px;
+      width: 8px; height: 8px;
+      background: #ff4a4a;
+      border-radius: 50%;
+    }
+    .dropdown-item .item-dot.hidden { display: none; }
     .dropdown-divider { height: 1px; background: #3a5a3a; margin: 6px 4px; }
     .dropdown-label { padding: 8px 14px 4px; font-size: 0.7rem; color: #6a8a6a;
       text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
@@ -232,9 +238,7 @@
     }
     .lb-row:last-child { border-bottom: none; }
     .lb-row.me { background: #2a4a2a; border: 1px solid #7fb07f; }
-    .lb-row.me.rank-up {
-      animation: rankUpGlow 1.5s ease; z-index: 5;
-    }
+    .lb-row.me.rank-up { animation: rankUpGlow 1.5s ease; z-index: 5; }
     @keyframes rankUpGlow {
       0% { background: #2a4a2a; box-shadow: 0 0 0 rgba(255, 217, 128, 0); transform: scale(1); }
       30% { background: #4a6a3a; box-shadow: 0 0 30px rgba(255, 217, 128, 1), 0 0 60px rgba(255, 217, 128, 0.5); transform: scale(1.03); }
@@ -398,28 +402,18 @@
       font-size: 2rem; margin: 0 auto 8px; overflow: hidden; }
     .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* Guest info card di halaman Akun */
     .guest-info-card {
       background: linear-gradient(160deg, #3a2e1e, #2a1e0e);
-      border: 1px solid #a08040;
-      border-radius: 18px;
-      padding: 14px 16px;
-      text-align: center;
+      border: 1px solid #a08040; border-radius: 18px;
+      padding: 14px 16px; text-align: center;
     }
     .guest-info-card .title {
-      color: #ffd980;
-      font-weight: 700;
-      font-size: 0.9rem;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      color: #ffd980; font-weight: 700; font-size: 0.9rem;
+      margin-bottom: 6px; display: flex; align-items: center;
+      justify-content: center; gap: 6px;
     }
     .guest-info-card .body {
-      color: #ffb060;
-      font-size: 0.78rem;
-      line-height: 1.55;
+      color: #ffb060; font-size: 0.78rem; line-height: 1.55;
     }
 
     .edit-btn { background: #3b5e3b; border: none; color: white; padding: 10px 16px;
@@ -431,16 +425,11 @@
     .lock-btn { background: #4a3a1e; border-color: #a08040; color: #ffd980; }
     .upgrade-cta-btn {
       background: linear-gradient(160deg, #4a7a4a, #2a5a2a);
-      border: 1px solid #a0d0a0;
-      color: #fff;
-      padding: 12px 16px;
-      border-radius: 40px;
-      font-weight: 800;
-      font-size: 0.95rem;
-      cursor: pointer;
-      touch-action: manipulation;
-      box-shadow: 0 4px 0 #1e3a1e;
-      width: 100%;
+      border: 1px solid #a0d0a0; color: #fff;
+      padding: 12px 16px; border-radius: 40px;
+      font-weight: 800; font-size: 0.95rem;
+      cursor: pointer; touch-action: manipulation;
+      box-shadow: 0 4px 0 #1e3a1e; width: 100%;
     }
     .upgrade-cta-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #1e3a1e; }
 
@@ -529,9 +518,7 @@
     .received-row .reply-btn:disabled { background: #2a3a2a;
       border-color: #4a5a4a; color: #6a7a6a; pointer-events: none; }
 
-    /* ============================================ */
-    /* ===== PRIVACY POLICY (v16.0) ===== */
-    /* ============================================ */
+    /* Privacy */
     .privacy-header {
       background: linear-gradient(160deg, #2a3a4a, #1a2a3a);
       border-radius: 20px; padding: 16px;
@@ -539,94 +526,199 @@
       display: flex; align-items: center; gap: 12px;
     }
     .privacy-back-btn {
-      background: #3a5a7a;
-      border: 1px solid #7a9aba;
-      color: #fff;
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      font-size: 1.2rem;
+      background: #3a5a7a; border: 1px solid #7a9aba;
+      color: #fff; width: 40px; height: 40px;
+      border-radius: 50%; font-size: 1.2rem;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; touch-action: manipulation;
-      flex-shrink: 0;
+      cursor: pointer; touch-action: manipulation; flex-shrink: 0;
     }
     .privacy-back-btn:active { background: #2a4a6a; }
-    .privacy-header .title {
-      color: #a0d0ff;
-      font-weight: 700;
-      font-size: 1.05rem;
-      line-height: 1.2;
-    }
-    .privacy-header .subtitle {
-      color: #7a9aba;
-      font-size: 0.75rem;
-      margin-top: 2px;
-    }
+    .privacy-header .title { color: #a0d0ff; font-weight: 700; font-size: 1.05rem; line-height: 1.2; }
+    .privacy-header .subtitle { color: #7a9aba; font-size: 0.75rem; margin-top: 2px; }
     .privacy-content {
-      background: #162316;
-      border-radius: 20px;
-      padding: 20px 18px;
-      border: 1px solid #3a5a3a;
-      color: #d0e8c0;
-      font-size: 0.88rem;
-      line-height: 1.7;
+      background: #162316; border-radius: 20px;
+      padding: 20px 18px; border: 1px solid #3a5a3a;
+      color: #d0e8c0; font-size: 0.88rem; line-height: 1.7;
     }
     .privacy-content h2 {
-      color: #a0d0ff;
-      font-size: 1.05rem;
-      margin-top: 20px;
-      margin-bottom: 8px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid #3a5a3a;
+      color: #a0d0ff; font-size: 1.05rem; margin-top: 20px;
+      margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #3a5a3a;
     }
     .privacy-content h2:first-child { margin-top: 0; }
-    .privacy-content h3 {
-      color: #c0e0ff;
-      font-size: 0.95rem;
-      margin-top: 14px;
-      margin-bottom: 6px;
-    }
-    .privacy-content p {
-      margin-bottom: 10px;
-      text-align: justify;
-    }
-    .privacy-content ul {
-      margin-left: 20px;
-      margin-bottom: 10px;
-    }
-    .privacy-content li {
-      margin-bottom: 4px;
-    }
+    .privacy-content h3 { color: #c0e0ff; font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px; }
+    .privacy-content p { margin-bottom: 10px; text-align: justify; }
+    .privacy-content ul { margin-left: 20px; margin-bottom: 10px; }
+    .privacy-content li { margin-bottom: 4px; }
     .privacy-content strong { color: #e0f0d0; }
-    .privacy-content a {
-      color: #80d0ff;
-      text-decoration: underline;
-      word-break: break-all;
-    }
+    .privacy-content a { color: #80d0ff; text-decoration: underline; word-break: break-all; }
     .privacy-content .updated-date {
-      color: #8fa88f;
-      font-size: 0.8rem;
-      font-style: italic;
-      margin-bottom: 16px;
-      text-align: center;
-      padding-bottom: 12px;
-      border-bottom: 1px dashed #3a5a3a;
+      color: #8fa88f; font-size: 0.8rem; font-style: italic;
+      margin-bottom: 16px; text-align: center;
+      padding-bottom: 12px; border-bottom: 1px dashed #3a5a3a;
     }
     .privacy-content .contact-box {
-      background: #0c180c;
-      border: 1px solid #5b875b;
-      border-radius: 14px;
-      padding: 14px;
-      margin: 12px 0;
+      background: #0c180c; border: 1px solid #5b875b;
+      border-radius: 14px; padding: 14px; margin: 12px 0;
     }
     .privacy-content .contact-box p { margin-bottom: 6px; }
     .privacy-content .highlight-box {
-      background: #1a2a3a;
-      border-left: 4px solid #80d0ff;
-      padding: 12px 14px;
-      border-radius: 8px;
-      margin: 12px 0;
+      background: #1a2a3a; border-left: 4px solid #80d0ff;
+      padding: 12px 14px; border-radius: 8px; margin: 12px 0;
     }
 
+    /* ===== DAILY REWARD (v17.0) ===== */
+    .daily-header {
+      background: linear-gradient(160deg, #3a2a1e, #2a1e0e);
+      border-radius: 20px; padding: 16px;
+      border: 1px solid #a08040;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .daily-header .title {
+      color: #ffd980; font-weight: 700; font-size: 1.15rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .daily-header .subtitle {
+      color: #ffb060; font-size: 0.78rem; line-height: 1.5;
+    }
+    .daily-header .subtitle b { color: #ffe08a; }
+
+    .daily-progress {
+      background: #0c180c; border-radius: 14px;
+      padding: 12px; border: 1px solid #3a5a3a;
+      margin-top: 4px;
+    }
+    .daily-progress .label {
+      color: #8fa88f; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      font-weight: 700; margin-bottom: 6px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .daily-progress .label .value { color: #ffd980; font-size: 0.85rem; }
+    .daily-progress-bar {
+      width: 100%; height: 8px;
+      background: #1a2a1a; border-radius: 10px; overflow: hidden;
+    }
+    .daily-progress-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #ffd980, #ffb060);
+      border-radius: 10px; transition: width 0.4s ease;
+    }
+
+    .daily-list {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .daily-day-card {
+      background: #162316; border-radius: 16px;
+      padding: 12px 14px; border: 1px solid #3a5a3a;
+      display: flex; align-items: center; gap: 12px;
+      transition: all 0.2s;
+    }
+    .daily-day-card.claimed {
+      background: #0c180c; border-color: #5b875b;
+      opacity: 0.7;
+    }
+    .daily-day-card.current {
+      background: linear-gradient(160deg, #3a2e1e, #2a1e0e);
+      border: 2px solid #ffd980;
+      box-shadow: 0 0 16px rgba(255, 217, 128, 0.3);
+    }
+    .daily-day-card.locked {
+      opacity: 0.4;
+    }
+    .daily-day-number {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: #0c180c;
+      border: 2px solid #5b875b;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1rem;
+      color: #a0d0a0; flex-shrink: 0;
+    }
+    .daily-day-card.claimed .daily-day-number {
+      background: #1e3a1e; color: #a0f0a0;
+      border-color: #5b875b;
+    }
+    .daily-day-card.current .daily-day-number {
+      background: #4a3a1e; color: #ffd980;
+      border-color: #ffd980;
+      animation: dayNumberPulse 1.5s ease infinite;
+    }
+    @keyframes dayNumberPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .daily-day-card.locked .daily-day-number {
+      color: #6a7a6a; border-color: #3a4a3a;
+    }
+    .daily-day-info { flex: 1; min-width: 0; }
+    .daily-day-label {
+      color: #8fa88f; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      font-weight: 700; margin-bottom: 2px;
+    }
+    .daily-day-reward {
+      color: #ffe08a; font-weight: 800; font-size: 1rem;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .daily-day-status {
+      color: #8fa88f; font-size: 0.72rem;
+    }
+    .daily-day-card.claimed .daily-day-status { color: #a0f0a0; }
+    .daily-day-card.current .daily-day-status { color: #ffd980; }
+    .daily-claim-btn {
+      background: linear-gradient(160deg, #c9a23f, #a0821f);
+      border: 1px solid #ffe08a;
+      color: #1e2b0e;
+      padding: 8px 14px; border-radius: 30px;
+      font-weight: 800; font-size: 0.85rem;
+      cursor: pointer; touch-action: manipulation;
+      box-shadow: 0 4px 0 #6a5010;
+      flex-shrink: 0;
+      animation: claimBtnGlow 1.5s ease infinite;
+    }
+    @keyframes claimBtnGlow {
+      0%, 100% { box-shadow: 0 4px 0 #6a5010, 0 0 0 rgba(255, 224, 138, 0); }
+      50% { box-shadow: 0 4px 0 #6a5010, 0 0 16px rgba(255, 224, 138, 0.7); }
+    }
+    .daily-claim-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #6a5010; }
+    .daily-claim-btn:disabled {
+      background: #2a3a2a; color: #6a7a6a;
+      box-shadow: 0 3px 0 #1a1a1a;
+      pointer-events: none; animation: none;
+    }
+
+    /* Daily help task */
+    .daily-help-card {
+      background: linear-gradient(160deg, #1e3a3e, #162c2e);
+      border: 1px solid #4a7a8a;
+      border-radius: 18px; padding: 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .daily-help-card.done {
+      opacity: 0.6;
+      background: #162316;
+      border-color: #3a5a3a;
+    }
+    .daily-help-card .help-icon {
+      font-size: 2rem; flex-shrink: 0;
+    }
+    .daily-help-card .help-info { flex: 1; min-width: 0; }
+    .daily-help-card .help-title {
+      color: #80d0ff; font-weight: 700; font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+    .daily-help-card.done .help-title { color: #a0f0a0; }
+    .daily-help-card .help-desc {
+      color: #8fa88f; font-size: 0.75rem;
+      margin-bottom: 2px;
+    }
+    .daily-help-card .help-reward {
+      color: #ffe08a; font-weight: 800; font-size: 0.95rem;
+    }
+
+    /* ============================================ */
+    /* ===== BOTTOM NAV ===== */
+    /* ============================================ */
     .bottom-nav { flex-shrink: 0; background: #0f1a0f; display: flex;
       border-top: 2px solid #3f6b3f; padding: 8px 0;
       padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
@@ -636,12 +728,20 @@
       line-height: 1.1; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 3px;
       cursor: pointer; touch-action: manipulation;
-      white-space: nowrap; overflow: hidden; }
+      white-space: nowrap; overflow: hidden; position: relative; }
     .nav-item.active { color: #d4f0b0; background: #1e2f1e;
       border-radius: 16px; margin: 0 2px; }
     .nav-icon { font-size: 1.4rem; line-height: 1; display: block; }
     .nav-label { display: block; font-size: 0.68rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.3px; }
+    .nav-dot {
+      position: absolute; top: 4px; right: calc(50% - 16px);
+      width: 10px; height: 10px;
+      background: #ff4a4a; border-radius: 50%;
+      border: 2px solid #0f1a0f;
+      animation: dotPulse 1.5s ease infinite;
+    }
+    .nav-dot.hidden { display: none; }
 
     .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
       background: #2d4a2d; color: #f0ffe0; padding: 12px 24px; border-radius: 50px;
@@ -689,7 +789,6 @@
     .modal-confirm:disabled { background: #2a3a2a; color: #6a7a6a; cursor: not-allowed; }
     .modal-danger { background: #8a2a2a; color: #fff; }
 
-    /* Profile modal */
     .profile-modal {
       background: linear-gradient(160deg, #1e2f1e, #162316);
       border-radius: 28px; padding: 24px 20px;
@@ -716,15 +815,13 @@
       background: #0c180c; border: 3px solid #7fb07f;
       display: flex; align-items: center; justify-content: center;
       font-size: 3rem; margin: 8px auto 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
     .profile-modal-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .profile-modal-name {
       color: #fff; font-size: 1.35rem; font-weight: 800;
       text-align: center; margin-bottom: 6px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-      word-break: break-word;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5); word-break: break-word;
     }
     .profile-modal-status {
       text-align: center; font-size: 0.9rem;
@@ -742,42 +839,33 @@
       margin-bottom: 16px;
     }
     .profile-modal-row {
-      display: flex; justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       background: #162316; border-radius: 12px;
-      padding: 10px 14px; border: 1px solid #2a3a2a;
-      gap: 8px;
+      padding: 10px 14px; border: 1px solid #2a3a2a; gap: 8px;
     }
     .profile-modal-row .label {
       color: #8fa88f; font-size: 0.8rem;
-      white-space: nowrap;
-      display: flex; align-items: center; gap: 6px;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
     }
     .profile-modal-row .value {
-      color: #e0f0d0; font-weight: 700;
-      font-size: 0.85rem;
-      text-align: right;
-      word-break: break-word;
-      max-width: 65%;
+      color: #e0f0d0; font-weight: 700; font-size: 0.85rem;
+      text-align: right; word-break: break-word; max-width: 65%;
       display: flex; align-items: center; gap: 6px;
     }
     .copy-btn {
       background: #3a5a3a; border: 1px solid #7fa07f;
       color: #d0e8c0; padding: 3px 8px;
       border-radius: 8px; font-size: 0.7rem;
-      font-weight: 700; cursor: pointer;
-      touch-action: manipulation;
+      font-weight: 700; cursor: pointer; touch-action: manipulation;
     }
     .copy-btn:active { background: #2a4a2a; }
     .profile-modal-help-btn {
       width: 100%; padding: 12px;
       background: linear-gradient(160deg, #2a7a9a, #1a5a7a);
-      color: #fff;
-      border: none; border-radius: 40px;
+      color: #fff; border: none; border-radius: 40px;
       font-weight: 700; font-size: 0.95rem;
       cursor: pointer; touch-action: manipulation;
-      box-shadow: 0 4px 0 #0a3040;
-      margin-bottom: 10px;
+      box-shadow: 0 4px 0 #0a3040; margin-bottom: 10px;
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
     .profile-modal-help-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3040; }
@@ -793,7 +881,6 @@
     }
     .profile-modal-close-full:active { background: #2a4a2a; }
 
-    /* Help modal */
     .help-modal {
       background: linear-gradient(160deg, #1e3a3e, #162c2e);
       border-radius: 28px; padding: 24px 20px;
@@ -815,8 +902,7 @@
       width: 100%; padding: 14px; border-radius: 40px;
       border: 2px solid #2a6a8a; background: #061018;
       color: #80d0ff; font-size: 1.8rem; font-weight: 800;
-      outline: none; text-align: center;
-      -moz-appearance: textfield;
+      outline: none; text-align: center; -moz-appearance: textfield;
     }
     .help-modal input[type="number"]::-webkit-outer-spin-button,
     .help-modal input[type="number"]::-webkit-inner-spin-button {
@@ -838,8 +924,7 @@
     .help-modal .help-modal-buttons button { flex: 1;
       padding: 14px; border-radius: 40px;
       border: none; font-weight: 700;
-      cursor: pointer; touch-action: manipulation;
-      font-size: 0.95rem; }
+      cursor: pointer; touch-action: manipulation; font-size: 0.95rem; }
     .help-modal .help-cancel { background: #3a5a3a; color: #fff; }
     .help-modal .help-confirm {
       background: linear-gradient(160deg, #2a7a9a, #1a5a7a);
@@ -848,24 +933,43 @@
     .help-modal .help-confirm:disabled { background: #2a3a2a; color: #6a7a6a;
       box-shadow: 0 3px 0 #1a1a1a; pointer-events: none; }
 
-    /* Daily reward modal */
-    .daily-modal { background: linear-gradient(160deg, #3a2e1e, #1e2f1e);
+    /* Daily reward toast modal */
+    .daily-claim-modal {
+      background: linear-gradient(160deg, #3a2e1e, #1e2f1e);
       border: 2px solid #ffd980; border-radius: 28px; padding: 24px 20px;
       text-align: center; max-width: 360px; width: 100%;
-      box-shadow: 0 20px 60px rgba(255, 217, 128, 0.4); }
-    .daily-modal .gift-icon { font-size: 4rem; margin-bottom: 8px;
-      animation: dailyBounce 1s ease infinite; }
-    @keyframes dailyBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    .daily-modal h2 { color: #ffd980; font-size: 1.4rem; margin-bottom: 6px; }
-    .daily-modal .reward-amount { color: #fff; font-size: 2rem;
-      font-weight: 800; margin: 12px 0; }
-    .daily-modal .reward-sub { color: #d0e8c0; font-size: 0.85rem; margin-bottom: 16px; }
-    .daily-modal .claim-btn { width: 100%; padding: 14px;
+      box-shadow: 0 20px 60px rgba(255, 217, 128, 0.4);
+      animation: profilePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .daily-claim-modal .gift-icon {
+      font-size: 4rem; margin-bottom: 8px;
+      animation: dailyBounce 1s ease infinite;
+    }
+    @keyframes dailyBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .daily-claim-modal h2 { color: #ffd980; font-size: 1.3rem; margin-bottom: 6px; }
+    .daily-claim-modal .day-label {
+      color: #ffb060; font-size: 0.85rem; margin-bottom: 12px;
+      text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+    }
+    .daily-claim-modal .reward-amount {
+      color: #fff; font-size: 2rem; font-weight: 800; margin: 12px 0;
+      text-shadow: 0 2px 12px rgba(255, 217, 128, 0.6);
+    }
+    .daily-claim-modal .reward-sub {
+      color: #d0e8c0; font-size: 0.85rem; margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .daily-claim-modal .claim-ok-btn {
+      width: 100%; padding: 14px;
       background: linear-gradient(160deg, #ffd980, #c9a23f);
       color: #1e2b0e; border: none; border-radius: 40px;
       font-weight: 800; font-size: 1.05rem; cursor: pointer;
-      touch-action: manipulation; box-shadow: 0 6px 0 #7a5e1e; }
-    .daily-modal .claim-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #7a5e1e; }
+      touch-action: manipulation; box-shadow: 0 6px 0 #7a5e1e;
+    }
+    .daily-claim-modal .claim-ok-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #7a5e1e; }
 
     /* Welcome Back modal */
     .wb-backdrop {
@@ -878,7 +982,6 @@
     }
     .wb-backdrop.show { opacity: 1; pointer-events: auto; }
     .wb-backdrop.hidden { display: none; }
-
     .wb-modal {
       background: linear-gradient(160deg, #1e2f1e, #162316);
       border-radius: 32px; padding: 28px 24px;
@@ -986,7 +1089,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v16.0 · Privacy & Guest Fix</p>
+    <p>v17.0 · Daily Reward</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -1022,7 +1125,6 @@
     </button>
   </div>
 
-  <!-- Welcome Back banner -->
   <div class="welcome-banner" id="welcomeBanner">
     <span class="wb-icon">🌱</span>
     <div class="wb-text" id="welcomeBannerText">
@@ -1030,7 +1132,6 @@
     </div>
   </div>
 
-  <!-- Privacy link -->
   <div class="login-privacy-link">
     Dengan masuk, Anda menyetujui <a id="loginPrivacyLink">Kebijakan Privasi</a> kami.
   </div>
@@ -1047,11 +1148,17 @@
       <div class="points" id="planterPointsDisplay">🌱 0 PP</div>
       <div class="cloud-status" id="cloudStatus">☁️ Sync</div>
     </div>
-    <button class="menu-btn" id="menuBtn" aria-label="Menu">⋮</button>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">⋮
+      <span class="menu-dot hidden" id="menuDot"></span>
+    </button>
     <div class="dropdown-menu" id="dropdownMenu">
       <div class="dropdown-label">Menu</div>
+      <button class="dropdown-item" id="menuDailyBtn">
+        <span class="icon">📅</span>
+        <span>Daily Reward</span>
+        <span class="item-dot hidden" id="menuDailyDot"></span>
+      </button>
       <button class="dropdown-item" id="menuHelpBtn"><span class="icon">💧</span><span>Bantu Siram</span></button>
-      <button class="dropdown-item" id="menuEmptyBtn"><span class="icon">📦</span><span>Tab Kosong</span></button>
       <div class="dropdown-divider"></div>
       <button class="dropdown-item" id="menuPrivacyBtn"><span class="icon">📜</span><span>Kebijakan Privasi</span></button>
       <button class="dropdown-item" id="menuCloseBtn"><span class="icon">✖️</span><span>Tutup Menu</span></button>
@@ -1068,7 +1175,7 @@
         <div class="exp-text" id="expText">0 / 499 Exp</div>
         <div class="reward-badge">🎁 $5.000 · 💧1000 · 💎30 · 50 PP</div>
         <div><span class="total-exp-badge" id="totalExpBadge">🌟 Total Exp: 0</span></div>
-        <div><span class="daily-badge" id="dailyBadge">🎁 Daily: -</span></div>
+        <div><span class="daily-badge" id="dailyBadge">📅 Streak: 0/7</span></div>
       </div>
       <div class="inventory-row">
         <span>💧 <span id="waterDisplay">0</span> L</span>
@@ -1080,6 +1187,42 @@
         <button class="btn btn-harvest hidden" id="harvestBtn" style="grid-column: span 2;">🎁 PANEN</button>
       </div>
       <div class="small-note" id="pupukNote">Beri pupuk tiap 10 siram agar efek tetap 10 exp/L</div>
+    </div>
+
+    <!-- DAILY REWARD (v17.0) -->
+    <div id="pageDaily" class="page">
+      <div class="daily-header">
+        <div class="title">📅 Daily Reward</div>
+        <div class="subtitle">
+          Login tiap hari untuk <b>streak mingguan</b>.<br>
+          Reset setiap <b>Senin 00:00</b>.
+        </div>
+        <div class="daily-progress">
+          <div class="label">
+            <span>Progress Minggu Ini</span>
+            <span class="value" id="dailyProgressValue">0/7 hari</span>
+          </div>
+          <div class="daily-progress-bar">
+            <div class="daily-progress-fill" id="dailyProgressFill" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="inv-section-title">🎁 Login Harian</div>
+      <div class="daily-list" id="dailyList"></div>
+
+      <div class="inv-section-title">💧 Bantu Siram</div>
+      <div class="daily-help-card" id="dailyHelpCard">
+        <div class="help-icon" id="dailyHelpIcon">💧</div>
+        <div class="help-info">
+          <div class="help-title" id="dailyHelpTitle">Bantu Siram 1x</div>
+          <div class="help-desc" id="dailyHelpDesc">Bantu siram pemain lain hari ini</div>
+          <div class="help-reward">Reward: $1.000</div>
+        </div>
+        <button class="help-action-btn" id="dailyHelpBtn">Klaim</button>
+      </div>
+
+      <div class="small-note">💡 Login tiap hari untuk reward lebih besar. Streak reset setiap Senin.</div>
     </div>
 
     <!-- LEADERBOARD -->
@@ -1149,7 +1292,7 @@
       <div class="small-note">💡 Daftar di-refresh otomatis tiap 24 jam</div>
     </div>
 
-    <!-- PRIVACY POLICY -->
+    <!-- PRIVACY -->
     <div id="pagePrivacy" class="page">
       <div class="privacy-header">
         <button class="privacy-back-btn" id="privacyBackBtn">←</button>
@@ -1158,9 +1301,7 @@
           <div class="subtitle">Compound Harvest</div>
         </div>
       </div>
-      <div class="privacy-content" id="privacyContent">
-        <!-- Konten di-inject via JS -->
-      </div>
+      <div class="privacy-content" id="privacyContent"></div>
     </div>
 
     <!-- AKUN -->
@@ -1188,11 +1329,10 @@
           <span class="profile-value" id="profileTotalExp">0</span>
         </div>
         <div class="profile-row">
-          <span class="profile-label">🎁 Daily Reward</span>
-          <span class="profile-value" id="profileDaily">-</span>
+          <span class="profile-label">📅 Streak Login</span>
+          <span class="profile-value" id="profileStreak">0/7</span>
         </div>
 
-        <!-- Guest info card (hanya untuk Guest) -->
         <div class="guest-info-card hidden" id="guestInfoCard">
           <div class="title">⚠️ Akun Guest Sementara</div>
           <div class="body">
@@ -1223,7 +1363,7 @@
           <span style="color: #8fa88f; font-size: 0.78rem;">📜 <a id="privacyLinkAccount" style="color:#a0d0a0; text-decoration: underline; cursor: pointer;">Kebijakan Privasi</a></span>
         </div>
       </div>
-      <div class="small-note">Compound Harvest 1 · v16.0</div>
+      <div class="small-note">Compound Harvest 1 · v17.0</div>
     </div>
   </main>
 
@@ -1277,13 +1417,14 @@
   </div>
 </div>
 
-<div class="modal-backdrop hidden" id="dailyRewardBackdrop">
-  <div class="daily-modal">
+<div class="modal-backdrop hidden" id="dailyClaimBackdrop">
+  <div class="daily-claim-modal">
     <div class="gift-icon">🎁</div>
-    <h2>Daily Reward!</h2>
-    <div class="reward-amount">+$500</div>
-    <div class="reward-sub">Bonus login harian.<br>Kembali besok untuk reward lagi!</div>
-    <button class="claim-btn" id="dailyClaimBtn">✅ Klaim & Lanjut</button>
+    <h2 id="dailyClaimTitle">Reward Diklaim!</h2>
+    <div class="day-label" id="dailyClaimDay">HARI 1</div>
+    <div class="reward-amount" id="dailyClaimAmount">+$500</div>
+    <div class="reward-sub" id="dailyClaimSub">Login besok untuk dapat lebih besar!</div>
+    <button class="claim-ok-btn" id="dailyClaimOkBtn">✅ OK, Lanjut</button>
   </div>
 </div>
 
@@ -1367,7 +1508,6 @@
   const OWNER_EMAIL = "kelvinkudus@gmail.com";
   const CONTACT_EMAIL = "kelvinnn.manusia@gmail.com";
   const BOT_KEYWORDS = ['test', 'bot', 'dummy', 'admin', 'player_', 'petani_bot', 'xxx'];
-  const DAILY_REWARD_AMOUNT = 500;
   const HEARTBEAT_INTERVAL = 45000;
   const ONLINE_THRESHOLD = 90000;
 
@@ -1384,8 +1524,19 @@
   const CONFETTI_COUNT = 12;
 
   const WB_MIN_DAYS = 7;
-  const WB_TYPEWRITER_DELAY = 30;
   const WB_TYPEWRITER_TIER = 4;
+
+  // ===== DAILY REWARD (v17.0) =====
+  const DAILY_REWARDS = [
+    { day: 1, amount: 500 },
+    { day: 2, amount: 1000 },
+    { day: 3, amount: 1500 },
+    { day: 4, amount: 2000 },
+    { day: 5, amount: 2500 },
+    { day: 6, amount: 3000 },
+    { day: 7, amount: 3500 }
+  ];
+  const DAILY_HELP_REWARD = 1000;
 
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
@@ -1409,8 +1560,11 @@
     uid: null, email: null, isAnonymous: true,
     provider: 'guest', displayName: '', photoURL: '',
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
-    regionLocked: false, lastDailyReward: '', isOwner: false,
+    regionLocked: false, isOwner: false,
     lastLogin: 0,
+    // Daily reward state
+    dailyLogin: { weekId: '', daysClaimed: [], currentDay: 1, lastClaimDate: '' },
+    dailyHelpTask: { date: '', helpedToday: 0, claimed: false },
   });
 
   let state = DEFAULT_STATE();
@@ -1419,7 +1573,7 @@
   let heartbeatTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v160_state';
+  const LOCAL_KEY = 'compoundHarvest_v170_state';
 
   let helpQuota = { totalSent: 0, playersHelped: {}, date: '' };
   let helpPool = [];
@@ -1437,7 +1591,6 @@
   let wbPendingData = null;
   let wbTypewriterTimer = null;
 
-  // Track halaman sebelumnya untuk tombol back
   let previousPageBeforePrivacy = 'akun';
 
   const LEVELS = [
@@ -1474,7 +1627,7 @@
   const profileUid = $('profileUid');
   const profileType = $('profileType');
   const profileTotalExp = $('profileTotalExp');
-  const profileDaily = $('profileDaily');
+  const profileStreak = $('profileStreak');
   const editNameBtn = $('editNameBtn');
   const upgradeBtn = $('upgradeBtn');
   const upgradeCtaBtn = $('upgradeCtaBtn');
@@ -1484,6 +1637,7 @@
   const adminCleanupBtn = $('adminCleanupBtn');
   const regionSection = $('regionSection');
   const pageTanam = $('pageTanam');
+  const pageDaily = $('pageDaily');
   const pageLeaderboard = $('pageLeaderboard');
   const pageInventori = $('pageInventori');
   const pageToko = $('pageToko');
@@ -1502,9 +1656,11 @@
   const invItemCount = $('invItemCount');
 
   const menuBtn = $('menuBtn');
+  const menuDot = $('menuDot');
   const dropdownMenu = $('dropdownMenu');
+  const menuDailyBtn = $('menuDailyBtn');
+  const menuDailyDot = $('menuDailyDot');
   const menuHelpBtn = $('menuHelpBtn');
-  const menuEmptyBtn = $('menuEmptyBtn');
   const menuPrivacyBtn = $('menuPrivacyBtn');
   const menuCloseBtn = $('menuCloseBtn');
 
@@ -1512,6 +1668,22 @@
   const privacyContent = $('privacyContent');
   const loginPrivacyLink = $('loginPrivacyLink');
   const privacyLinkAccount = $('privacyLinkAccount');
+
+  // Daily reward DOM
+  const dailyList = $('dailyList');
+  const dailyProgressValue = $('dailyProgressValue');
+  const dailyProgressFill = $('dailyProgressFill');
+  const dailyHelpCard = $('dailyHelpCard');
+  const dailyHelpIcon = $('dailyHelpIcon');
+  const dailyHelpTitle = $('dailyHelpTitle');
+  const dailyHelpDesc = $('dailyHelpDesc');
+  const dailyHelpBtn = $('dailyHelpBtn');
+  const dailyClaimBackdrop = $('dailyClaimBackdrop');
+  const dailyClaimTitle = $('dailyClaimTitle');
+  const dailyClaimDay = $('dailyClaimDay');
+  const dailyClaimAmount = $('dailyClaimAmount');
+  const dailyClaimSub = $('dailyClaimSub');
+  const dailyClaimOkBtn = $('dailyClaimOkBtn');
 
   const profileModalBackdrop = $('profileModalBackdrop');
   const profileModalClose = $('profileModalClose');
@@ -1583,9 +1755,6 @@
   const regRegency = $('regRegency');
   const regDistrict = $('regDistrict');
 
-  const dailyRewardBackdrop = $('dailyRewardBackdrop');
-  const dailyClaimBtn = $('dailyClaimBtn');
-
   // ===== UTILS =====
   function showToast(msg, duration = 1800, isReward = false) {
     toastEl.textContent = msg;
@@ -1655,6 +1824,15 @@
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
+  // ISO Week ID (standar internasional)
+  function getWeekId() {
+    const d = new Date();
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+  }
   function showLbSkeleton(count = 5) {
     let html = '';
     for (let i = 0; i < count; i++) {
@@ -1671,22 +1849,232 @@
     lbList.innerHTML = html;
   }
 
-  // ===== PRIVACY POLICY =====
+  // ===== DAILY REWARD (v17.0) =====
+  function checkAndResetDailyData() {
+    const today = getTodayKey();
+    const thisWeek = getWeekId();
+
+    // Reset daily login kalau minggu baru
+    if (!state.dailyLogin || state.dailyLogin.weekId !== thisWeek) {
+      console.log(`📅 Week baru: ${thisWeek} → reset daily streak`);
+      state.dailyLogin = {
+        weekId: thisWeek,
+        daysClaimed: [],
+        currentDay: 1,
+        lastClaimDate: ''
+      };
+    }
+
+    // Reset daily help task kalau tanggal beda
+    if (!state.dailyHelpTask || state.dailyHelpTask.date !== today) {
+      state.dailyHelpTask = {
+        date: today,
+        helpedToday: 0,
+        claimed: false
+      };
+    }
+  }
+
+  function canClaimTodayLogin() {
+    const today = getTodayKey();
+    const dl = state.dailyLogin;
+    if (!dl) return false;
+    if (dl.lastClaimDate === today) return false; // Sudah klaim hari ini
+    if (dl.daysClaimed.length >= 7) return false; // Sudah 7 hari (harusnya reset Senin)
+    return true;
+  }
+
+  function getCurrentDayReward() {
+    const dl = state.dailyLogin;
+    if (!dl) return DAILY_REWARDS[0];
+    const nextDay = dl.daysClaimed.length + 1;
+    if (nextDay > 7) return DAILY_REWARDS[6];
+    return DAILY_REWARDS[nextDay - 1];
+  }
+
+  async function claimDailyLogin() {
+    if (!canClaimTodayLogin()) {
+      showToast('❌ Sudah klaim hari ini');
+      return;
+    }
+    const today = getTodayKey();
+    const dl = state.dailyLogin;
+    const nextDay = dl.daysClaimed.length + 1;
+    const reward = DAILY_REWARDS[nextDay - 1];
+
+    // Update state
+    dl.daysClaimed.push(nextDay);
+    dl.currentDay = nextDay + 1;
+    dl.lastClaimDate = today;
+    state.money += reward.amount;
+
+    updateUI();
+    await saveToCloud();
+
+    // Show claim modal
+    showDailyClaimModal(nextDay, reward.amount);
+  }
+
+  function showDailyClaimModal(day, amount) {
+    dailyClaimTitle.textContent = 'Reward Login!';
+    dailyClaimDay.textContent = `HARI ${day}`;
+    dailyClaimAmount.textContent = `+$${formatNumber(amount)}`;
+    if (day === 7) {
+      dailyClaimSub.textContent = '🎉 Max reward! Besok reset ke Hari 1.';
+    } else {
+      dailyClaimSub.textContent = 'Login besok untuk dapat lebih besar!';
+    }
+    dailyClaimBackdrop.classList.remove('hidden');
+  }
+
+  function hideDailyClaimModal() {
+    dailyClaimBackdrop.classList.add('hidden');
+  }
+
+  function renderDailyPage() {
+    if (!dailyList) return;
+
+    const dl = state.dailyLogin || { daysClaimed: [], currentDay: 1 };
+    const claimed = dl.daysClaimed.length;
+    const progressPct = (claimed / 7) * 100;
+
+    // Update progress bar
+    dailyProgressValue.textContent = `${claimed}/7 hari`;
+    dailyProgressFill.style.width = progressPct + '%';
+
+    // Render 7 day cards
+    let html = '';
+    for (let i = 0; i < 7; i++) {
+      const dayNum = i + 1;
+      const isClaimed = dl.daysClaimed.includes(dayNum);
+      const isCurrent = !isClaimed && (claimed === i);
+      const isLocked = !isClaimed && !isCurrent;
+      const reward = DAILY_REWARDS[i];
+
+      let className = 'daily-day-card';
+      if (isClaimed) className += ' claimed';
+      else if (isCurrent) className += ' current';
+      else if (isLocked) className += ' locked';
+
+      let status = '';
+      if (isClaimed) status = '✅ Sudah diklaim';
+      else if (isCurrent) status = '🎁 Bisa klaim sekarang!';
+      else status = '🔒 Terkunci';
+
+      html += `
+        <div class="${className}">
+          <div class="daily-day-number">${dayNum}</div>
+          <div class="daily-day-info">
+            <div class="daily-day-label">Hari ${dayNum}${dayNum === 7 ? ' 🏆 MAX' : ''}</div>
+            <div class="daily-day-reward">💰 $${formatNumber(reward.amount)}</div>
+            <div class="daily-day-status">${status}</div>
+          </div>
+          ${isCurrent ? `<button class="daily-claim-btn" data-day="${dayNum}">KLAIM</button>` : ''}
+        </div>`;
+    }
+    dailyList.innerHTML = html;
+
+    // Attach claim handler
+    dailyList.querySelectorAll('.daily-claim-btn').forEach(btn => {
+      btn.addEventListener('click', claimDailyLogin);
+    });
+
+    // Render daily help task
+    renderDailyHelpTask();
+  }
+
+  function renderDailyHelpTask() {
+    const today = getTodayKey();
+    const task = state.dailyHelpTask || { date: '', helpedToday: 0, claimed: false };
+    const isToday = task.date === today;
+    const canClaim = isToday && task.helpedToday >= 1 && !task.claimed;
+
+    if (task.claimed) {
+      dailyHelpCard.classList.add('done');
+      dailyHelpIcon.textContent = '✅';
+      dailyHelpTitle.textContent = 'Sudah Diklaim';
+      dailyHelpDesc.textContent = 'Besok bisa lagi';
+      dailyHelpBtn.textContent = '✅';
+      dailyHelpBtn.disabled = true;
+    } else if (canClaim) {
+      dailyHelpCard.classList.remove('done');
+      dailyHelpIcon.textContent = '🎁';
+      dailyHelpTitle.textContent = 'Bisa Klaim!';
+      dailyHelpDesc.textContent = 'Kamu sudah bantu siram hari ini';
+      dailyHelpBtn.textContent = 'KLAIM';
+      dailyHelpBtn.disabled = false;
+    } else if (isToday && task.helpedToday >= 1) {
+      dailyHelpCard.classList.remove('done');
+      dailyHelpIcon.textContent = '💧';
+      dailyHelpTitle.textContent = 'Bantu Siram 1x';
+      dailyHelpDesc.textContent = `Sudah bantu ${task.helpedToday}x, bisa klaim`;
+      dailyHelpBtn.textContent = 'KLAIM';
+      dailyHelpBtn.disabled = false;
+    } else {
+      dailyHelpCard.classList.remove('done');
+      dailyHelpIcon.textContent = '💧';
+      dailyHelpTitle.textContent = 'Bantu Siram 1x';
+      dailyHelpDesc.textContent = 'Bantu siram pemain lain hari ini';
+      dailyHelpBtn.textContent = 'Belum';
+      dailyHelpBtn.disabled = true;
+    }
+  }
+
+  async function claimDailyHelp() {
+    const today = getTodayKey();
+    const task = state.dailyHelpTask;
+    if (!task || task.date !== today) {
+      showToast('❌ Belum bantu siram hari ini');
+      return;
+    }
+    if (task.helpedToday < 1) {
+      showToast('❌ Bantu siram dulu minimal 1x');
+      return;
+    }
+    if (task.claimed) {
+      showToast('❌ Sudah klaim hari ini');
+      return;
+    }
+
+    task.claimed = true;
+    state.money += DAILY_HELP_REWARD;
+
+    updateUI();
+    await saveToCloud();
+
+    showDailyClaimModal('HELP', DAILY_HELP_REWARD);
+    dailyClaimDay.textContent = '💧 BANTU SIRAM';
+  }
+
+  function updateMenuDot() {
+    // Cek apakah ada daily reward yang bisa diklaim
+    const canClaim = canClaimTodayLogin();
+    const helpTask = state.dailyHelpTask || {};
+    const today = getTodayKey();
+    const canClaimHelp = helpTask.date === today && helpTask.helpedToday >= 1 && !helpTask.claimed;
+    const hasNotif = canClaim || canClaimHelp;
+
+    if (hasNotif) {
+      menuDot.classList.remove('hidden');
+      menuDailyDot.classList.remove('hidden');
+    } else {
+      menuDot.classList.add('hidden');
+      menuDailyDot.classList.add('hidden');
+    }
+  }
+
+  // ===== PRIVACY =====
   function renderPrivacyContent() {
     const today = new Date();
     const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     const dateStr = `${today.getDate()} ${monthNames[today.getMonth()]} ${today.getFullYear()}`;
-
     privacyContent.innerHTML = `
       <div class="updated-date">Terakhir diperbarui: ${dateStr}</div>
-
       <h2>1. Pendahuluan</h2>
       <p>Selamat datang di <strong>Compound Harvest</strong> ("Game", "kami"). Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi Anda saat menggunakan Game kami.</p>
       <p>Dengan mengakses atau menggunakan Game, Anda <strong>menyetujui</strong> praktik yang dijelaskan dalam Kebijakan Privasi ini. Jika Anda tidak setuju, mohon <strong>jangan gunakan</strong> Game.</p>
-
       <h2>2. Informasi yang Kami Kumpulkan</h2>
       <p>Kami mengumpulkan informasi berikut:</p>
-
       <h3>a) Informasi Akun</h3>
       <ul>
         <li><strong>Guest Login</strong>: Identifier anonim (UID) yang di-generate Firebase</li>
@@ -1694,7 +2082,6 @@
         <li><strong>GitHub Login</strong>: Username GitHub, nama tampilan, foto profil publik</li>
         <li><strong>Password</strong>: Dienkripsi oleh Firebase Authentication (kami tidak bisa melihat password Anda)</li>
       </ul>
-
       <h3>b) Informasi Game</h3>
       <ul>
         <li>Progress permainan (uang, diamond, level, item, exp)</li>
@@ -1702,23 +2089,20 @@
         <li>Wilayah (negara, provinsi, kabupaten, kecamatan) — <strong>opsional, diisi manual</strong></li>
         <li>Waktu login terakhir & status online/offline</li>
       </ul>
-
       <h3>c) Informasi Teknis</h3>
       <ul>
         <li>Jenis perangkat & browser (via user agent, tidak disimpan permanen)</li>
         <li>Firebase Analytics: statistik kunjungan anonim (opsional)</li>
         <li>Alamat IP (diproses oleh Firebase untuk keamanan)</li>
       </ul>
-
       <h3>d) Data yang TIDAK Kami Kumpulkan</h3>
       <ul>
         <li>Lokasi GPS</li>
         <li>Kontak telepon</li>
         <li>Foto galeri</li>
         <li>Data kesehatan</li>
-        <li>Informasi keuangan/pembayaran (belum ada transaksi nyata)</li>
+        <li>Informasi keuangan/pembayaran</li>
       </ul>
-
       <h2>3. Bagaimana Kami Menggunakan Informasi</h2>
       <p>Informasi Anda digunakan untuk:</p>
       <ul>
@@ -1734,7 +2118,6 @@
         <li>Iklan bertarget</li>
         <li>Profiling komersial</li>
       </ul>
-
       <h2>4. Berbagi Informasi dengan Pihak Ketiga</h2>
       <p>Kami menggunakan layanan pihak ketiga:</p>
       <h3>a) Google Firebase (Google LLC)</h3>
@@ -1750,16 +2133,13 @@
       </ul>
       <h3>c) GitHub Pages (Hosting)</h3>
       <p>Game di-host di GitHub Pages (Microsoft).</p>
-
       <p>Kami <strong>tidak menjual</strong> data Anda. Kami <strong>tidak membagikan</strong> data Anda ke pihak lain di luar yang tercantum.</p>
-
       <h2>5. Penyimpanan Data</h2>
       <ul>
         <li><strong>Lokasi</strong>: Data disimpan di server Google Firebase (region: Asia-Southeast1 / Singapore)</li>
         <li><strong>Durasi</strong>: Selama akun aktif. Data akan dihapus jika Anda menghapus akun atau akun tidak aktif > 1 tahun</li>
         <li><strong>Backup</strong>: Firebase otomatis membuat backup, tersimpan aman</li>
       </ul>
-
       <h2>6. Hak Anda</h2>
       <p>Anda berhak untuk:</p>
       <ul>
@@ -1770,7 +2150,6 @@
         <li><strong>Menolak</strong> pengumpulan data — Berhenti gunakan Game</li>
       </ul>
       <p>Untuk permintaan khusus, hubungi: <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>
-
       <h2>7. Keamanan Data</h2>
       <p>Kami berkomitmen melindungi data Anda:</p>
       <ul>
@@ -1781,7 +2160,6 @@
       <div class="highlight-box">
         <strong>Catatan</strong>: Tidak ada sistem yang 100% aman. Jika ada pelanggaran data, kami akan menginformasikan Anda dalam 72 jam.
       </div>
-
       <h2>8. Cookie & Local Storage</h2>
       <p>Kami menggunakan:</p>
       <ul>
@@ -1789,10 +2167,8 @@
         <li><strong>Firebase session</strong>: Menyimpan status login</li>
       </ul>
       <p>Kami <strong>tidak pakai cookie tracking</strong> pihak ketiga. Anda bisa menghapus data lokal ini kapan saja via pengaturan browser.</p>
-
       <h2>9. Anak-Anak di Bawah Umur</h2>
       <p>Game ini <strong>tidak ditujukan untuk anak di bawah 13 tahun</strong>. Kami tidak dengan sengaja mengumpulkan data anak-anak. Jika Anda orang tua dan mengetahui anak Anda menggunakan Game, hubungi kami untuk menghapus akun.</p>
-
       <h2>10. Perubahan Kebijakan</h2>
       <p>Kami dapat memperbarui Kebijakan Privasi ini. Perubahan signifikan akan:</p>
       <ul>
@@ -1801,7 +2177,6 @@
         <li>Tanggal "Terakhir diperbarui" akan diubah</li>
       </ul>
       <p>Penggunaan lanjutan setelah perubahan = <strong>persetujuan Anda</strong>.</p>
-
       <h2>11. Kontak</h2>
       <p>Untuk pertanyaan, keluhan, atau permintaan terkait privasi:</p>
       <div class="contact-box">
@@ -1809,7 +2184,6 @@
         <p>🐙 <strong>GitHub</strong>: <a href="https://github.com/kelvinkudus" target="_blank">github.com/kelvinkudus</a></p>
         <p>🌐 <strong>Game</strong>: <a href="https://kelvinkudus.github.io/compound-harvest.game/" target="_blank">kelvinkudus.github.io/compound-harvest.game</a></p>
       </div>
-
       <h2>12. Dasar Hukum (UU PDP Indonesia)</h2>
       <p>Sesuai UU Perlindungan Data Pribadi No. 27 Tahun 2022:</p>
       <ul>
@@ -1818,7 +2192,6 @@
         <li>Anda berhak mengajukan <strong>keberatan</strong> dan <strong>penghapusan</strong></li>
         <li>Pengaduan dapat diajukan ke <strong>Lembaga Perlindungan Data Pribadi</strong></li>
       </ul>
-
       <div class="highlight-box" style="margin-top: 20px; text-align: center;">
         <strong>Dengan menggunakan Compound Harvest, Anda menyatakan telah membaca dan menyetujui Kebijakan Privasi ini.</strong>
       </div>
@@ -1827,51 +2200,19 @@
 
   // ===== WELCOME BACK =====
   const WELCOME_BACK_TEXTS = {
-    1: {
-      title: '🌱 Pohonmu Merindukanmu', icon: '🌱',
-      body: (name, days) => [
-        `${days} hari bukan waktu yang singkat, <span class="wb-name">${name}</span>.`,
-        `Daun-daun mulai layu, dan tanah sedikit kering.`,
-        `Tapi kamu kembali — dan itu yang terpenting.`
-      ],
-      quote: 'Selamat datang kembali, kami merindukanmu.',
-      btnText: '🌱 Kembali ke Kebun'
-    },
-    2: {
-      title: '🌿 Kebun Ini Menunggumu', icon: '🌿',
-      body: (name, days) => [
-        `${days} hari telah berlalu.`,
-        `Angin membawa debu ke tanah yang tak tersentuh.`,
-        `Tapi hari ini, langkahmu kembali ke sini.`
-      ],
-      quote: 'Kebun ini bukan hanya tentang pohon. Ini tentang kamu.',
-      btnText: '🌿 Lanjutkan Perjalanan'
-    },
-    3: {
-      title: '🌳 Sang Penjaga Telah Kembali', icon: '🌳',
-      body: (name, days) => [
-        `Sebulan lebih, <span class="wb-name">${name}</span>.`,
-        `Setiap pohon menyimpan cerita. Setiap daun menyimpan jejak tanganmu.`,
-        `Tanah ini tidak pernah melupakan siapa yang menanamnya.`,
-        `Hari ini, kamu pulang. Dan itu adalah alasan untuk bersorak.`
-      ],
-      quote: 'Kamu dirindukan, dan selalu begitu.',
-      btnText: '🌳 Klaim Kehormatanmu'
-    },
-    4: {
-      title: '✨ LEGENDA KEMBALI', icon: '💎',
-      body: (name, days) => [
-        `Mereka bilang kamu sudah pergi.`,
-        `Mereka bilang kebun ini akan sunyi selamanya.`,
-        `Tapi mereka salah.`,
-        `${days} hari tanah menunggu. ${days} hari langit menahan hujan.`,
-        `Kini kamu kembali — dan kebun ini bernafas lagi.`
-      ],
-      quote: 'Beberapa hal memang layak ditunggu. Kamu salah satunya.',
-      btnText: '💎 Klaim Warisan Ini'
-    }
+    1: { title: '🌱 Pohonmu Merindukanmu', icon: '🌱',
+      body: (name, days) => [`${days} hari bukan waktu yang singkat, <span class="wb-name">${name}</span>.`, `Daun-daun mulai layu, dan tanah sedikit kering.`, `Tapi kamu kembali — dan itu yang terpenting.`],
+      quote: 'Selamat datang kembali, kami merindukanmu.', btnText: '🌱 Kembali ke Kebun' },
+    2: { title: '🌿 Kebun Ini Menunggumu', icon: '🌿',
+      body: (name, days) => [`${days} hari telah berlalu.`, `Angin membawa debu ke tanah yang tak tersentuh.`, `Tapi hari ini, langkahmu kembali ke sini.`],
+      quote: 'Kebun ini bukan hanya tentang pohon. Ini tentang kamu.', btnText: '🌿 Lanjutkan Perjalanan' },
+    3: { title: '🌳 Sang Penjaga Telah Kembali', icon: '🌳',
+      body: (name, days) => [`Sebulan lebih, <span class="wb-name">${name}</span>.`, `Setiap pohon menyimpan cerita. Setiap daun menyimpan jejak tanganmu.`, `Tanah ini tidak pernah melupakan siapa yang menanamnya.`, `Hari ini, kamu pulang. Dan itu adalah alasan untuk bersorak.`],
+      quote: 'Kamu dirindukan, dan selalu begitu.', btnText: '🌳 Klaim Kehormatanmu' },
+    4: { title: '✨ LEGENDA KEMBALI', icon: '💎',
+      body: (name, days) => [`Mereka bilang kamu sudah pergi.`, `Mereka bilang kebun ini akan sunyi selamanya.`, `Tapi mereka salah.`, `${days} hari tanah menunggu. ${days} hari langit menahan hujan.`, `Kini kamu kembali — dan kebun ini bernafas lagi.`],
+      quote: 'Beberapa hal memang layak ditunggu. Kamu salah satunya.', btnText: '💎 Klaim Warisan Ini' }
   };
-
   const WELCOME_BACK_REWARDS = {
     1: { money: 2000,  diamond: 20,  water: 100, fertilizer: 0,  instantGrow: 0, tierLabel: 'TIER 1' },
     2: { money: 5000,  diamond: 50,  water: 200, fertilizer: 5,  instantGrow: 0, tierLabel: 'TIER 2' },
@@ -1965,10 +2306,8 @@
       particle.style.top = (rect.height / 2) + 'px';
       const angle = (Math.PI * 2 * i) / 24 + Math.random() * 0.5;
       const dist = 100 + Math.random() * 150;
-      const dx = Math.cos(angle) * dist;
-      const dy = Math.sin(angle) * dist;
-      particle.style.setProperty('--dx', dx + 'px');
-      particle.style.setProperty('--dy', dy + 'px');
+      particle.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      particle.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
       wbModalEl.appendChild(particle);
       setTimeout(() => { if (particle.parentNode) particle.parentNode.removeChild(particle); }, 1400);
     }
@@ -2013,7 +2352,6 @@
       document.querySelectorAll('.wb-particle').forEach(p => p.remove());
     }, 400);
     showToast(`🎉 ${rewards.tierLabel} reward diklaim!`, 3000, true);
-    setTimeout(() => { checkAndShowDailyReward(); }, 800);
   }
 
   function showWelcomeBannerOnLogin() {
@@ -2116,9 +2454,7 @@
   }
   async function generateUniqueName(baseName) {
     baseName = sanitizeName(baseName) || 'Petani';
-    if (baseName.toLowerCase() === 'petani') {
-      baseName = `Petani_${Math.floor(1000 + Math.random() * 9000)}`;
-    }
+    if (baseName.toLowerCase() === 'petani') baseName = `Petani_${Math.floor(1000 + Math.random() * 9000)}`;
     try {
       const snap = await get(ref(db, `nameRegistry/${baseName}`));
       if (!snap.exists()) return baseName;
@@ -2165,9 +2501,7 @@
   async function updateHeartbeat() {
     if (!auth.currentUser) return;
     try {
-      await update(ref(db, `users/${auth.currentUser.uid}`), {
-        online: true, lastSeen: Date.now()
-      });
+      await update(ref(db, `users/${auth.currentUser.uid}`), { online: true, lastSeen: Date.now() });
     } catch (e) {}
   }
   async function setOffline() {
@@ -2184,8 +2518,8 @@
     else openMenu();
   });
   menuCloseBtn.addEventListener('click', () => closeMenu());
+  menuDailyBtn.addEventListener('click', () => { closeMenu(); switchPage('daily'); });
   menuHelpBtn.addEventListener('click', () => { closeMenu(); switchPage('help'); });
-  menuEmptyBtn.addEventListener('click', () => { closeMenu(); showToast('📦 Tab Kosong — Coming Soon', 2000); });
   menuPrivacyBtn.addEventListener('click', () => { closeMenu(); switchPage('privacy', 'tanam'); });
   document.addEventListener('click', e => {
     if (dropdownMenu.classList.contains('open') && !dropdownMenu.contains(e.target) && e.target !== menuBtn) closeMenu();
@@ -2198,13 +2532,11 @@
     try {
       const snap = await get(query(ref(db, 'leaderboard/global/exp'), orderByChild('value'), limitToLast(200)));
       snap.forEach(child => { if (child.key !== myUid) candidates.add(child.key); });
-    } catch (e) { console.warn('LB pool fetch error:', e); }
+    } catch (e) {}
     try {
       const usersSnap = await get(ref(db, 'users'));
-      if (usersSnap.exists()) {
-        usersSnap.forEach(child => { if (child.key !== myUid) candidates.add(child.key); });
-      }
-    } catch (e) { console.warn('Users pool fetch error:', e); }
+      if (usersSnap.exists()) usersSnap.forEach(child => { if (child.key !== myUid) candidates.add(child.key); });
+    } catch (e) {}
     let all = Array.from(candidates);
     if (all.length === 0) return [];
     for (let i = all.length - 1; i > 0; i--) {
@@ -2221,17 +2553,11 @@
       const snap = await get(ref(db, `helpQuota/${state.uid}/${today}`));
       if (snap.exists()) {
         const data = snap.val() || {};
-        helpQuota = {
-          totalSent: data.totalSent || 0,
-          playersHelped: data.playersHelped || {},
-          date: today
-        };
+        helpQuota = { totalSent: data.totalSent || 0, playersHelped: data.playersHelped || {}, date: today };
       } else {
         helpQuota = { totalSent: 0, playersHelped: {}, date: today };
       }
-    } catch (e) {
-      helpQuota = { totalSent: 0, playersHelped: {}, date: today };
-    }
+    } catch (e) { helpQuota = { totalSent: 0, playersHelped: {}, date: today }; }
   }
 
   function countPlayersHelped() {
@@ -2247,27 +2573,15 @@
     try { helpPool = await generateHelpPool(); }
     catch (e) { helpPool = []; }
     if (helpPool.length === 0) {
-      helpList.innerHTML = `<div class="help-empty">
-        📭 Belum ada pemain lain di game.<br>
-        <small style="color: #6a8a6a; font-size: 0.8rem; display: block; margin-top: 8px;">
-          Ajak teman untuk daftar / main dulu ya! 🌱
-        </small>
-      </div>`;
+      helpList.innerHTML = `<div class="help-empty">📭 Belum ada pemain lain di game.<br><small style="color: #6a8a6a; font-size: 0.8rem; display: block; margin-top: 8px;">Ajak teman untuk daftar / main dulu ya! 🌱</small></div>`;
       return;
     }
     const promises = helpPool.map(uid =>
-      get(ref(db, `users/${uid}`))
-        .then(snap => {
-          if (!snap.exists()) return null;
-          const data = snap.val() || {};
-          return {
-            uid, name: data.name || 'Petani',
-            photoURL: data.photoURL || '',
-            provider: data.provider || 'guest',
-            totalExp: data.totalExp || 0,
-          };
-        })
-        .catch(() => null)
+      get(ref(db, `users/${uid}`)).then(snap => {
+        if (!snap.exists()) return null;
+        const data = snap.val() || {};
+        return { uid, name: data.name || 'Petani', photoURL: data.photoURL || '', provider: data.provider || 'guest', totalExp: data.totalExp || 0 };
+      }).catch(() => null)
     );
     const results = await Promise.all(promises);
     const playersData = results.filter(p => p !== null);
@@ -2287,13 +2601,9 @@
           <div class="help-avatar">${avatarContent}</div>
           <div class="help-info" data-uid="${p.uid}" data-name="${escapeHtml(p.name)}">
             <div class="help-name">${escapeHtml(p.name)}</div>
-            <div class="help-sub ${alreadyHelped ? 'done-label' : ''}">
-              ${alreadyHelped ? '✅ Sudah dibantu hari ini' : `Lv.${lvData.level} ${lvData.name}`}
-            </div>
+            <div class="help-sub ${alreadyHelped ? 'done-label' : ''}">${alreadyHelped ? '✅ Sudah dibantu hari ini' : `Lv.${lvData.level} ${lvData.name}`}</div>
           </div>
-          <button class="help-action-btn" data-uid="${p.uid}" data-name="${escapeHtml(p.name)}" ${alreadyHelped ? 'disabled' : ''}>
-            ${alreadyHelped ? '✅' : '💧 Bantu'}
-          </button>
+          <button class="help-action-btn" data-uid="${p.uid}" data-name="${escapeHtml(p.name)}" ${alreadyHelped ? 'disabled' : ''}>${alreadyHelped ? '✅' : '💧 Bantu'}</button>
         </div>`;
     });
     helpList.innerHTML = html;
@@ -2341,10 +2651,7 @@
     let amount = parseInt(helpWaterInput.value, 10);
     if (isNaN(amount) || amount < HELP_WATER_MIN) amount = HELP_WATER_MIN;
     if (amount > HELP_WATER_MAX) amount = HELP_WATER_MAX;
-    if (Date.now() < helpCooldownUntil) {
-      showToast(`⏱️ Tunggu ${Math.ceil((helpCooldownUntil - Date.now()) / 1000)} detik lagi`);
-      return;
-    }
+    if (Date.now() < helpCooldownUntil) { showToast(`⏱️ Tunggu ${Math.ceil((helpCooldownUntil - Date.now()) / 1000)} detik lagi`); return; }
     const helpedCount = countPlayersHelped();
     if (helpedCount >= HELP_MAX_PLAYERS) { showToast('❌ Kuota habis'); closeHelpModal(); return; }
     if (helpQuota.playersHelped[targetUid]) { showToast('❌ Sudah bantu'); closeHelpModal(); return; }
@@ -2356,24 +2663,25 @@
       const updates = {};
       helpQuota.totalSent += amount;
       helpQuota.playersHelped[targetUid] = amount;
-      updates[`helpQuota/${state.uid}/${today}`] = {
-        totalSent: helpQuota.totalSent,
-        playersHelped: helpQuota.playersHelped,
-        date: today
-      };
-      updates[`helpReceived/${targetUid}/${today}/${state.uid}`] = {
-        name: state.name || 'Petani', amount: amount, ts: now
-      };
-      updates[`helpPool/${targetUid}/${state.uid}`] = {
-        amount: amount, expGain: amount * HELP_EXP_PER_LITER,
-        senderName: state.name || 'Petani', ts: now, applied: false
-      };
+      updates[`helpQuota/${state.uid}/${today}`] = { totalSent: helpQuota.totalSent, playersHelped: helpQuota.playersHelped, date: today };
+      updates[`helpReceived/${targetUid}/${today}/${state.uid}`] = { name: state.name || 'Petani', amount: amount, ts: now };
+      updates[`helpPool/${targetUid}/${state.uid}`] = { amount: amount, expGain: amount * HELP_EXP_PER_LITER, senderName: state.name || 'Petani', ts: now, applied: false };
+
+      // Update daily help task
+      const task = state.dailyHelpTask || { date: today, helpedToday: 0, claimed: false };
+      if (task.date !== today) { task.date = today; task.helpedToday = 0; task.claimed = false; }
+      task.helpedToday += 1;
+      state.dailyHelpTask = task;
+
       await update(ref(db), updates);
       helpCooldownUntil = now + HELP_COOLDOWN_MS;
       startCooldownDisplay();
       showToast(`💧 Bantu ${targetName} +${amount}L (+${amount * HELP_EXP_PER_LITER} exp)`, 2500);
+      updateUI();
+      debouncedSave();
       renderHelpPage();
       renderReceivedSection();
+      renderDailyPage();
     } catch (e) {
       console.error('Help error:', e);
       showToast('❌ Gagal: ' + (e.message || 'coba lagi'));
@@ -2402,39 +2710,20 @@
     const today = getTodayKey();
     try {
       const snap = await get(ref(db, `helpReceived/${state.uid}/${today}`));
-      if (!snap.exists()) {
-        receivedList.innerHTML = `<div class="small-note">Belum ada bantuan hari ini</div>`;
-        return;
-      }
+      if (!snap.exists()) { receivedList.innerHTML = `<div class="small-note">Belum ada bantuan hari ini</div>`; return; }
       const data = snap.val() || {};
-      const entries = Object.entries(data).map(([senderUid, v]) => ({
-        senderUid, ...v
-      })).sort((a, b) => (b.ts || 0) - (a.ts || 0));
-      if (entries.length === 0) {
-        receivedList.innerHTML = `<div class="small-note">Belum ada bantuan hari ini</div>`;
-        return;
-      }
+      const entries = Object.entries(data).map(([senderUid, v]) => ({ senderUid, ...v })).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+      if (entries.length === 0) { receivedList.innerHTML = `<div class="small-note">Belum ada bantuan hari ini</div>`; return; }
       let html = '';
       entries.forEach(e => {
         const alreadyReplied = !!helpQuota.playersHelped[e.senderUid];
-        html += `
-          <div class="received-row">
-            <div class="info">
-              <div class="sender">💧 ${escapeHtml(e.name || 'Petani')}</div>
-              <div class="amount">+${e.amount || 0}L</div>
-            </div>
-            <button class="reply-btn" data-uid="${e.senderUid}" data-name="${escapeHtml(e.name || 'Petani')}" ${alreadyReplied ? 'disabled' : ''}>
-              ${alreadyReplied ? '✅' : '🔁 Balas'}
-            </button>
-          </div>`;
+        html += `<div class="received-row"><div class="info"><div class="sender">💧 ${escapeHtml(e.name || 'Petani')}</div><div class="amount">+${e.amount || 0}L</div></div><button class="reply-btn" data-uid="${e.senderUid}" data-name="${escapeHtml(e.name || 'Petani')}" ${alreadyReplied ? 'disabled' : ''}>${alreadyReplied ? '✅' : '🔁 Balas'}</button></div>`;
       });
       receivedList.innerHTML = html;
       receivedList.querySelectorAll('.reply-btn').forEach(btn => {
         btn.addEventListener('click', () => openHelpModal(btn.dataset.uid, btn.dataset.name));
       });
-    } catch (e) {
-      receivedList.innerHTML = `<div class="small-note">Gagal memuat bantuan</div>`;
-    }
+    } catch (e) { receivedList.innerHTML = `<div class="small-note">Gagal memuat bantuan</div>`; }
   }
 
   async function applyPendingHelp() {
@@ -2446,10 +2735,7 @@
       let totalExpGain = 0;
       const updates = {};
       for (const [senderUid, v] of Object.entries(pool)) {
-        if (v.applied === false) {
-          totalExpGain += (v.expGain || 0);
-          updates[`helpPool/${state.uid}/${senderUid}/applied`] = true;
-        }
+        if (v.applied === false) { totalExpGain += (v.expGain || 0); updates[`helpPool/${state.uid}/${senderUid}/applied`] = true; }
       }
       if (totalExpGain > 0) {
         const oldLevel = state.level;
@@ -2463,16 +2749,14 @@
         showToast(`💧 +${totalExpGain} Exp dari bantuan teman!`, 2500, true);
       }
       if (Object.keys(updates).length > 0) await update(ref(db), updates);
-    } catch (e) { console.warn('Apply pending help error:', e); }
+    } catch (e) {}
   }
 
   // ===== INVENTORY =====
   function getInventoryItems() {
     return [
-      { id: 'water', icon: '💧', name: 'Air', amount: state.water, unit: 'L',
-        desc: 'Untuk menyiram pohon. 1L = +10 Exp', className: 'water', max: 5000 },
-      { id: 'fertilizer', icon: '🧪', name: 'Pupuk', amount: state.fertilizer, unit: 'Kg',
-        desc: 'Beri tiap 10 siram agar efek air tetap 10/L', className: 'fertilizer', max: 100 },
+      { id: 'water', icon: '💧', name: 'Air', amount: state.water, unit: 'L', desc: 'Untuk menyiram pohon. 1L = +10 Exp', className: 'water', max: 5000 },
+      { id: 'fertilizer', icon: '🧪', name: 'Pupuk', amount: state.fertilizer, unit: 'Kg', desc: 'Beri tiap 10 siram agar efek air tetap 10/L', className: 'fertilizer', max: 100 },
     ];
   }
   function renderInventory() {
@@ -2480,14 +2764,7 @@
     const items = getInventoryItems();
     invGrid.innerHTML = items.map(item => {
       const pct = Math.min(100, (item.amount / item.max) * 100);
-      return `
-        <div class="inv-card ${item.className}">
-          <div class="inv-icon">${item.icon}</div>
-          <div class="inv-name">${escapeHtml(item.name)}</div>
-          <div class="inv-amount ${item.className}">${formatNumber(item.amount)}<span class="inv-unit">${item.unit}</span></div>
-          <div class="inv-bar"><div class="inv-bar-fill ${item.className}" style="width: ${pct}%;"></div></div>
-          <div class="inv-desc">${escapeHtml(item.desc)}</div>
-        </div>`;
+      return `<div class="inv-card ${item.className}"><div class="inv-icon">${item.icon}</div><div class="inv-name">${escapeHtml(item.name)}</div><div class="inv-amount ${item.className}">${formatNumber(item.amount)}<span class="inv-unit">${item.unit}</span></div><div class="inv-bar"><div class="inv-bar-fill ${item.className}" style="width: ${pct}%;"></div></div><div class="inv-desc">${escapeHtml(item.desc)}</div></div>`;
     }).join('');
     invItemCount.textContent = `${items.filter(i => i.amount > 0).length} item`;
   }
@@ -2500,8 +2777,10 @@
     waterDisplay.textContent = state.water;
     fertilizerDisplay.textContent = state.fertilizer;
     totalExpBadge.textContent = `🌟 Total Exp: ${formatNumber(state.totalExp)}`;
-    if (state.lastDailyReward) dailyBadge.textContent = `🎁 Daily: terakhir ${state.lastDailyReward}`;
-    else dailyBadge.textContent = `🎁 Daily: belum pernah`;
+    // Streak badge
+    const dl = state.dailyLogin || { daysClaimed: [] };
+    dailyBadge.textContent = `📅 Streak: ${dl.daysClaimed.length}/7`;
+
     const currentLevelData = getLevelData(state.exp);
     state.level = currentLevelData.level;
     if (state.level === 5) state.exp = Math.min(state.exp, 3000);
@@ -2543,27 +2822,16 @@
       profileType.textContent = '🎮 Guest'; profileAvatar.textContent = '👤';
     }
     profileTotalExp.textContent = formatNumber(state.totalExp);
-    if (state.lastDailyReward) {
-      const today = getTodayKey();
-      if (state.lastDailyReward === today) {
-        profileDaily.textContent = '✅ Hari ini sudah klaim';
-        profileDaily.style.color = '#a0f0a0';
-      } else {
-        profileDaily.textContent = `Terakhir: ${state.lastDailyReward}`;
-        profileDaily.style.color = '#ffd980';
-      }
-    } else { profileDaily.textContent = 'Belum pernah'; profileDaily.style.color = '#8fa88f'; }
+    profileStreak.textContent = `${dl.daysClaimed.length}/7 hari`;
 
-    // ==== GUEST vs EMAIL/GITHUB LOGIC (v16.0) ====
+    // Guest vs Email/GitHub
     if (state.provider === 'guest') {
-      // Guest: TIDAK BISA logout, hanya upgrade atau hapus
       logoutBtn.classList.add('hidden');
       guestInfoCard.classList.remove('hidden');
       upgradeCtaBtn.classList.remove('hidden');
-      upgradeBtn.classList.add('hidden'); // Sembunyikan tombol upgrade kecil
+      upgradeBtn.classList.add('hidden');
       deleteAccountBtn.textContent = '🗑️ Hapus Akun Guest';
     } else {
-      // Email/GitHub: bisa logout, tidak perlu info card
       logoutBtn.classList.remove('hidden');
       logoutBtn.textContent = '🚪 Logout';
       guestInfoCard.classList.add('hidden');
@@ -2583,30 +2851,19 @@
     renderRegionSection();
     renderShop();
     renderInventory();
+    renderDailyPage();
+    updateMenuDot();
   }
 
   function renderRegionSection() {
     if (!regionSection) return;
     const r = state.region;
     if (!state.regionLocked || !hasRegion()) {
-      regionSection.innerHTML = `
-        <div class="locked-display">
-          <div class="title" style="color:#ffb060;">⚠️ Wilayah Belum Diatur</div>
-          <div class="small-note" style="margin-top: 4px;">Set <b>SEKALI</b>, tidak bisa diubah sendiri.</div>
-          <button class="edit-btn lock-btn" id="setRegionBtn" style="width:100%; margin-top: 6px;">🌍 Atur Wilayah Sekarang</button>
-        </div>`;
+      regionSection.innerHTML = `<div class="locked-display"><div class="title" style="color:#ffb060;">⚠️ Wilayah Belum Diatur</div><div class="small-note" style="margin-top: 4px;">Set <b>SEKALI</b>, tidak bisa diubah sendiri.</div><button class="edit-btn lock-btn" id="setRegionBtn" style="width:100%; margin-top: 6px;">🌍 Atur Wilayah Sekarang</button></div>`;
       const btn = $('setRegionBtn');
       if (btn) btn.addEventListener('click', openRegionModal);
     } else {
-      regionSection.innerHTML = `
-        <div class="locked-display">
-          <div class="title">🔒 Wilayah Anda (Terkunci)</div>
-          <div class="row"><span class="icon">🌍</span><span>${escapeHtml(r.negara)}</span></div>
-          <div class="row"><span class="icon">🏙️</span><span>${escapeHtml(r.provinsi)}</span></div>
-          <div class="row"><span class="icon">🏘️</span><span>${escapeHtml(r.kabupaten)}</span></div>
-          <div class="row"><span class="icon">🏡</span><span>${escapeHtml(r.kecamatan)}</span></div>
-          <div class="locked-note">Hubungi admin untuk mengubah wilayah</div>
-        </div>`;
+      regionSection.innerHTML = `<div class="locked-display"><div class="title">🔒 Wilayah Anda (Terkunci)</div><div class="row"><span class="icon">🌍</span><span>${escapeHtml(r.negara)}</span></div><div class="row"><span class="icon">🏙️</span><span>${escapeHtml(r.provinsi)}</span></div><div class="row"><span class="icon">🏘️</span><span>${escapeHtml(r.kabupaten)}</span></div><div class="row"><span class="icon">🏡</span><span>${escapeHtml(r.kecamatan)}</span></div><div class="locked-note">Hubungi admin untuk mengubah wilayah</div></div>`;
     }
   }
 
@@ -2628,7 +2885,6 @@
         exp: state.exp, level: state.level,
         planterPoints: state.planterPoints, totalExp: state.totalExp,
         region: state.region, regionLocked: state.regionLocked,
-        lastDailyReward: state.lastDailyReward,
         waterSinceFertilizer: state.waterSinceFertilizer,
         skipUsedThisLevel: state.skipUsedThisLevel,
         email: state.email || null, isAnonymous: state.isAnonymous,
@@ -2636,6 +2892,8 @@
         photoURL: state.photoURL || '',
         online: true, lastSeen: Date.now(),
         lastLogin: Date.now(),
+        dailyLogin: state.dailyLogin,
+        dailyHelpTask: state.dailyHelpTask,
         lastUpdated: Date.now(),
       });
       setCloudStatus('saved');
@@ -2657,7 +2915,6 @@
     state = { ...DEFAULT_STATE(), ...savedMeta };
     let isNewAccount = false;
     let wbData = null;
-
     try {
       const snap = await get(userRef);
       if (snap.exists()) {
@@ -2672,20 +2929,19 @@
           skipUsedThisLevel: data.skipUsedThisLevel ?? false,
           region: data.region || { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
           regionLocked: data.regionLocked === true,
-          lastDailyReward: data.lastDailyReward || '',
           provider: data.provider || state.provider,
           displayName: data.displayName || state.displayName,
           photoURL: data.photoURL || state.photoURL,
           lastLogin: data.lastLogin || 0,
+          dailyLogin: data.dailyLogin || { weekId: '', daysClaimed: [], currentDay: 1, lastClaimDate: '' },
+          dailyHelpTask: data.dailyHelpTask || { date: '', helpedToday: 0, claimed: false },
         });
 
+        // Welcome back check
         const lastLogin = data.lastLogin || 0;
         if (lastLogin > 0) {
           const daysSince = Math.floor((Date.now() - lastLogin) / (1000 * 60 * 60 * 24));
-          if (daysSince >= WB_MIN_DAYS) {
-            wbData = getWBData(state.name, daysSince);
-            console.log(`🎁 Welcome Back detected: ${daysSince} hari absen → Tier ${wbData?.tier}`);
-          }
+          if (daysSince >= WB_MIN_DAYS) wbData = getWBData(state.name, daysSince);
         }
         showToast('☁️ Data dimuat');
       } else {
@@ -2701,6 +2957,10 @@
         await saveToCloud();
         showToast(`🌱 Selamat datang, ${state.name}!`);
       }
+
+      // Reset daily data kalau perlu
+      checkAndResetDailyData();
+
       updateUI();
       updateLeaderboardEntries().catch(() => {});
       startHeartbeat();
@@ -2709,9 +2969,9 @@
         renderReceivedSection();
       }).catch(() => {});
 
+      // Welcome back modal (prioritas)
       setTimeout(() => {
         if (wbData && !isNewAccount) showWelcomeBackModal(wbData);
-        else checkAndShowDailyReward();
       }, isNewAccount ? 800 : 500);
     } catch (e) {
       console.error('Load error:', e);
@@ -2781,7 +3041,6 @@
       lbList.innerHTML = `<div class="lb-empty">❌ Gagal: ${e.message}</div>`;
     }
   }
-
   function detectRankChanges(oldRanks, newRows) {
     const changes = { up: [], down: [] };
     newRows.forEach((row, idx) => {
@@ -2794,7 +3053,6 @@
     });
     return changes;
   }
-
   function spawnConfetti(rowEl, color = '#ffd700') {
     if (!rowEl) return;
     const colors = [color, '#ffd980', '#ff8c40', '#ffffc0'];
@@ -2806,15 +3064,12 @@
       particle.style.top = '50%';
       const angle = (Math.PI * 2 * i) / CONFETTI_COUNT + Math.random() * 0.5;
       const dist = 60 + Math.random() * 80;
-      const dx = Math.cos(angle) * dist;
-      const dy = Math.sin(angle) * dist;
-      particle.style.setProperty('--dx', dx + 'px');
-      particle.style.setProperty('--dy', dy + 'px');
+      particle.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      particle.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
       rowEl.appendChild(particle);
       setTimeout(() => { if (particle.parentNode) particle.parentNode.removeChild(particle); }, 1300);
     }
   }
-
   function renderLeaderboard(rows) {
     if (!rows || rows.length === 0) {
       lbList.innerHTML = `<div class="lb-empty">📭 Belum ada data. Jadilah yang pertama! 🌱</div>`;
@@ -2822,8 +3077,7 @@
       return;
     }
     const oldPositions = {};
-    const oldRows = lbList.querySelectorAll('.lb-row[data-uid]');
-    oldRows.forEach(el => {
+    lbList.querySelectorAll('.lb-row[data-uid]').forEach(el => {
       const uid = el.dataset.uid;
       if (uid) oldPositions[uid] = el.getBoundingClientRect().top;
     });
@@ -2846,15 +3100,7 @@
       if (rank === 1) topClass = 'top-1';
       else if (rank === 2) topClass = 'top-2';
       else if (rank === 3) topClass = 'top-3';
-      html += `
-        <div class="lb-row ${isMe ? 'me' : ''} ${topClass}" data-uid="${row.uid}">
-          <div class="lb-rank ${rankClass}">${rankIcon}</div>
-          <div class="lb-info" data-uid="${row.uid}" data-name="${safeName}" data-provider="${row.provider}">
-            <div class="lb-name ${isMe ? 'me' : ''}">${badge} ${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}</div>
-            <div class="lb-sub">#${rank} · Tap untuk profil</div>
-          </div>
-          <div class="lb-value ${cat}">${formatNumber(row.value)} ${unit}</div>
-        </div>`;
+      html += `<div class="lb-row ${isMe ? 'me' : ''} ${topClass}" data-uid="${row.uid}"><div class="lb-rank ${rankClass}">${rankIcon}</div><div class="lb-info" data-uid="${row.uid}" data-name="${safeName}" data-provider="${row.provider}"><div class="lb-name ${isMe ? 'me' : ''}">${badge} ${escapeHtml(row.name)}${isMe ? ' (Anda)' : ''}</div><div class="lb-sub">#${rank} · Tap untuk profil</div></div><div class="lb-value ${cat}">${formatNumber(row.value)} ${unit}</div></div>`;
     });
     lbList.innerHTML = html;
     const newRows = lbList.querySelectorAll('.lb-row[data-uid]');
@@ -2905,10 +3151,7 @@
       }
       changes.up.concat(changes.down).forEach(c => {
         const el = lbList.querySelector(`.lb-row[data-uid="${c.uid}"] .lb-rank`);
-        if (el) {
-          el.classList.add('bounce');
-          setTimeout(() => el.classList.remove('bounce'), 700);
-        }
+        if (el) { el.classList.add('bounce'); setTimeout(() => el.classList.remove('bounce'), 700); }
       });
       lastAnimationTime = now;
     }
@@ -2926,24 +3169,6 @@
         openProfile(uid, { name, provider });
       });
     });
-  }
-
-  function hasClaimedDailyToday() { return state.lastDailyReward === getTodayKey(); }
-  function showDailyRewardModal() { dailyRewardBackdrop.classList.remove('hidden'); }
-  function hideDailyRewardModal() { dailyRewardBackdrop.classList.add('hidden'); }
-  async function claimDailyReward() {
-    const today = getTodayKey();
-    if (state.lastDailyReward === today) { hideDailyRewardModal(); return; }
-    state.money += DAILY_REWARD_AMOUNT;
-    state.lastDailyReward = today;
-    updateUI();
-    await saveToCloud();
-    hideDailyRewardModal();
-    showToast(`🎁 +$${formatNumber(DAILY_REWARD_AMOUNT)} Daily Reward!`, 2500, true);
-  }
-  function checkAndShowDailyReward() {
-    if (hasClaimedDailyToday()) return;
-    showDailyRewardModal();
   }
 
   function addExp(amount) {
@@ -3017,14 +3242,7 @@
       if (item.priceMoney && item.priceDiamond) priceHtml = `$${formatNumber(item.priceMoney)} / 💎${item.priceDiamond}`;
       else if (item.priceMoney) priceHtml = `$${formatNumber(item.priceMoney)}`;
       else if (item.priceDiamond) priceHtml = `💎${item.priceDiamond}`;
-      html += `
-        <div class="shop-item">
-          <div class="item-info">
-            <div class="item-name">${item.name}</div>
-            <div class="item-price">${priceHtml}</div>
-          </div>
-          <button class="buy-btn" data-id="${item.id}" ${disabled ? 'disabled' : ''}>Beli</button>
-        </div>`;
+      html += `<div class="shop-item"><div class="item-info"><div class="item-name">${item.name}</div><div class="item-price">${priceHtml}</div></div><button class="buy-btn" data-id="${item.id}" ${disabled ? 'disabled' : ''}>Beli</button></div>`;
     });
     shopItemsContainer.innerHTML = html;
     document.querySelectorAll('.buy-btn').forEach(btn => {
@@ -3039,11 +3257,9 @@
       if (state.level >= 5) { showToast('Pohon sudah dewasa.'); return; }
     }
     let paid = false;
-    if (item.priceMoney !== undefined && state.money >= item.priceMoney) {
-      state.money -= item.priceMoney; paid = true;
-    } else if (item.priceDiamond !== undefined && state.diamond >= item.priceDiamond) {
-      state.diamond -= item.priceDiamond; paid = true;
-    } else { showToast('❌ Saldo tidak cukup!'); return; }
+    if (item.priceMoney !== undefined && state.money >= item.priceMoney) { state.money -= item.priceMoney; paid = true; }
+    else if (item.priceDiamond !== undefined && state.diamond >= item.priceDiamond) { state.diamond -= item.priceDiamond; paid = true; }
+    else { showToast('❌ Saldo tidak cukup!'); return; }
     if (!paid) return;
     switch (item.type) {
       case 'water': state.water += item.amount; showToast(`💧 +${item.amount} Liter`); break;
@@ -3067,19 +3283,16 @@
   }
 
   function switchPage(pageId, fromPage) {
-    // Simpan halaman sebelumnya jika pindah ke privacy
-    if (pageId === 'privacy' && fromPage) {
-      previousPageBeforePrivacy = fromPage;
-    }
-    [pageTanam, pageLeaderboard, pageInventori, pageToko, pageHelp, pagePrivacy, pageAkun].forEach(p => p.classList.remove('active'));
+    if (pageId === 'privacy' && fromPage) previousPageBeforePrivacy = fromPage;
+    [pageTanam, pageDaily, pageLeaderboard, pageInventori, pageToko, pageHelp, pagePrivacy, pageAkun].forEach(p => p.classList.remove('active'));
     if (pageId === 'tanam') pageTanam.classList.add('active');
+    else if (pageId === 'daily') { pageDaily.classList.add('active'); renderDailyPage(); }
     else if (pageId === 'leaderboard') pageLeaderboard.classList.add('active');
     else if (pageId === 'inventori') { pageInventori.classList.add('active'); renderInventory(); }
     else if (pageId === 'toko') pageToko.classList.add('active');
     else if (pageId === 'help') { pageHelp.classList.add('active'); renderHelpPage(); }
     else if (pageId === 'privacy') { pagePrivacy.classList.add('active'); renderPrivacyContent(); }
     else if (pageId === 'akun') pageAkun.classList.add('active');
-    // Update nav active (kecuali privacy yang bukan di nav)
     navItems.forEach(item => item.classList.toggle('active', item.dataset.page === pageId));
     if (pageId === 'toko') renderShop();
     if (pageId === 'leaderboard') loadLeaderboard();
@@ -3104,78 +3317,33 @@
     loadLeaderboard();
   });
 
-  // Privacy back button
-  privacyBackBtn.addEventListener('click', () => {
-    switchPage(previousPageBeforePrivacy);
-  });
-
-  // Privacy links
+  privacyBackBtn.addEventListener('click', () => switchPage(previousPageBeforePrivacy));
   loginPrivacyLink.addEventListener('click', () => {
-    // Sebelum login, langsung tampilkan modal (dengan scroll)
-    // Kita bisa pakai alert atau buka container game
-    // Karena belum login, kita tampilkan konten privacy di login screen
-    // Solusi simple: pakai modal besar
-    showPrivacyFromLogin();
-  });
-
-  function showPrivacyFromLogin() {
-    // Buat modal privacy sementara
     const modal = document.createElement('div');
-    modal.style.cssText = `
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.95); z-index: 10000;
-      overflow-y: auto; padding: 20px;
-    `;
+    modal.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; overflow-y: auto; padding: 20px;`;
     const content = document.createElement('div');
-    content.style.cssText = `
-      max-width: 500px; margin: 0 auto; background: #162316;
-      border-radius: 20px; padding: 20px; border: 1px solid #3a5a3a;
-      color: #d0e8c0; font-size: 0.88rem; line-height: 1.7;
-      font-family: system-ui, sans-serif;
-    `;
-    // Copy style dari privacy-content
+    content.style.cssText = `max-width: 500px; margin: 0 auto; background: #162316; border-radius: 20px; padding: 20px; border: 1px solid #3a5a3a; color: #d0e8c0; font-size: 0.88rem; line-height: 1.7; font-family: system-ui, sans-serif;`;
     content.innerHTML = privacyContent.innerHTML;
-    // Apply heading styles
-    content.querySelectorAll('h2').forEach(h => {
-      h.style.cssText = 'color: #a0d0ff; font-size: 1.05rem; margin-top: 20px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #3a5a3a;';
-    });
-    content.querySelectorAll('h3').forEach(h => {
-      h.style.cssText = 'color: #c0e0ff; font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;';
-    });
-    content.querySelectorAll('p').forEach(p => {
-      p.style.cssText = 'margin-bottom: 10px; text-align: justify;';
-    });
-    content.querySelectorAll('ul').forEach(u => {
-      u.style.cssText = 'margin-left: 20px; margin-bottom: 10px;';
-    });
-    content.querySelectorAll('li').forEach(l => {
-      l.style.cssText = 'margin-bottom: 4px;';
-    });
-    content.querySelectorAll('a').forEach(a => {
-      a.style.cssText = 'color: #80d0ff; text-decoration: underline; word-break: break-all;';
-    });
-
+    content.querySelectorAll('h2').forEach(h => h.style.cssText = 'color: #a0d0ff; font-size: 1.05rem; margin-top: 20px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #3a5a3a;');
+    content.querySelectorAll('h3').forEach(h => h.style.cssText = 'color: #c0e0ff; font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;');
+    content.querySelectorAll('p').forEach(p => p.style.cssText = 'margin-bottom: 10px; text-align: justify;');
+    content.querySelectorAll('ul').forEach(u => u.style.cssText = 'margin-left: 20px; margin-bottom: 10px;');
+    content.querySelectorAll('li').forEach(l => l.style.cssText = 'margin-bottom: 4px;');
+    content.querySelectorAll('a').forEach(a => a.style.cssText = 'color: #80d0ff; text-decoration: underline; word-break: break-all;');
     const closeBtn = document.createElement('button');
     closeBtn.textContent = '✕ Tutup';
-    closeBtn.style.cssText = `
-      display: block; width: 100%; padding: 14px;
-      background: #3a5a3a; color: #fff; border: none;
-      border-radius: 40px; font-weight: 700; font-size: 1rem;
-      margin-top: 20px; cursor: pointer;
-    `;
+    closeBtn.style.cssText = `display: block; width: 100%; padding: 14px; background: #3a5a3a; color: #fff; border: none; border-radius: 40px; font-weight: 700; font-size: 1rem; margin-top: 20px; cursor: pointer;`;
     closeBtn.addEventListener('click', () => modal.remove());
-
     content.appendChild(closeBtn);
     modal.appendChild(content);
     document.body.appendChild(modal);
-  }
-
-  privacyLinkAccount.addEventListener('click', () => {
-    switchPage('privacy', 'akun');
   });
+  privacyLinkAccount.addEventListener('click', () => switchPage('privacy', 'akun'));
+
+  dailyClaimOkBtn.addEventListener('click', hideDailyClaimModal);
 
   let modalCallback = null;
-  function showModal(title, message, confirmText, callback, requireWord, danger, extraButtons) {
+  function showModal(title, message, confirmText, callback, requireWord, danger) {
     modalTitle.textContent = title;
     modalMessage.textContent = message;
     modalConfirm.textContent = confirmText || 'Ya, Lanjut';
@@ -3185,9 +3353,7 @@
       modalInput.value = '';
       modalInput.placeholder = `Ketik "${requireWord}"`;
       modalConfirm.disabled = true;
-      modalInput.oninput = () => {
-        modalConfirm.disabled = modalInput.value.trim().toUpperCase() !== requireWord.toUpperCase();
-      };
+      modalInput.oninput = () => { modalConfirm.disabled = modalInput.value.trim().toUpperCase() !== requireWord.toUpperCase(); };
     } else {
       modalInput.classList.add('hidden');
       modalConfirm.disabled = false;
@@ -3202,21 +3368,13 @@
     modalConfirm.disabled = false;
   }
   modalCancel.addEventListener('click', hideModal);
-  modalConfirm.addEventListener('click', () => {
-    if (modalCallback) modalCallback();
-    hideModal();
-  });
-  modalBackdrop.addEventListener('click', e => {
-    if (e.target === modalBackdrop) hideModal();
-  });
+  modalConfirm.addEventListener('click', () => { if (modalCallback) modalCallback(); hideModal(); });
+  modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) hideModal(); });
 
   wbClaimBtn.addEventListener('click', claimWelcomeBack);
-
   profileModalClose.addEventListener('click', closeProfileModal);
   profileModalCloseFull.addEventListener('click', closeProfileModal);
-  profileModalBackdrop.addEventListener('click', e => {
-    if (e.target === profileModalBackdrop) closeProfileModal();
-  });
+  profileModalBackdrop.addEventListener('click', e => { if (e.target === profileModalBackdrop) closeProfileModal(); });
   pmCopyBtn.addEventListener('click', () => {
     if (!currentProfileUid) return;
     navigator.clipboard.writeText(currentProfileUid).then(() => showToast('📋 UID disalin')).catch(() => showToast('❌ Gagal copy'));
@@ -3230,9 +3388,7 @@
 
   helpModalCancel.addEventListener('click', closeHelpModal);
   helpModalConfirm.addEventListener('click', executeHelpWater);
-  helpModalBackdrop.addEventListener('click', e => {
-    if (e.target === helpModalBackdrop) closeHelpModal();
-  });
+  helpModalBackdrop.addEventListener('click', e => { if (e.target === helpModalBackdrop) closeHelpModal(); });
   document.querySelectorAll('.help-modal .quick-btn').forEach(btn => {
     btn.addEventListener('click', () => { helpWaterInput.value = btn.dataset.amount; });
   });
@@ -3266,11 +3422,7 @@
     const kabupaten = regRegency.value.trim();
     const kecamatan = regDistrict.value.trim();
     if (!negara || !provinsi || !kabupaten || !kecamatan) { showToast('❌ Semua field wajib diisi!'); return; }
-    regionPreview.innerHTML = `
-      <div class="row"><span>🌍</span><span>${escapeHtml(negara)}</span></div>
-      <div class="row"><span>🏙️</span><span>${escapeHtml(provinsi)}</span></div>
-      <div class="row"><span>🏘️</span><span>${escapeHtml(kabupaten)}</span></div>
-      <div class="row"><span>🏡</span><span>${escapeHtml(kecamatan)}</span></div>`;
+    regionPreview.innerHTML = `<div class="row"><span>🌍</span><span>${escapeHtml(negara)}</span></div><div class="row"><span>🏙️</span><span>${escapeHtml(provinsi)}</span></div><div class="row"><span>🏘️</span><span>${escapeHtml(kabupaten)}</span></div><div class="row"><span>🏡</span><span>${escapeHtml(kecamatan)}</span></div>`;
     regionModalStep1.classList.add('hidden');
     regionModalStep2.classList.remove('hidden');
     let count = 3;
@@ -3313,14 +3465,9 @@
     regionModalConfirm.textContent = 'Ya (3)';
   });
   regionModalConfirm.addEventListener('click', confirmRegionLock);
-  regionModalBackdrop.addEventListener('click', e => {
-    if (e.target === regionModalBackdrop) closeRegionModal();
-  });
+  regionModalBackdrop.addEventListener('click', e => { if (e.target === regionModalBackdrop) closeRegionModal(); });
 
-  dailyClaimBtn.addEventListener('click', claimDailyReward);
-  dailyRewardBackdrop.addEventListener('click', e => {
-    if (e.target === dailyRewardBackdrop) showToast('Klik "Klaim & Lanjut" untuk lanjut');
-  });
+  dailyHelpBtn.addEventListener('click', claimDailyHelp);
 
   function switchLoginTab(tab) {
     if (tab === 'login') {
@@ -3436,58 +3583,29 @@
     try { await sendPasswordResetEmail(auth, email); showToast('📧 Email reset terkirim!'); }
     catch (e) { showError('Gagal: ' + e.message); }
   }
-
   async function handleUpgrade() {
     if (state.provider === 'github') { showToast('Sudah GitHub.'); return; }
     if (state.provider === 'guest') {
-      // Modal pilih upgrade
-      showModal(
-        '🔗 Upgrade Akun',
-        'Pilih cara upgrade akun Guest Anda. Setelah upgrade, akun akan tersimpan permanen dan bisa login ulang di device manapun.',
-        'Batal',
-        null,
-        null,
-        false,
-        null
-      );
-      // Karena kita butuh custom button, kita ubah manual
-      modalMessage.innerHTML = `
-        <div style="text-align: left; background: #0c180c; padding: 12px; border-radius: 12px; margin-bottom: 12px;">
-          <div style="margin-bottom: 8px;"><b style="color:#a0d0a0;">📧 Email</b> — Daftar dengan email & password</div>
-          <div><b style="color:#a0d0a0;">🐙 GitHub</b> — Hubungkan dengan akun GitHub</div>
-        </div>
-        <p style="color: #8fa88f; font-size: 0.82rem;">Progress saat ini akan tetap tersimpan.</p>
-      `;
-      modalConfirm.textContent = '📧 Email';
-      modalCancel.textContent = 'Batal';
-      // Tambah tombol GitHub
-      const oldBtn = modalConfirm.cloneNode(true);
-      modalConfirm.parentNode.replaceChild(oldBtn, modalConfirm);
+      showModal('🔗 Upgrade Akun', '', 'Batal', null);
+      modalMessage.innerHTML = `<div style="text-align: left; background: #0c180c; padding: 12px; border-radius: 12px; margin-bottom: 12px;"><div style="margin-bottom: 8px;"><b style="color:#a0d0a0;">📧 Email</b> — Daftar dengan email & password</div><div><b style="color:#a0d0a0;">🐙 GitHub</b> — Hubungkan dengan akun GitHub</div></div><p style="color: #8fa88f; font-size: 0.82rem;">Progress saat ini akan tetap tersimpan.</p>`;
       modalButtons.innerHTML = '';
+      const btnCancel = document.createElement('button');
+      btnCancel.className = 'modal-cancel';
+      btnCancel.textContent = 'Batal';
+      const btnEmail = document.createElement('button');
+      btnEmail.className = 'modal-confirm';
+      btnEmail.textContent = '📧 Email';
       const btnGithub = document.createElement('button');
       btnGithub.className = 'modal-confirm';
       btnGithub.textContent = '🐙 GitHub';
       btnGithub.style.background = '#24292e';
-      const btnEmail = document.createElement('button');
-      btnEmail.className = 'modal-confirm';
-      btnEmail.textContent = '📧 Email';
-      const btnCancel = document.createElement('button');
-      btnCancel.className = 'modal-cancel';
-      btnCancel.textContent = 'Batal';
       modalButtons.appendChild(btnCancel);
       modalButtons.appendChild(btnEmail);
       modalButtons.appendChild(btnGithub);
       btnCancel.addEventListener('click', hideModal);
-      btnEmail.addEventListener('click', async () => {
-        hideModal();
-        await upgradeToEmail();
-      });
-      btnGithub.addEventListener('click', async () => {
-        hideModal();
-        await upgradeToGithub();
-      });
+      btnEmail.addEventListener('click', async () => { hideModal(); await upgradeToEmail(); });
+      btnGithub.addEventListener('click', async () => { hideModal(); await upgradeToGithub(); });
     } else if (state.provider === 'email') {
-      // Email → GitHub link
       try {
         const provider = new GithubAuthProvider();
         await signInWithPopup(auth, provider);
@@ -3495,7 +3613,6 @@
       } catch (e) { showToast('❌ ' + e.message); }
     }
   }
-
   async function upgradeToEmail() {
     const email = prompt('Email baru:');
     if (!email) return;
@@ -3512,7 +3629,6 @@
       showToast('❌ ' + msg);
     }
   }
-
   async function upgradeToGithub() {
     try {
       const provider = new GithubAuthProvider();
@@ -3525,12 +3641,8 @@
       showToast('❌ ' + msg);
     }
   }
-
   async function handleLogout() {
-    if (state.provider === 'guest') {
-      showToast('❌ Guest tidak bisa logout. Upgrade dulu!');
-      return;
-    }
+    if (state.provider === 'guest') { showToast('❌ Guest tidak bisa logout.'); return; }
     if (!confirm('Logout? Kamu bisa login kembali dengan Email/Password kamu.')) return;
     if (saveTimer) clearTimeout(saveTimer);
     await saveToCloud();
@@ -3540,27 +3652,14 @@
     clearLocalState();
     await signOut(auth);
   }
-
   async function handleDeleteAccount() {
     const isGuest = state.provider === 'guest';
     const uidToDelete = state.uid;
     const nameToDelete = state.name;
     const regionToDelete = { ...state.region };
-
     if (isGuest) {
-      // Guest: Modal khusus dengan opsi upgrade
-      showModal(
-        '⚠️ Hapus Akun Guest?',
-        `Semua progress "${nameToDelete}" akan DIHAPUS PERMANEN.\n\nKalau hanya ingin menyimpan progress, gunakan tombol Upgrade!`,
-        'Ya, Hapus',
-        async () => {
-          await performDeleteAccount(uidToDelete, nameToDelete, regionToDelete);
-        },
-        'HAPUS',
-        true,
-        true
-      );
-      // Tambah tombol "Upgrade Saja"
+      showModal('⚠️ Hapus Akun Guest?', '', 'Ya, Hapus', null, 'HAPUS', true);
+      modalMessage.innerHTML = `Semua progress "${escapeHtml(nameToDelete)}" akan DIHAPUS PERMANEN.<br><br>Kalau hanya ingin menyimpan progress, gunakan tombol Upgrade!`;
       modalButtons.innerHTML = '';
       const btnCancel = document.createElement('button');
       btnCancel.className = 'modal-cancel';
@@ -3570,29 +3669,14 @@
       btnConfirm.className = 'modal-confirm modal-danger';
       btnConfirm.textContent = 'Ya, Hapus';
       btnConfirm.disabled = true;
-      const input = modalInput;
-      input.oninput = () => {
-        btnConfirm.disabled = input.value.trim().toUpperCase() !== 'HAPUS';
-      };
-      btnConfirm.addEventListener('click', async () => {
-        hideModal();
-        await performDeleteAccount(uidToDelete, nameToDelete, regionToDelete);
-      });
+      modalInput.oninput = () => { btnConfirm.disabled = modalInput.value.trim().toUpperCase() !== 'HAPUS'; };
+      btnConfirm.addEventListener('click', async () => { hideModal(); await performDeleteAccount(uidToDelete, nameToDelete, regionToDelete); });
       modalButtons.appendChild(btnCancel);
       modalButtons.appendChild(btnConfirm);
     } else {
-      // Email/GitHub: konfirmasi biasa
-      showModal(
-        '⚠️ Hapus Akun?',
-        `Semua progress "${nameToDelete}" akan DIHAPUS PERMANEN. Ketik "HAPUS" untuk konfirmasi.`,
-        'Ya, Hapus',
-        async () => { await performDeleteAccount(uidToDelete, nameToDelete, regionToDelete); },
-        'HAPUS',
-        true
-      );
+      showModal('⚠️ Hapus Akun?', `Semua progress "${nameToDelete}" akan DIHAPUS PERMANEN. Ketik "HAPUS" untuk konfirmasi.`, 'Ya, Hapus', async () => { await performDeleteAccount(uidToDelete, nameToDelete, regionToDelete); }, 'HAPUS', true);
     }
   }
-
   async function performDeleteAccount(uidToDelete, nameToDelete, regionToDelete) {
     try {
       showToast('🗑️ Menghapus...', 3000);
@@ -3616,7 +3700,6 @@
       showToast('⚠️ Logout paksa.');
     }
   }
-
   function isBotName(name) {
     if (!name) return false;
     const lower = name.toLowerCase().trim();
@@ -3657,14 +3740,11 @@
         showToast(`🧹 ${count} akun bot dihapus`, 3000);
         if (lbView.unsubscribe) setTimeout(() => loadLeaderboard(), 500);
       }
-    } catch (e) { console.warn('Auto-cleanup error:', e); }
+    } catch (e) {}
   }
   async function handleAdminCleanup() {
     if (!state.isOwner) return;
-    showModal('🧹 Bersihkan Data Bot?',
-      `Hapus akun dengan kata kunci: ${BOT_KEYWORDS.join(', ')}. Lanjutkan?`,
-      'Ya, Bersihkan',
-      async () => { showToast('🧹 Memindai...', 3000); await autoCleanupBots(); });
+    showModal('🧹 Bersihkan Data Bot?', `Hapus akun dengan kata kunci: ${BOT_KEYWORDS.join(', ')}. Lanjutkan?`, 'Ya, Bersihkan', async () => { showToast('🧹 Memindai...', 3000); await autoCleanupBots(); });
   }
   function handleEditName() {
     const newName = prompt('Nama baru (jangan "Petani" saja):', state.name);
@@ -3724,7 +3804,6 @@
       state = DEFAULT_STATE();
       dbRef = null;
       stopHeartbeat();
-      hideDailyRewardModal();
       closeProfileModal();
       closeHelpModal();
       closeMenu();
@@ -3746,7 +3825,7 @@
   try {
     const redirectResult = await getRedirectResult(auth);
     if (redirectResult && redirectResult.user) console.log('✅ Redirect login berhasil:', redirectResult.user.displayName);
-  } catch (e) { console.warn('Redirect result error:', e); }
+  } catch (e) {}
 
   waterBtn.addEventListener('click', waterTree);
   fertilizeBtn.addEventListener('click', fertilizeTree);
@@ -3779,7 +3858,7 @@
   showWelcomeBannerOnLogin();
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v16.0 ready — Privacy & Guest Fix');
+  console.log('🌳 Compound Harvest v17.0 ready — Daily Reward');
 </script>
 </body>
 </html>
