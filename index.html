@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#1e2b1e">
-  <title>Compound Harvest 1 · v17.0</title>
+  <title>Compound Harvest 1 · v17.1</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { height: 100%; overflow: hidden; }
@@ -132,7 +132,6 @@
     .menu-btn:active { background: #2a3f2a; }
     .menu-btn.active { background: #4a7a4a; border-color: #a0d0a0; }
 
-    /* Dot notif di menu btn */
     .menu-btn .menu-dot {
       position: absolute; top: -2px; right: -2px;
       width: 12px; height: 12px;
@@ -217,7 +216,6 @@
     .btn-harvest { background: #c9a23f; color: #1e2b0e; border-color: #f5e56b;
       grid-column: span 2; font-size: 1.3rem; box-shadow: 0 6px 0 #7a5e1e; }
 
-    /* Leaderboard */
     .lb-controls { background: #162316; border-radius: 20px; padding: 12px; border: 1px solid #3a5a3a;
       display: flex; flex-direction: column; gap: 10px; }
     .lb-section-label { font-size: 0.75rem; color: #8fa88f; font-weight: 600;
@@ -336,7 +334,6 @@
     @keyframes shimmer { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
     .lb-skeleton .skel-bar { height: 12px; background: #2a3a2a; border-radius: 6px; }
 
-    /* Inventori */
     .inv-header { background: #162316; border-radius: 20px; padding: 14px 16px;
       border: 1px solid #3a5a3a; display: flex; justify-content: space-between;
       align-items: center; gap: 10px; }
@@ -371,7 +368,6 @@
       text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
       padding-left: 4px; margin-top: 4px; }
 
-    /* Shop */
     .shop-item { background: #1e2f1e; border-radius: 20px; padding: 14px 16px;
       display: flex; justify-content: space-between; align-items: center;
       border: 1px solid #497049; box-shadow: 0 4px 0 #0a130a; margin-bottom: 10px; }
@@ -387,7 +383,6 @@
       border-radius: 50px; justify-content: space-around; font-weight: 600;
       color: #d0e8c0; border: 1px solid #527a52; }
 
-    /* Profile */
     .profile-card { background: #1e2f1e; border-radius: 24px; padding: 16px;
       border: 1px solid #5b875b; display: flex; flex-direction: column; gap: 10px; }
     .profile-row { display: flex; justify-content: space-between; align-items: center;
@@ -448,7 +443,6 @@
     .region-warning { background: #5a3e1e; border: 1px solid #a08040; border-radius: 12px;
       padding: 10px 14px; color: #ffe0a0; font-size: 0.82rem; line-height: 1.5; }
 
-    /* Help (Bantu Siram) */
     .help-header {
       background: linear-gradient(160deg, #1e3a3e, #162c2e);
       border-radius: 20px; padding: 16px;
@@ -518,7 +512,6 @@
     .received-row .reply-btn:disabled { background: #2a3a2a;
       border-color: #4a5a4a; color: #6a7a6a; pointer-events: none; }
 
-    /* Privacy */
     .privacy-header {
       background: linear-gradient(160deg, #2a3a4a, #1a2a3a);
       border-radius: 20px; padding: 16px;
@@ -566,7 +559,7 @@
       padding: 12px 14px; border-radius: 8px; margin: 12px 0;
     }
 
-    /* ===== DAILY REWARD (v17.0) ===== */
+    /* ===== DAILY REWARD (v17.1) ===== */
     .daily-header {
       background: linear-gradient(160deg, #3a2a1e, #2a1e0e);
       border-radius: 20px; padding: 16px;
@@ -604,6 +597,24 @@
       border-radius: 10px; transition: width 0.4s ease;
     }
 
+    /* Hint: kapan bisa klaim berikutnya */
+    .daily-next-hint {
+      background: #0c180c;
+      border: 1px dashed #5b875b;
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #a0d0a0;
+      font-size: 0.78rem;
+      text-align: center;
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .daily-next-hint .hint-icon { font-size: 1.1rem; }
+    .daily-next-hint b { color: #ffe08a; }
+
     .daily-list {
       display: flex; flex-direction: column; gap: 8px;
     }
@@ -613,18 +624,28 @@
       display: flex; align-items: center; gap: 12px;
       transition: all 0.2s;
     }
+    /* Status: sudah diklaim */
     .daily-day-card.claimed {
       background: #0c180c; border-color: #5b875b;
       opacity: 0.7;
     }
+    /* Status: BISA DIKLAIM hari ini (hanya 1 card) */
     .daily-day-card.current {
       background: linear-gradient(160deg, #3a2e1e, #2a1e0e);
       border: 2px solid #ffd980;
       box-shadow: 0 0 16px rgba(255, 217, 128, 0.3);
     }
-    .daily-day-card.locked {
-      opacity: 0.4;
+    /* Status: BESOK (hari berikutnya, belum bisa klaim) */
+    .daily-day-card.next {
+      background: #162316;
+      border: 1px dashed #7fa07f;
+      opacity: 0.65;
     }
+    /* Status: TERKUNCI (hari-hari setelahnya) */
+    .daily-day-card.locked {
+      opacity: 0.35;
+    }
+
     .daily-day-number {
       width: 40px; height: 40px;
       border-radius: 50%;
@@ -647,6 +668,11 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.08); }
     }
+    .daily-day-card.next .daily-day-number {
+      background: #1a2a1a;
+      color: #a0d0a0;
+      border-color: #7fa07f;
+    }
     .daily-day-card.locked .daily-day-number {
       color: #6a7a6a; border-color: #3a4a3a;
     }
@@ -664,7 +690,10 @@
       color: #8fa88f; font-size: 0.72rem;
     }
     .daily-day-card.claimed .daily-day-status { color: #a0f0a0; }
-    .daily-day-card.current .daily-day-status { color: #ffd980; }
+    .daily-day-card.current .daily-day-status { color: #ffd980; font-weight: 700; }
+    .daily-day-card.next .daily-day-status { color: #a0d0a0; font-weight: 700; }
+    .daily-day-card.locked .daily-day-status { color: #6a7a6a; }
+
     .daily-claim-btn {
       background: linear-gradient(160deg, #c9a23f, #a0821f);
       border: 1px solid #ffe08a;
@@ -681,10 +710,17 @@
       50% { box-shadow: 0 4px 0 #6a5010, 0 0 16px rgba(255, 224, 138, 0.7); }
     }
     .daily-claim-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #6a5010; }
-    .daily-claim-btn:disabled {
-      background: #2a3a2a; color: #6a7a6a;
-      box-shadow: 0 3px 0 #1a1a1a;
-      pointer-events: none; animation: none;
+
+    /* Tombol "BESOK" (disabled, bukan tombol) */
+    .daily-tomorrow-btn {
+      background: #1a2a1a;
+      border: 1px dashed #7fa07f;
+      color: #a0d0a0;
+      padding: 8px 14px; border-radius: 30px;
+      font-weight: 800; font-size: 0.78rem;
+      flex-shrink: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     /* Daily help task */
@@ -715,10 +751,26 @@
     .daily-help-card .help-reward {
       color: #ffe08a; font-weight: 800; font-size: 0.95rem;
     }
+    .daily-help-card .help-action-btn {
+      background: linear-gradient(160deg, #c9a23f, #a0821f);
+      border: 1px solid #ffe08a;
+      color: #1e2b0e;
+      padding: 8px 14px; border-radius: 30px;
+      font-weight: 800; font-size: 0.85rem;
+      cursor: pointer; touch-action: manipulation;
+      box-shadow: 0 4px 0 #6a5010;
+      flex-shrink: 0;
+      animation: claimBtnGlow 1.5s ease infinite;
+    }
+    .daily-help-card .help-action-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #6a5010; }
+    .daily-help-card .help-action-btn:disabled {
+      background: #2a3a2a; color: #6a7a6a;
+      box-shadow: 0 3px 0 #1a1a1a;
+      pointer-events: none; animation: none; border-color: #3a4a3a;
+    }
+    .daily-help-card.done .help-action-btn { animation: none; }
 
-    /* ============================================ */
-    /* ===== BOTTOM NAV ===== */
-    /* ============================================ */
+    /* Bottom nav */
     .bottom-nav { flex-shrink: 0; background: #0f1a0f; display: flex;
       border-top: 2px solid #3f6b3f; padding: 8px 0;
       padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
@@ -734,14 +786,6 @@
     .nav-icon { font-size: 1.4rem; line-height: 1; display: block; }
     .nav-label { display: block; font-size: 0.68rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.3px; }
-    .nav-dot {
-      position: absolute; top: 4px; right: calc(50% - 16px);
-      width: 10px; height: 10px;
-      background: #ff4a4a; border-radius: 50%;
-      border: 2px solid #0f1a0f;
-      animation: dotPulse 1.5s ease infinite;
-    }
-    .nav-dot.hidden { display: none; }
 
     .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
       background: #2d4a2d; color: #f0ffe0; padding: 12px 24px; border-radius: 50px;
@@ -759,7 +803,6 @@
       animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Modals */
     .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85); z-index: 9998; display: flex;
       align-items: center; justify-content: center; padding: 20px; }
@@ -933,7 +976,6 @@
     .help-modal .help-confirm:disabled { background: #2a3a2a; color: #6a7a6a;
       box-shadow: 0 3px 0 #1a1a1a; pointer-events: none; }
 
-    /* Daily reward toast modal */
     .daily-claim-modal {
       background: linear-gradient(160deg, #3a2e1e, #1e2f1e);
       border: 2px solid #ffd980; border-radius: 28px; padding: 24px 20px;
@@ -971,7 +1013,6 @@
     }
     .daily-claim-modal .claim-ok-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #7a5e1e; }
 
-    /* Welcome Back modal */
     .wb-backdrop {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.95);
@@ -1089,7 +1130,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v17.0 · Daily Reward</p>
+    <p>v17.1 · Daily Fix</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -1189,7 +1230,7 @@
       <div class="small-note" id="pupukNote">Beri pupuk tiap 10 siram agar efek tetap 10 exp/L</div>
     </div>
 
-    <!-- DAILY REWARD (v17.0) -->
+    <!-- DAILY REWARD -->
     <div id="pageDaily" class="page">
       <div class="daily-header">
         <div class="title">📅 Daily Reward</div>
@@ -1208,6 +1249,11 @@
         </div>
       </div>
 
+      <div class="daily-next-hint" id="dailyNextHint">
+        <span class="hint-icon">⏰</span>
+        <span id="dailyNextHintText">Klaim Hari 1 sekarang!</span>
+      </div>
+
       <div class="inv-section-title">🎁 Login Harian</div>
       <div class="daily-list" id="dailyList"></div>
 
@@ -1219,7 +1265,7 @@
           <div class="help-desc" id="dailyHelpDesc">Bantu siram pemain lain hari ini</div>
           <div class="help-reward">Reward: $1.000</div>
         </div>
-        <button class="help-action-btn" id="dailyHelpBtn">Klaim</button>
+        <button class="help-action-btn" id="dailyHelpBtn">Belum</button>
       </div>
 
       <div class="small-note">💡 Login tiap hari untuk reward lebih besar. Streak reset setiap Senin.</div>
@@ -1363,7 +1409,7 @@
           <span style="color: #8fa88f; font-size: 0.78rem;">📜 <a id="privacyLinkAccount" style="color:#a0d0a0; text-decoration: underline; cursor: pointer;">Kebijakan Privasi</a></span>
         </div>
       </div>
-      <div class="small-note">Compound Harvest 1 · v17.0</div>
+      <div class="small-note">Compound Harvest 1 · v17.1</div>
     </div>
   </main>
 
@@ -1526,7 +1572,6 @@
   const WB_MIN_DAYS = 7;
   const WB_TYPEWRITER_TIER = 4;
 
-  // ===== DAILY REWARD (v17.0) =====
   const DAILY_REWARDS = [
     { day: 1, amount: 500 },
     { day: 2, amount: 1000 },
@@ -1562,7 +1607,6 @@
     region: { negara: '', provinsi: '', kabupaten: '', kecamatan: '' },
     regionLocked: false, isOwner: false,
     lastLogin: 0,
-    // Daily reward state
     dailyLogin: { weekId: '', daysClaimed: [], currentDay: 1, lastClaimDate: '' },
     dailyHelpTask: { date: '', helpedToday: 0, claimed: false },
   });
@@ -1573,7 +1617,7 @@
   let heartbeatTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v170_state';
+  const LOCAL_KEY = 'compoundHarvest_v171_state';
 
   let helpQuota = { totalSent: 0, playersHelped: {}, date: '' };
   let helpPool = [];
@@ -1669,7 +1713,6 @@
   const loginPrivacyLink = $('loginPrivacyLink');
   const privacyLinkAccount = $('privacyLinkAccount');
 
-  // Daily reward DOM
   const dailyList = $('dailyList');
   const dailyProgressValue = $('dailyProgressValue');
   const dailyProgressFill = $('dailyProgressFill');
@@ -1678,6 +1721,8 @@
   const dailyHelpTitle = $('dailyHelpTitle');
   const dailyHelpDesc = $('dailyHelpDesc');
   const dailyHelpBtn = $('dailyHelpBtn');
+  const dailyNextHint = $('dailyNextHint');
+  const dailyNextHintText = $('dailyNextHintText');
   const dailyClaimBackdrop = $('dailyClaimBackdrop');
   const dailyClaimTitle = $('dailyClaimTitle');
   const dailyClaimDay = $('dailyClaimDay');
@@ -1824,7 +1869,6 @@
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
-  // ISO Week ID (standar internasional)
   function getWeekId() {
     const d = new Date();
     const dayNum = d.getUTCDay() || 7;
@@ -1849,69 +1893,53 @@
     lbList.innerHTML = html;
   }
 
-  // ===== DAILY REWARD (v17.0) =====
+  // ===== DAILY REWARD (v17.1) =====
   function checkAndResetDailyData() {
     const today = getTodayKey();
     const thisWeek = getWeekId();
-
-    // Reset daily login kalau minggu baru
     if (!state.dailyLogin || state.dailyLogin.weekId !== thisWeek) {
-      console.log(`📅 Week baru: ${thisWeek} → reset daily streak`);
-      state.dailyLogin = {
-        weekId: thisWeek,
-        daysClaimed: [],
-        currentDay: 1,
-        lastClaimDate: ''
-      };
+      state.dailyLogin = { weekId: thisWeek, daysClaimed: [], currentDay: 1, lastClaimDate: '' };
     }
-
-    // Reset daily help task kalau tanggal beda
     if (!state.dailyHelpTask || state.dailyHelpTask.date !== today) {
-      state.dailyHelpTask = {
-        date: today,
-        helpedToday: 0,
-        claimed: false
-      };
+      state.dailyHelpTask = { date: today, helpedToday: 0, claimed: false };
     }
+  }
+
+  function hasClaimedToday() {
+    const today = getTodayKey();
+    return state.dailyLogin && state.dailyLogin.lastClaimDate === today;
   }
 
   function canClaimTodayLogin() {
-    const today = getTodayKey();
+    if (hasClaimedToday()) return false;
     const dl = state.dailyLogin;
     if (!dl) return false;
-    if (dl.lastClaimDate === today) return false; // Sudah klaim hari ini
-    if (dl.daysClaimed.length >= 7) return false; // Sudah 7 hari (harusnya reset Senin)
+    if (dl.daysClaimed.length >= 7) return false;
     return true;
   }
 
-  function getCurrentDayReward() {
-    const dl = state.dailyLogin;
-    if (!dl) return DAILY_REWARDS[0];
+  function getNextRewardDay() {
+    const dl = state.dailyLogin || { daysClaimed: [] };
     const nextDay = dl.daysClaimed.length + 1;
-    if (nextDay > 7) return DAILY_REWARDS[6];
-    return DAILY_REWARDS[nextDay - 1];
+    if (nextDay > 7) return 7;
+    return nextDay;
   }
 
   async function claimDailyLogin() {
     if (!canClaimTodayLogin()) {
-      showToast('❌ Sudah klaim hari ini');
+      showToast('❌ Sudah klaim hari ini. Coba besok!');
       return;
     }
     const today = getTodayKey();
     const dl = state.dailyLogin;
     const nextDay = dl.daysClaimed.length + 1;
     const reward = DAILY_REWARDS[nextDay - 1];
-
-    // Update state
     dl.daysClaimed.push(nextDay);
     dl.currentDay = nextDay + 1;
     dl.lastClaimDate = today;
     state.money += reward.amount;
-
     updateUI();
     await saveToCloud();
-
-    // Show claim modal
     showDailyClaimModal(nextDay, reward.amount);
   }
 
@@ -1920,66 +1948,92 @@
     dailyClaimDay.textContent = `HARI ${day}`;
     dailyClaimAmount.textContent = `+$${formatNumber(amount)}`;
     if (day === 7) {
-      dailyClaimSub.textContent = '🎉 Max reward! Besok reset ke Hari 1.';
+      dailyClaimSub.textContent = '🎉 Max reward minggu ini! Besok mulai lagi dari Hari 1.';
     } else {
-      dailyClaimSub.textContent = 'Login besok untuk dapat lebih besar!';
+      dailyClaimSub.textContent = 'Login besok untuk dapat reward lebih besar!';
     }
     dailyClaimBackdrop.classList.remove('hidden');
   }
-
   function hideDailyClaimModal() {
     dailyClaimBackdrop.classList.add('hidden');
   }
 
   function renderDailyPage() {
     if (!dailyList) return;
-
     const dl = state.dailyLogin || { daysClaimed: [], currentDay: 1 };
     const claimed = dl.daysClaimed.length;
     const progressPct = (claimed / 7) * 100;
-
-    // Update progress bar
     dailyProgressValue.textContent = `${claimed}/7 hari`;
     dailyProgressFill.style.width = progressPct + '%';
+
+    // ===== FIX BUG v17.1: Tentukan status per hari =====
+    const today = getTodayKey();
+    const alreadyClaimedToday = dl.lastClaimDate === today;
+
+    // Hari yang bisa diklaim = hanya kalau BELUM klaim hari ini
+    // Kalau sudah klaim hari ini, semua card jadi claimed/next/locked
+    const claimableDayNum = canClaimTodayLogin() ? (claimed + 1) : -1;
+    // Hari berikutnya = setelah hari yang bisa diklaim (kalau sudah klaim hari ini)
+    const nextDayNum = alreadyClaimedToday && claimed < 7 ? (claimed + 1) : -1;
 
     // Render 7 day cards
     let html = '';
     for (let i = 0; i < 7; i++) {
       const dayNum = i + 1;
       const isClaimed = dl.daysClaimed.includes(dayNum);
-      const isCurrent = !isClaimed && (claimed === i);
-      const isLocked = !isClaimed && !isCurrent;
-      const reward = DAILY_REWARDS[i];
+      const isClaimable = (dayNum === claimableDayNum);
+      const isNext = (dayNum === nextDayNum);
+      const isLocked = !isClaimed && !isClaimable && !isNext;
 
       let className = 'daily-day-card';
       if (isClaimed) className += ' claimed';
-      else if (isCurrent) className += ' current';
+      else if (isClaimable) className += ' current';
+      else if (isNext) className += ' next';
       else if (isLocked) className += ' locked';
 
       let status = '';
       if (isClaimed) status = '✅ Sudah diklaim';
-      else if (isCurrent) status = '🎁 Bisa klaim sekarang!';
+      else if (isClaimable) status = '🎁 Bisa klaim sekarang!';
+      else if (isNext) status = '⏰ Besok';
       else status = '🔒 Terkunci';
+
+      // Tombol hanya muncul kalau isClaimable
+      let btnHtml = '';
+      if (isClaimable) {
+        btnHtml = `<button class="daily-claim-btn" data-day="${dayNum}">KLAIM</button>`;
+      } else if (isNext) {
+        btnHtml = `<span class="daily-tomorrow-btn">Besok</span>`;
+      }
 
       html += `
         <div class="${className}">
           <div class="daily-day-number">${dayNum}</div>
           <div class="daily-day-info">
             <div class="daily-day-label">Hari ${dayNum}${dayNum === 7 ? ' 🏆 MAX' : ''}</div>
-            <div class="daily-day-reward">💰 $${formatNumber(reward.amount)}</div>
+            <div class="daily-day-reward">💰 $${formatNumber(DAILY_REWARDS[i].amount)}</div>
             <div class="daily-day-status">${status}</div>
           </div>
-          ${isCurrent ? `<button class="daily-claim-btn" data-day="${dayNum}">KLAIM</button>` : ''}
+          ${btnHtml}
         </div>`;
     }
     dailyList.innerHTML = html;
 
-    // Attach claim handler
+    // Attach claim handler (hanya 1 tombol)
     dailyList.querySelectorAll('.daily-claim-btn').forEach(btn => {
       btn.addEventListener('click', claimDailyLogin);
     });
 
-    // Render daily help task
+    // Update hint
+    if (canClaimTodayLogin()) {
+      const nextDay = getNextRewardDay();
+      dailyNextHintText.innerHTML = `🎁 Klaim <b>Hari ${nextDay}</b> sekarang! ($${formatNumber(DAILY_REWARDS[nextDay - 1].amount)})`;
+    } else if (claimed >= 7) {
+      dailyNextHintText.innerHTML = `🏆 Streak minggu ini <b>selesai!</b> Senin depan mulai lagi.`;
+    } else {
+      const nextDay = claimed + 1;
+      dailyNextHintText.innerHTML = `⏰ Klaim berikutnya: <b>Hari ${nextDay}</b> (besok). Jangan bolong ya!`;
+    }
+
     renderDailyHelpTask();
   }
 
@@ -1988,7 +2042,6 @@
     const task = state.dailyHelpTask || { date: '', helpedToday: 0, claimed: false };
     const isToday = task.date === today;
     const canClaim = isToday && task.helpedToday >= 1 && !task.claimed;
-
     if (task.claimed) {
       dailyHelpCard.classList.add('done');
       dailyHelpIcon.textContent = '✅';
@@ -2000,14 +2053,7 @@
       dailyHelpCard.classList.remove('done');
       dailyHelpIcon.textContent = '🎁';
       dailyHelpTitle.textContent = 'Bisa Klaim!';
-      dailyHelpDesc.textContent = 'Kamu sudah bantu siram hari ini';
-      dailyHelpBtn.textContent = 'KLAIM';
-      dailyHelpBtn.disabled = false;
-    } else if (isToday && task.helpedToday >= 1) {
-      dailyHelpCard.classList.remove('done');
-      dailyHelpIcon.textContent = '💧';
-      dailyHelpTitle.textContent = 'Bantu Siram 1x';
-      dailyHelpDesc.textContent = `Sudah bantu ${task.helpedToday}x, bisa klaim`;
+      dailyHelpDesc.textContent = `Sudah bantu ${task.helpedToday}x hari ini`;
       dailyHelpBtn.textContent = 'KLAIM';
       dailyHelpBtn.disabled = false;
     } else {
@@ -2023,37 +2069,26 @@
   async function claimDailyHelp() {
     const today = getTodayKey();
     const task = state.dailyHelpTask;
-    if (!task || task.date !== today) {
-      showToast('❌ Belum bantu siram hari ini');
-      return;
-    }
-    if (task.helpedToday < 1) {
-      showToast('❌ Bantu siram dulu minimal 1x');
-      return;
-    }
-    if (task.claimed) {
-      showToast('❌ Sudah klaim hari ini');
-      return;
-    }
-
+    if (!task || task.date !== today) { showToast('❌ Belum bantu siram hari ini'); return; }
+    if (task.helpedToday < 1) { showToast('❌ Bantu siram dulu minimal 1x'); return; }
+    if (task.claimed) { showToast('❌ Sudah klaim hari ini'); return; }
     task.claimed = true;
     state.money += DAILY_HELP_REWARD;
-
     updateUI();
     await saveToCloud();
-
-    showDailyClaimModal('HELP', DAILY_HELP_REWARD);
+    dailyClaimTitle.textContent = 'Reward Bantu Siram!';
     dailyClaimDay.textContent = '💧 BANTU SIRAM';
+    dailyClaimAmount.textContent = `+$${formatNumber(DAILY_HELP_REWARD)}`;
+    dailyClaimSub.textContent = 'Terima kasih sudah bantu pemain lain!';
+    dailyClaimBackdrop.classList.remove('hidden');
   }
 
   function updateMenuDot() {
-    // Cek apakah ada daily reward yang bisa diklaim
     const canClaim = canClaimTodayLogin();
     const helpTask = state.dailyHelpTask || {};
     const today = getTodayKey();
     const canClaimHelp = helpTask.date === today && helpTask.helpedToday >= 1 && !helpTask.claimed;
     const hasNotif = canClaim || canClaimHelp;
-
     if (hasNotif) {
       menuDot.classList.remove('hidden');
       menuDailyDot.classList.remove('hidden');
@@ -2157,9 +2192,7 @@
         <li><strong>Authentication</strong>: Firebase Auth dengan password hashing</li>
         <li><strong>Database Rules</strong>: Hanya pemilik akun yang bisa akses data pribadi</li>
       </ul>
-      <div class="highlight-box">
-        <strong>Catatan</strong>: Tidak ada sistem yang 100% aman. Jika ada pelanggaran data, kami akan menginformasikan Anda dalam 72 jam.
-      </div>
+      <div class="highlight-box"><strong>Catatan</strong>: Tidak ada sistem yang 100% aman. Jika ada pelanggaran data, kami akan menginformasikan Anda dalam 72 jam.</div>
       <h2>8. Cookie & Local Storage</h2>
       <p>Kami menggunakan:</p>
       <ul>
@@ -2666,13 +2699,10 @@
       updates[`helpQuota/${state.uid}/${today}`] = { totalSent: helpQuota.totalSent, playersHelped: helpQuota.playersHelped, date: today };
       updates[`helpReceived/${targetUid}/${today}/${state.uid}`] = { name: state.name || 'Petani', amount: amount, ts: now };
       updates[`helpPool/${targetUid}/${state.uid}`] = { amount: amount, expGain: amount * HELP_EXP_PER_LITER, senderName: state.name || 'Petani', ts: now, applied: false };
-
-      // Update daily help task
       const task = state.dailyHelpTask || { date: today, helpedToday: 0, claimed: false };
       if (task.date !== today) { task.date = today; task.helpedToday = 0; task.claimed = false; }
       task.helpedToday += 1;
       state.dailyHelpTask = task;
-
       await update(ref(db), updates);
       helpCooldownUntil = now + HELP_COOLDOWN_MS;
       startCooldownDisplay();
@@ -2777,7 +2807,6 @@
     waterDisplay.textContent = state.water;
     fertilizerDisplay.textContent = state.fertilizer;
     totalExpBadge.textContent = `🌟 Total Exp: ${formatNumber(state.totalExp)}`;
-    // Streak badge
     const dl = state.dailyLogin || { daysClaimed: [] };
     dailyBadge.textContent = `📅 Streak: ${dl.daysClaimed.length}/7`;
 
@@ -2824,7 +2853,6 @@
     profileTotalExp.textContent = formatNumber(state.totalExp);
     profileStreak.textContent = `${dl.daysClaimed.length}/7 hari`;
 
-    // Guest vs Email/GitHub
     if (state.provider === 'guest') {
       logoutBtn.classList.add('hidden');
       guestInfoCard.classList.remove('hidden');
@@ -2936,8 +2964,6 @@
           dailyLogin: data.dailyLogin || { weekId: '', daysClaimed: [], currentDay: 1, lastClaimDate: '' },
           dailyHelpTask: data.dailyHelpTask || { date: '', helpedToday: 0, claimed: false },
         });
-
-        // Welcome back check
         const lastLogin = data.lastLogin || 0;
         if (lastLogin > 0) {
           const daysSince = Math.floor((Date.now() - lastLogin) / (1000 * 60 * 60 * 24));
@@ -2957,10 +2983,7 @@
         await saveToCloud();
         showToast(`🌱 Selamat datang, ${state.name}!`);
       }
-
-      // Reset daily data kalau perlu
       checkAndResetDailyData();
-
       updateUI();
       updateLeaderboardEntries().catch(() => {});
       startHeartbeat();
@@ -2968,8 +2991,6 @@
         applyPendingHelp();
         renderReceivedSection();
       }).catch(() => {});
-
-      // Welcome back modal (prioritas)
       setTimeout(() => {
         if (wbData && !isNewAccount) showWelcomeBackModal(wbData);
       }, isNewAccount ? 800 : 500);
@@ -3341,6 +3362,7 @@
   privacyLinkAccount.addEventListener('click', () => switchPage('privacy', 'akun'));
 
   dailyClaimOkBtn.addEventListener('click', hideDailyClaimModal);
+  dailyHelpBtn.addEventListener('click', claimDailyHelp);
 
   let modalCallback = null;
   function showModal(title, message, confirmText, callback, requireWord, danger) {
@@ -3466,8 +3488,6 @@
   });
   regionModalConfirm.addEventListener('click', confirmRegionLock);
   regionModalBackdrop.addEventListener('click', e => { if (e.target === regionModalBackdrop) closeRegionModal(); });
-
-  dailyHelpBtn.addEventListener('click', claimDailyHelp);
 
   function switchLoginTab(tab) {
     if (tab === 'login') {
@@ -3858,7 +3878,7 @@
   showWelcomeBannerOnLogin();
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v17.0 ready — Daily Reward');
+  console.log('🌳 Compound Harvest v17.1 ready — Daily UI Fix');
 </script>
 </body>
 </html>
