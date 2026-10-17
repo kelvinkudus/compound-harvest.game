@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#1e2b1e">
-  <title>Compound Harvest 1 · v17.1</title>
+  <title>Compound Harvest 1 · v18.0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { height: 100%; overflow: hidden; }
@@ -135,10 +135,8 @@
     .menu-btn .menu-dot {
       position: absolute; top: -2px; right: -2px;
       width: 12px; height: 12px;
-      background: #ff4a4a;
-      border: 2px solid #0f1a0f;
-      border-radius: 50%;
-      animation: dotPulse 1.5s ease infinite;
+      background: #ff4a4a; border: 2px solid #0f1a0f;
+      border-radius: 50%; animation: dotPulse 1.5s ease infinite;
     }
     .menu-btn .menu-dot.hidden { display: none; }
     @keyframes dotPulse {
@@ -169,9 +167,7 @@
     .dropdown-item .icon { font-size: 1.2rem; }
     .dropdown-item .item-dot {
       position: absolute; top: 8px; right: 8px;
-      width: 8px; height: 8px;
-      background: #ff4a4a;
-      border-radius: 50%;
+      width: 8px; height: 8px; background: #ff4a4a; border-radius: 50%;
     }
     .dropdown-item .item-dot.hidden { display: none; }
     .dropdown-divider { height: 1px; background: #3a5a3a; margin: 6px 4px; }
@@ -418,6 +414,7 @@
     .admin-btn { background: #4a3d2a; border-color: #a08050; color: #ffe08a; }
     .delete-btn { background: #8a2a2a; border-color: #c06060; }
     .lock-btn { background: #4a3a1e; border-color: #a08040; color: #ffd980; }
+    .frame-btn { background: #4a3a7a; border-color: #8a7ac0; color: #d0c0ff; }
     .upgrade-cta-btn {
       background: linear-gradient(160deg, #4a7a4a, #2a5a2a);
       border: 1px solid #a0d0a0; color: #fff;
@@ -559,7 +556,7 @@
       padding: 12px 14px; border-radius: 8px; margin: 12px 0;
     }
 
-    /* ===== DAILY REWARD (v17.1) ===== */
+    /* Daily reward */
     .daily-header {
       background: linear-gradient(160deg, #3a2a1e, #2a1e0e);
       border-radius: 20px; padding: 16px;
@@ -574,11 +571,9 @@
       color: #ffb060; font-size: 0.78rem; line-height: 1.5;
     }
     .daily-header .subtitle b { color: #ffe08a; }
-
     .daily-progress {
       background: #0c180c; border-radius: 14px;
-      padding: 12px; border: 1px solid #3a5a3a;
-      margin-top: 4px;
+      padding: 12px; border: 1px solid #3a5a3a; margin-top: 4px;
     }
     .daily-progress .label {
       color: #8fa88f; font-size: 0.72rem;
@@ -596,86 +591,51 @@
       background: linear-gradient(90deg, #ffd980, #ffb060);
       border-radius: 10px; transition: width 0.4s ease;
     }
-
-    /* Hint: kapan bisa klaim berikutnya */
     .daily-next-hint {
-      background: #0c180c;
-      border: 1px dashed #5b875b;
-      border-radius: 12px;
-      padding: 10px 14px;
-      color: #a0d0a0;
-      font-size: 0.78rem;
-      text-align: center;
-      line-height: 1.5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      background: #0c180c; border: 1px dashed #5b875b;
+      border-radius: 12px; padding: 10px 14px;
+      color: #a0d0a0; font-size: 0.78rem;
+      text-align: center; line-height: 1.5;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .daily-next-hint .hint-icon { font-size: 1.1rem; }
     .daily-next-hint b { color: #ffe08a; }
-
-    .daily-list {
-      display: flex; flex-direction: column; gap: 8px;
-    }
+    .daily-list { display: flex; flex-direction: column; gap: 8px; }
     .daily-day-card {
       background: #162316; border-radius: 16px;
       padding: 12px 14px; border: 1px solid #3a5a3a;
       display: flex; align-items: center; gap: 12px;
       transition: all 0.2s;
     }
-    /* Status: sudah diklaim */
-    .daily-day-card.claimed {
-      background: #0c180c; border-color: #5b875b;
-      opacity: 0.7;
-    }
-    /* Status: BISA DIKLAIM hari ini (hanya 1 card) */
+    .daily-day-card.claimed { background: #0c180c; border-color: #5b875b; opacity: 0.7; }
     .daily-day-card.current {
       background: linear-gradient(160deg, #3a2e1e, #2a1e0e);
       border: 2px solid #ffd980;
       box-shadow: 0 0 16px rgba(255, 217, 128, 0.3);
     }
-    /* Status: BESOK (hari berikutnya, belum bisa klaim) */
     .daily-day-card.next {
       background: #162316;
       border: 1px dashed #7fa07f;
       opacity: 0.65;
     }
-    /* Status: TERKUNCI (hari-hari setelahnya) */
-    .daily-day-card.locked {
-      opacity: 0.35;
-    }
-
+    .daily-day-card.locked { opacity: 0.35; }
     .daily-day-number {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: #0c180c;
-      border: 2px solid #5b875b;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #0c180c; border: 2px solid #5b875b;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 1rem;
-      color: #a0d0a0; flex-shrink: 0;
+      font-weight: 800; font-size: 1rem; color: #a0d0a0; flex-shrink: 0;
     }
-    .daily-day-card.claimed .daily-day-number {
-      background: #1e3a1e; color: #a0f0a0;
-      border-color: #5b875b;
-    }
+    .daily-day-card.claimed .daily-day-number { background: #1e3a1e; color: #a0f0a0; border-color: #5b875b; }
     .daily-day-card.current .daily-day-number {
-      background: #4a3a1e; color: #ffd980;
-      border-color: #ffd980;
+      background: #4a3a1e; color: #ffd980; border-color: #ffd980;
       animation: dayNumberPulse 1.5s ease infinite;
     }
     @keyframes dayNumberPulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.08); }
     }
-    .daily-day-card.next .daily-day-number {
-      background: #1a2a1a;
-      color: #a0d0a0;
-      border-color: #7fa07f;
-    }
-    .daily-day-card.locked .daily-day-number {
-      color: #6a7a6a; border-color: #3a4a3a;
-    }
+    .daily-day-card.next .daily-day-number { background: #1a2a1a; color: #a0d0a0; border-color: #7fa07f; }
+    .daily-day-card.locked .daily-day-number { color: #6a7a6a; border-color: #3a4a3a; }
     .daily-day-info { flex: 1; min-width: 0; }
     .daily-day-label {
       color: #8fa88f; font-size: 0.72rem;
@@ -686,23 +646,18 @@
       color: #ffe08a; font-weight: 800; font-size: 1rem;
       display: flex; align-items: center; gap: 6px;
     }
-    .daily-day-status {
-      color: #8fa88f; font-size: 0.72rem;
-    }
+    .daily-day-status { color: #8fa88f; font-size: 0.72rem; }
     .daily-day-card.claimed .daily-day-status { color: #a0f0a0; }
     .daily-day-card.current .daily-day-status { color: #ffd980; font-weight: 700; }
     .daily-day-card.next .daily-day-status { color: #a0d0a0; font-weight: 700; }
     .daily-day-card.locked .daily-day-status { color: #6a7a6a; }
-
     .daily-claim-btn {
       background: linear-gradient(160deg, #c9a23f, #a0821f);
-      border: 1px solid #ffe08a;
-      color: #1e2b0e;
+      border: 1px solid #ffe08a; color: #1e2b0e;
       padding: 8px 14px; border-radius: 30px;
       font-weight: 800; font-size: 0.85rem;
       cursor: pointer; touch-action: manipulation;
-      box-shadow: 0 4px 0 #6a5010;
-      flex-shrink: 0;
+      box-shadow: 0 4px 0 #6a5010; flex-shrink: 0;
       animation: claimBtnGlow 1.5s ease infinite;
     }
     @keyframes claimBtnGlow {
@@ -710,56 +665,34 @@
       50% { box-shadow: 0 4px 0 #6a5010, 0 0 16px rgba(255, 224, 138, 0.7); }
     }
     .daily-claim-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #6a5010; }
-
-    /* Tombol "BESOK" (disabled, bukan tombol) */
     .daily-tomorrow-btn {
-      background: #1a2a1a;
-      border: 1px dashed #7fa07f;
-      color: #a0d0a0;
-      padding: 8px 14px; border-radius: 30px;
+      background: #1a2a1a; border: 1px dashed #7fa07f;
+      color: #a0d0a0; padding: 8px 14px; border-radius: 30px;
       font-weight: 800; font-size: 0.78rem;
-      flex-shrink: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.5px;
     }
-
-    /* Daily help task */
     .daily-help-card {
       background: linear-gradient(160deg, #1e3a3e, #162c2e);
       border: 1px solid #4a7a8a;
       border-radius: 18px; padding: 14px;
       display: flex; align-items: center; gap: 12px;
     }
-    .daily-help-card.done {
-      opacity: 0.6;
-      background: #162316;
-      border-color: #3a5a3a;
-    }
-    .daily-help-card .help-icon {
-      font-size: 2rem; flex-shrink: 0;
-    }
+    .daily-help-card.done { opacity: 0.6; background: #162316; border-color: #3a5a3a; }
+    .daily-help-card .help-icon { font-size: 2rem; flex-shrink: 0; }
     .daily-help-card .help-info { flex: 1; min-width: 0; }
     .daily-help-card .help-title {
-      color: #80d0ff; font-weight: 700; font-size: 0.95rem;
-      margin-bottom: 2px;
+      color: #80d0ff; font-weight: 700; font-size: 0.95rem; margin-bottom: 2px;
     }
     .daily-help-card.done .help-title { color: #a0f0a0; }
-    .daily-help-card .help-desc {
-      color: #8fa88f; font-size: 0.75rem;
-      margin-bottom: 2px;
-    }
-    .daily-help-card .help-reward {
-      color: #ffe08a; font-weight: 800; font-size: 0.95rem;
-    }
+    .daily-help-card .help-desc { color: #8fa88f; font-size: 0.75rem; margin-bottom: 2px; }
+    .daily-help-card .help-reward { color: #ffe08a; font-weight: 800; font-size: 0.95rem; }
     .daily-help-card .help-action-btn {
       background: linear-gradient(160deg, #c9a23f, #a0821f);
-      border: 1px solid #ffe08a;
-      color: #1e2b0e;
+      border: 1px solid #ffe08a; color: #1e2b0e;
       padding: 8px 14px; border-radius: 30px;
       font-weight: 800; font-size: 0.85rem;
       cursor: pointer; touch-action: manipulation;
-      box-shadow: 0 4px 0 #6a5010;
-      flex-shrink: 0;
+      box-shadow: 0 4px 0 #6a5010; flex-shrink: 0;
       animation: claimBtnGlow 1.5s ease infinite;
     }
     .daily-help-card .help-action-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #6a5010; }
@@ -832,6 +765,9 @@
     .modal-confirm:disabled { background: #2a3a2a; color: #6a7a6a; cursor: not-allowed; }
     .modal-danger { background: #8a2a2a; color: #fff; }
 
+    /* ============================================ */
+    /* ===== PROFILE MODAL + FRAME PREMIUM (v18.0) ===== */
+    /* ============================================ */
     .profile-modal {
       background: linear-gradient(160deg, #1e2f1e, #162316);
       border-radius: 28px; padding: 24px 20px;
@@ -840,18 +776,237 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.7);
       position: relative;
       animation: profilePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: border-color 0.3s, box-shadow 0.3s;
+      margin: 20px;  /* ruang untuk badge frame */
     }
     @keyframes profilePop {
       0% { transform: scale(0.7); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
+
+    /* === FRAME PREMIUM === */
+    /* Tier 1: Silver Frame */
+    .profile-modal.frame-silver {
+      border: 3px solid #a8a8b0;
+      box-shadow: 0 0 30px rgba(168, 168, 176, 0.5),
+                  0 0 60px rgba(192, 192, 200, 0.3),
+                  inset 0 0 20px rgba(192, 192, 200, 0.1),
+                  0 20px 60px rgba(0,0,0,0.7);
+      background:
+        repeating-linear-gradient(45deg,
+          rgba(200, 200, 210, 0.04) 0px,
+          rgba(200, 200, 210, 0.04) 2px,
+          transparent 2px, transparent 8px),
+        linear-gradient(160deg, #1e2f1e, #162316);
+    }
+    /* Tier 2: Gold Frame */
+    .profile-modal.frame-gold {
+      border: 3px solid #ffd700;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.6),
+                  0 0 80px rgba(255, 215, 0, 0.3),
+                  inset 0 0 25px rgba(255, 215, 0, 0.15),
+                  0 20px 60px rgba(0,0,0,0.7);
+      background:
+        repeating-linear-gradient(45deg,
+          rgba(255, 224, 138, 0.06) 0px,
+          rgba(255, 224, 138, 0.06) 3px,
+          transparent 3px, transparent 7px),
+        repeating-linear-gradient(-45deg,
+          rgba(255, 215, 0, 0.04) 0px,
+          rgba(255, 215, 0, 0.04) 2px,
+          transparent 2px, transparent 8px),
+        linear-gradient(160deg, #2e2416, #1e1608);
+    }
+    /* Tier 3: Platinum Frame */
+    .profile-modal.frame-platinum {
+      border: 3px solid #80d0ff;
+      box-shadow: 0 0 50px rgba(128, 208, 255, 0.7),
+                  0 0 100px rgba(128, 208, 255, 0.35),
+                  inset 0 0 30px rgba(128, 208, 255, 0.15),
+                  0 20px 60px rgba(0,0,0,0.7);
+      background:
+        linear-gradient(135deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          transparent 30%,
+          transparent 70%,
+          rgba(255, 255, 255, 0.08) 100%),
+        linear-gradient(160deg, #1a2a3a, #101a28);
+      position: relative;
+    }
+    .profile-modal.frame-platinum::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.15),
+        transparent);
+      border-radius: 28px;
+      animation: platinumShine 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes platinumShine {
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
+    }
+    /* Tier 4: Legendary Frame */
+    .profile-modal.frame-legendary {
+      border: 3px solid #b980ff;
+      box-shadow: 0 0 60px rgba(185, 128, 255, 0.8),
+                  0 0 120px rgba(255, 215, 0, 0.4),
+                  inset 0 0 30px rgba(185, 128, 255, 0.2),
+                  0 20px 60px rgba(0,0,0,0.7);
+      background:
+        radial-gradient(circle at 30% 20%, rgba(185, 128, 255, 0.1), transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(255, 215, 0, 0.08), transparent 50%),
+        linear-gradient(160deg, #2a1e3a, #1e142a);
+      animation: legendaryPulse 3s ease-in-out infinite;
+    }
+    @keyframes legendaryPulse {
+      0%, 100% {
+        box-shadow: 0 0 60px rgba(185, 128, 255, 0.8),
+                    0 0 120px rgba(255, 215, 0, 0.4),
+                    inset 0 0 30px rgba(185, 128, 255, 0.2),
+                    0 20px 60px rgba(0,0,0,0.7);
+      }
+      50% {
+        box-shadow: 0 0 80px rgba(185, 128, 255, 1),
+                    0 0 160px rgba(255, 215, 0, 0.6),
+                    inset 0 0 40px rgba(185, 128, 255, 0.3),
+                    0 20px 60px rgba(0,0,0,0.7);
+      }
+    }
+    /* Tier 5: Harvest Frame */
+    .profile-modal.frame-harvest {
+      border: 3px solid #4ade80;
+      box-shadow: 0 0 70px rgba(74, 222, 128, 0.9),
+                  0 0 140px rgba(255, 100, 200, 0.5),
+                  0 0 180px rgba(100, 200, 255, 0.4),
+                  inset 0 0 30px rgba(74, 222, 128, 0.2),
+                  0 20px 60px rgba(0,0,0,0.7);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(74, 222, 128, 0.15), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255, 100, 200, 0.12), transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(100, 200, 255, 0.12), transparent 40%),
+        linear-gradient(160deg, #1a2e1a, #0f1f0f);
+      animation: harvestPulse 4s ease-in-out infinite;
+      position: relative;
+    }
+    @keyframes harvestPulse {
+      0%, 100% {
+        box-shadow: 0 0 70px rgba(74, 222, 128, 0.9),
+                    0 0 140px rgba(255, 100, 200, 0.5),
+                    inset 0 0 30px rgba(74, 222, 128, 0.2),
+                    0 20px 60px rgba(0,0,0,0.7);
+      }
+      50% {
+        box-shadow: 0 0 100px rgba(74, 222, 128, 1),
+                    0 0 200px rgba(255, 100, 200, 0.7),
+                    0 0 240px rgba(100, 200, 255, 0.5),
+                    inset 0 0 40px rgba(74, 222, 128, 0.3),
+                    0 20px 60px rgba(0,0,0,0.7);
+      }
+    }
+
+    /* Frame badge */
+    .frame-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .frame-badge.legendary {
+      background: linear-gradient(90deg, #b980ff, #ffd700, #b980ff);
+      background-size: 200% 100%;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.7),
+                  0 4px 12px rgba(0,0,0,0.4);
+      animation: badgeShine 3s ease-in-out infinite;
+    }
+    .frame-badge.harvestman {
+      background: linear-gradient(90deg, #4ade80, #ff64c8, #64c8ff, #4ade80);
+      background-size: 300% 100%;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      box-shadow: 0 0 25px rgba(74, 222, 128, 0.9),
+                  0 0 40px rgba(255, 100, 200, 0.5),
+                  0 4px 12px rgba(0,0,0,0.4);
+      animation: badgeShift 3s ease infinite;
+    }
+    @keyframes badgeShine {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    @keyframes badgeShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Shimmer name untuk Harvest Frame */
+    .profile-modal-name.shimmer-name {
+      background: linear-gradient(90deg,
+        #4ade80 0%,
+        #ff64c8 25%,
+        #64c8ff 50%,
+        #ffd700 75%,
+        #4ade80 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: shimmerText 3s linear infinite;
+      text-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+      font-weight: 900;
+    }
+    @keyframes shimmerText {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* Confetti particle untuk Harvest */
+    .harvest-particle {
+      position: absolute;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: harvestParticleFloat linear infinite;
+    }
+    @keyframes harvestParticleFloat {
+      0% {
+        transform: translate(0, 0) scale(0.5);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--dx), var(--dy)) scale(0.5);
+        opacity: 0;
+      }
+    }
+
     .profile-modal .close-btn {
       position: absolute; top: 12px; right: 12px;
       background: #3a5a3a; border: 1px solid #7fa07f;
       color: #fff; width: 32px; height: 32px;
       border-radius: 50%; font-size: 1.1rem; font-weight: 700;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      touch-action: manipulation; }
+      touch-action: manipulation; z-index: 5; }
     .profile-modal .close-btn:active { background: #2a4a2a; }
     .profile-modal-avatar {
       width: 90px; height: 90px; border-radius: 50%;
@@ -859,17 +1014,20 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 3rem; margin: 8px auto 12px;
       overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      position: relative; z-index: 2;
     }
     .profile-modal-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .profile-modal-name {
       color: #fff; font-size: 1.35rem; font-weight: 800;
       text-align: center; margin-bottom: 6px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.5); word-break: break-word;
+      position: relative; z-index: 2;
     }
     .profile-modal-status {
       text-align: center; font-size: 0.9rem;
       font-weight: 700; margin-bottom: 18px;
       display: flex; align-items: center; justify-content: center; gap: 6px;
+      position: relative; z-index: 2;
     }
     .status-dot { display: inline-block; width: 10px; height: 10px;
       border-radius: 50%; box-shadow: 0 0 6px currentColor; }
@@ -879,7 +1037,7 @@
     .profile-modal-rows {
       background: #0c180c; border-radius: 16px;
       padding: 8px; display: flex; flex-direction: column; gap: 6px;
-      margin-bottom: 16px;
+      margin-bottom: 16px; position: relative; z-index: 2;
     }
     .profile-modal-row {
       display: flex; justify-content: space-between; align-items: center;
@@ -910,6 +1068,7 @@
       cursor: pointer; touch-action: manipulation;
       box-shadow: 0 4px 0 #0a3040; margin-bottom: 10px;
       display: flex; align-items: center; justify-content: center; gap: 6px;
+      position: relative; z-index: 2;
     }
     .profile-modal-help-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3040; }
     .profile-modal-help-btn:disabled { background: #2a3a2a; color: #6a7a6a;
@@ -921,61 +1080,156 @@
       font-weight: 700; font-size: 0.95rem;
       cursor: pointer; touch-action: manipulation;
       border: 1px solid #7fa07f;
+      position: relative; z-index: 2;
     }
     .profile-modal-close-full:active { background: #2a4a2a; }
 
-    .help-modal {
-      background: linear-gradient(160deg, #1e3a3e, #162c2e);
-      border-radius: 28px; padding: 24px 20px;
-      max-width: 400px; width: 100%;
-      border: 2px solid #4a7a8a;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    /* Frame selector modal */
+    .frame-selector-modal {
+      background: linear-gradient(160deg, #1e2f1e, #162316);
+      border-radius: 28px; padding: 20px 16px;
+      max-width: 440px; width: 100%;
+      border: 2px solid #8a7ac0;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
       position: relative;
       animation: profilePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-height: 90vh;
+      overflow-y: auto;
     }
-    .help-modal h3 { color: #80d0ff; text-align: center; margin-bottom: 8px; font-size: 1.2rem; }
-    .help-modal .target-info { text-align: center; color: #d0e8c0; font-size: 0.95rem; margin-bottom: 16px; }
-    .help-modal .target-info b { color: #fff; }
-    .help-modal .input-section { background: #0c181c; border-radius: 16px;
-      padding: 16px; border: 1px solid #2a4a5a; margin-bottom: 14px; }
-    .help-modal .input-section .label { color: #6a9aaa; font-size: 0.75rem;
-      text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
-      margin-bottom: 8px; text-align: center; }
-    .help-modal input[type="number"] {
-      width: 100%; padding: 14px; border-radius: 40px;
-      border: 2px solid #2a6a8a; background: #061018;
-      color: #80d0ff; font-size: 1.8rem; font-weight: 800;
-      outline: none; text-align: center; -moz-appearance: textfield;
+    .frame-selector-modal h3 {
+      color: #d0c0ff; font-size: 1.2rem; margin-bottom: 6px; text-align: center;
     }
-    .help-modal input[type="number"]::-webkit-outer-spin-button,
-    .help-modal input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none; margin: 0;
+    .frame-selector-modal .subtitle {
+      color: #8fa88f; font-size: 0.8rem; text-align: center;
+      margin-bottom: 16px;
     }
-    .help-modal .quick-select { display: flex; gap: 6px; margin-top: 12px;
-      flex-wrap: wrap; justify-content: center; }
-    .help-modal .quick-btn { flex: 1; min-width: 60px;
-      padding: 10px; border-radius: 30px;
-      border: 1px solid #2a6a8a; background: #162c2e;
-      color: #80d0ff; font-weight: 700; font-size: 0.9rem;
-      cursor: pointer; touch-action: manipulation; }
-    .help-modal .quick-btn:active { background: #2a4a5a; }
-    .help-modal .info-box { background: #0c180c; border-radius: 12px;
-      padding: 10px 14px; margin-bottom: 14px;
-      font-size: 0.8rem; color: #8fa88f; line-height: 1.5; }
-    .help-modal .info-box b { color: #80d0ff; }
-    .help-modal .help-modal-buttons { display: flex; gap: 10px; }
-    .help-modal .help-modal-buttons button { flex: 1;
-      padding: 14px; border-radius: 40px;
-      border: none; font-weight: 700;
-      cursor: pointer; touch-action: manipulation; font-size: 0.95rem; }
-    .help-modal .help-cancel { background: #3a5a3a; color: #fff; }
-    .help-modal .help-confirm {
-      background: linear-gradient(160deg, #2a7a9a, #1a5a7a);
-      color: #fff; box-shadow: 0 4px 0 #0a3040; }
-    .help-modal .help-confirm:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3040; }
-    .help-modal .help-confirm:disabled { background: #2a3a2a; color: #6a7a6a;
-      box-shadow: 0 3px 0 #1a1a1a; pointer-events: none; }
+    .frame-list { display: flex; flex-direction: column; gap: 12px; }
+    .frame-item {
+      background: #0c180c;
+      border-radius: 16px;
+      padding: 12px 14px;
+      border: 2px solid #2a3a2a;
+      display: flex; align-items: center; gap: 12px;
+      cursor: pointer; transition: all 0.2s;
+      position: relative;
+    }
+    .frame-item.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .frame-item.active {
+      border-color: #ffd980;
+      box-shadow: 0 0 20px rgba(255, 217, 128, 0.4);
+    }
+    .frame-item:not(.locked):active {
+      transform: scale(0.98);
+    }
+    .frame-preview {
+      width: 50px; height: 50px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      background: #1a2a1a;
+    }
+    .frame-info { flex: 1; min-width: 0; }
+    .frame-name {
+      color: #e0f0d0; font-weight: 700; font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+    .frame-req {
+      color: #8fa88f; font-size: 0.72rem;
+      line-height: 1.4;
+    }
+    .frame-req .met { color: #a0f0a0; }
+    .frame-req .unmet { color: #ff9090; }
+    .frame-status {
+      font-size: 0.7rem; font-weight: 800;
+      padding: 4px 10px; border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .frame-status.active {
+      background: #3a5a3a; color: #a0f0a0; border: 1px solid #7fa07f;
+    }
+    .frame-status.owned {
+      background: #2a4a6a; color: #a0d0ff; border: 1px solid #4a8aaa;
+    }
+    .frame-status.locked {
+      background: #3a2a2a; color: #ff9090; border: 1px solid #7a4a4a;
+    }
+    .frame-status.buy {
+      background: #4a3a1e; color: #ffd980; border: 1px solid #a08040;
+    }
 
+    /* Frame preview visual per tier */
+    .frame-prev-silver {
+      background: linear-gradient(135deg, #a8a8b0, #d0d0d8);
+      border: 2px solid #c8c8d0;
+    }
+    .frame-prev-gold {
+      background: linear-gradient(135deg, #ffd700, #c9a23f);
+      border: 2px solid #ffe08a;
+    }
+    .frame-prev-platinum {
+      background: linear-gradient(135deg, #80d0ff, #4a8ac0);
+      border: 2px solid #a0e0ff;
+    }
+    .frame-prev-legendary {
+      background: linear-gradient(135deg, #b980ff, #7a50a0);
+      border: 2px solid #d0a8ff;
+      box-shadow: 0 0 20px rgba(185, 128, 255, 0.6);
+    }
+    .frame-prev-harvest {
+      background: linear-gradient(135deg, #4ade80, #ff64c8, #64c8ff);
+      border: 2px solid #4ade80;
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.8);
+      animation: harvestPulse 3s ease-in-out infinite;
+    }
+
+    /* Frame unlock modal */
+    .frame-unlock-modal {
+      background: linear-gradient(160deg, #2a1e3a, #1e142a);
+      border-radius: 28px; padding: 28px 24px;
+      max-width: 380px; width: 100%;
+      border: 2px solid #b980ff;
+      box-shadow: 0 30px 80px rgba(185, 128, 255, 0.5),
+                  0 0 100px rgba(255, 215, 0, 0.3);
+      position: relative; text-align: center;
+      animation: profilePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .frame-unlock-modal .unlock-icon {
+      font-size: 4rem; margin-bottom: 8px;
+      animation: dailyBounce 1s ease infinite;
+    }
+    .frame-unlock-modal h2 {
+      color: #ffd980; font-size: 1.4rem; margin-bottom: 8px;
+      text-shadow: 0 2px 12px rgba(255, 217, 128, 0.5);
+    }
+    .frame-unlock-modal .unlock-name {
+      color: #fff; font-size: 1.2rem; font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .frame-unlock-modal .unlock-desc {
+      color: #d0e8c0; font-size: 0.9rem; margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .frame-unlock-modal .unlock-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(160deg, #a870e0, #7a50a0);
+      color: #fff; border: 2px solid #e0c0ff;
+      border-radius: 40px;
+      font-weight: 800; font-size: 1.05rem;
+      cursor: pointer; touch-action: manipulation;
+      box-shadow: 0 6px 0 #4a2870, 0 10px 40px rgba(185, 128, 255, 0.5);
+    }
+    .frame-unlock-modal .unlock-btn:active {
+      transform: translateY(6px);
+      box-shadow: 0 0 0 #4a2870;
+    }
+
+    /* Daily claim modal */
     .daily-claim-modal {
       background: linear-gradient(160deg, #3a2e1e, #1e2f1e);
       border: 2px solid #ffd980; border-radius: 28px; padding: 24px 20px;
@@ -1013,6 +1267,7 @@
     }
     .daily-claim-modal .claim-ok-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #7a5e1e; }
 
+    /* Welcome Back modal */
     .wb-backdrop {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.95);
@@ -1120,6 +1375,7 @@
       .wb-title { font-size: 1.3rem; }
       .wb-body { font-size: 0.85rem; }
       .privacy-content { font-size: 0.82rem; padding: 16px 14px; }
+      .profile-modal-name { font-size: 1.15rem; }
     }
   </style>
 </head>
@@ -1130,7 +1386,7 @@
   <div class="login-logo">
     <div class="icon">🌳</div>
     <h1>Compound Harvest</h1>
-    <p>v17.1 · Daily Fix</p>
+    <p>v18.0 · Frame Premium</p>
   </div>
   <div class="login-form">
     <div class="tab-switch">
@@ -1313,6 +1569,9 @@
     <!-- TOKO -->
     <div id="pageToko" class="page">
       <h3 style="color:#c0e0b0; margin-bottom: 8px;">🛒 Toko</h3>
+      <div class="inv-section-title">🖼️ Frame Premium</div>
+      <div id="shopFramesContainer"></div>
+      <div class="inv-section-title">📦 Item Lain</div>
       <div id="shopItemsContainer"></div>
     </div>
 
@@ -1375,6 +1634,14 @@
           <span class="profile-value" id="profileTotalExp">0</span>
         </div>
         <div class="profile-row">
+          <span class="profile-label">🌱 Planter Points</span>
+          <span class="profile-value" id="profilePlanterPoints">0</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">🖼️ Frame Aktif</span>
+          <span class="profile-value" id="profileFrame">-</span>
+        </div>
+        <div class="profile-row">
           <span class="profile-label">📅 Streak Login</span>
           <span class="profile-value" id="profileStreak">0/7</span>
         </div>
@@ -1387,6 +1654,7 @@
           </div>
         </div>
 
+        <button class="edit-btn frame-btn" id="changeFrameBtn" style="width:100%;">🖼️ Ganti Frame Premium</button>
         <button class="upgrade-cta-btn hidden" id="upgradeCtaBtn">🔗 Upgrade ke Email / GitHub</button>
 
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -1409,7 +1677,7 @@
           <span style="color: #8fa88f; font-size: 0.78rem;">📜 <a id="privacyLinkAccount" style="color:#a0d0a0; text-decoration: underline; cursor: pointer;">Kebijakan Privasi</a></span>
         </div>
       </div>
-      <div class="small-note">Compound Harvest 1 · v17.1</div>
+      <div class="small-note">Compound Harvest 1 · v18.0</div>
     </div>
   </main>
 
@@ -1474,6 +1742,29 @@
   </div>
 </div>
 
+<!-- Frame Selector Modal -->
+<div class="modal-backdrop hidden" id="frameSelectorBackdrop">
+  <div class="frame-selector-modal">
+    <button class="close-btn" id="frameSelectorClose" style="position: absolute; top: 12px; right: 12px; background: #3a5a3a; border: 1px solid #7fa07f; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; touch-action: manipulation;">✕</button>
+    <h3>🖼️ Frame Premium</h3>
+    <div class="subtitle">Pilih frame untuk profilmu. Klik "Pakai" untuk mengaktifkan.</div>
+    <div class="frame-list" id="frameListContainer"></div>
+  </div>
+</div>
+
+<!-- Frame Unlock Modal -->
+<div class="modal-backdrop hidden" id="frameUnlockBackdrop">
+  <div class="frame-unlock-modal">
+    <div class="unlock-icon">🎉</div>
+    <h2>FRAME BARU!</h2>
+    <div class="unlock-name" id="frameUnlockName">Silver Frame</div>
+    <div class="unlock-desc" id="frameUnlockDesc">
+      Selamat! Kamu berhasil membuka frame baru!
+    </div>
+    <button class="unlock-btn" id="frameUnlockBtn">🌟 Pakai Sekarang</button>
+  </div>
+</div>
+
 <div class="modal-backdrop hidden" id="wbBackdrop">
   <div class="wb-modal" id="wbModal">
     <div class="wb-icon" id="wbIcon">🌱</div>
@@ -1490,7 +1781,7 @@
 </div>
 
 <div class="modal-backdrop hidden" id="profileModalBackdrop">
-  <div class="profile-modal">
+  <div class="profile-modal" id="profileModalEl">
     <button class="close-btn" id="profileModalClose">✕</button>
     <div class="profile-modal-avatar" id="pmAvatar">👤</div>
     <div class="profile-modal-name" id="pmName">-</div>
@@ -1506,6 +1797,10 @@
       <div class="profile-modal-row">
         <span class="label">🏷️ Tipe</span>
         <span class="value" id="pmType">-</span>
+      </div>
+      <div class="profile-modal-row">
+        <span class="label">🖼️ Frame</span>
+        <span class="value" id="pmFrame">-</span>
       </div>
     </div>
     <button class="profile-modal-help-btn" id="pmHelpBtn">💧 Bantu Siram</button>
@@ -1583,6 +1878,47 @@
   ];
   const DAILY_HELP_REWARD = 1000;
 
+  // ===== FRAME CONFIG (v18.0) =====
+  const FRAMES = {
+    none: {
+      id: 'none', name: 'Tanpa Frame', tier: 0,
+      reqPP: 0, reqExp: 0, badge: null, color: null,
+      priceMoney: null, priceDiamond: null,
+      desc: 'Tampilan default tanpa frame'
+    },
+    silver: {
+      id: 'silver', name: '🥈 Silver Frame', tier: 1,
+      reqPP: 500, reqExp: 50000,
+      priceMoney: 100000, priceDiamond: 50,
+      badge: null, color: '#a8a8b0',
+      desc: 'Abu-abu dengan corak garis diagonal'
+    },
+    gold: {
+      id: 'gold', name: '🥇 Gold Frame', tier: 2,
+      reqPP: 1000, reqExp: 90000,
+      badge: null, color: '#ffd700',
+      desc: 'Emas cerah dengan corak garis lebih banyak'
+    },
+    platinum: {
+      id: 'platinum', name: '💎 Platinum Frame', tier: 3,
+      reqPP: 2000, reqExp: 110000,
+      badge: null, color: '#80d0ff',
+      desc: 'Biru muda berkilau dengan efek glossy'
+    },
+    legendary: {
+      id: 'legendary', name: '⭐ Legendary Frame', tier: 4,
+      reqPP: 4000, reqExp: 120000,
+      badge: 'Legendary', color: '#b980ff',
+      desc: 'Ungu bercahaya dengan aura emas hidup + badge Legendary'
+    },
+    harvest: {
+      id: 'harvest', name: '🌾 Harvest Frame', tier: 5,
+      reqPP: 10000, reqExp: 150000, reqStreak: 7,
+      badge: 'Harvestman', color: '#4ade80',
+      desc: 'Hijau berkilau dengan partikel + aura warna warni + badge Harvestman'
+    }
+  };
+
   const firebaseConfig = {
     apiKey: "AIzaSyB_WFjmZwhyZHwwGuSnjr2q4fUF0nf28J0",
     authDomain: "compound-harvest.firebaseapp.com",
@@ -1609,6 +1945,10 @@
     lastLogin: 0,
     dailyLogin: { weekId: '', daysClaimed: [], currentDay: 1, lastClaimDate: '' },
     dailyHelpTask: { date: '', helpedToday: 0, claimed: false },
+    // Frame state
+    ownedFrames: ['none'],
+    activeFrame: 'none',
+    unlockedFrameNotifications: [],  // frame baru yang belum di-notif
   });
 
   let state = DEFAULT_STATE();
@@ -1617,7 +1957,7 @@
   let heartbeatTimer = null;
   let isOnline = navigator.onLine;
   let isSaving = false;
-  const LOCAL_KEY = 'compoundHarvest_v171_state';
+  const LOCAL_KEY = 'compoundHarvest_v180_state';
 
   let helpQuota = { totalSent: 0, playersHelped: {}, date: '' };
   let helpPool = [];
@@ -1636,6 +1976,7 @@
   let wbTypewriterTimer = null;
 
   let previousPageBeforePrivacy = 'akun';
+  let pendingFrameUnlock = null;  // { frameId, frameData }
 
   const LEVELS = [
     { level: 1, name: 'Benih', min: 0, max: 499 },
@@ -1665,16 +2006,20 @@
   const harvestBtn = $('harvestBtn');
   const pupukNote = $('pupukNote');
   const shopItemsContainer = $('shopItemsContainer');
+  const shopFramesContainer = $('shopFramesContainer');
   const profileAvatar = $('profileAvatar');
   const profileName = $('profileName');
   const profileEmail = $('profileEmail');
   const profileUid = $('profileUid');
   const profileType = $('profileType');
   const profileTotalExp = $('profileTotalExp');
+  const profilePlanterPoints = $('profilePlanterPoints');
+  const profileFrame = $('profileFrame');
   const profileStreak = $('profileStreak');
   const editNameBtn = $('editNameBtn');
   const upgradeBtn = $('upgradeBtn');
   const upgradeCtaBtn = $('upgradeCtaBtn');
+  const changeFrameBtn = $('changeFrameBtn');
   const guestInfoCard = $('guestInfoCard');
   const logoutBtn = $('logoutBtn');
   const deleteAccountBtn = $('deleteAccountBtn');
@@ -1730,7 +2075,16 @@
   const dailyClaimSub = $('dailyClaimSub');
   const dailyClaimOkBtn = $('dailyClaimOkBtn');
 
+  const frameSelectorBackdrop = $('frameSelectorBackdrop');
+  const frameSelectorClose = $('frameSelectorClose');
+  const frameListContainer = $('frameListContainer');
+  const frameUnlockBackdrop = $('frameUnlockBackdrop');
+  const frameUnlockName = $('frameUnlockName');
+  const frameUnlockDesc = $('frameUnlockDesc');
+  const frameUnlockBtn = $('frameUnlockBtn');
+
   const profileModalBackdrop = $('profileModalBackdrop');
+  const profileModalEl = $('profileModalEl');
   const profileModalClose = $('profileModalClose');
   const profileModalCloseFull = $('profileModalCloseFull');
   const pmAvatar = $('pmAvatar');
@@ -1738,6 +2092,7 @@
   const pmStatus = $('pmStatus');
   const pmUid = $('pmUid');
   const pmType = $('pmType');
+  const pmFrame = $('pmFrame');
   const pmCopyBtn = $('pmCopyBtn');
   const pmHelpBtn = $('pmHelpBtn');
 
@@ -1893,7 +2248,281 @@
     lbList.innerHTML = html;
   }
 
-  // ===== DAILY REWARD (v17.1) =====
+  // ===== FRAME LOGIC (v18.0) =====
+  function isFrameUnlockable(frameId) {
+    const f = FRAMES[frameId];
+    if (!f || frameId === 'none') return false;
+    if (state.ownedFrames.includes(frameId)) return false;
+    if (state.planterPoints < f.reqPP) return false;
+    if (state.totalExp < f.reqExp) return false;
+    if (f.reqStreak) {
+      const dl = state.dailyLogin || { daysClaimed: [] };
+      if (dl.daysClaimed.length < f.reqStreak) return false;
+    }
+    return true;
+  }
+
+  function checkFrameUnlocks() {
+    // Cek semua frame yang bisa di-unlock
+    for (const frameId of Object.keys(FRAMES)) {
+      if (frameId === 'none') continue;
+      if (state.ownedFrames.includes(frameId)) continue;
+      const f = FRAMES[frameId];
+      // Skip frame yang butuh dibeli (Silver) kecuali user sudah beli
+      // Silver bisa auto-unlock via requirement juga
+      if (isFrameUnlockable(frameId)) {
+        // Unlock frame
+        state.ownedFrames.push(frameId);
+        // Notif
+        pendingFrameUnlock = { frameId, frameData: f };
+        console.log(`🎉 Frame unlocked: ${f.name}`);
+      }
+    }
+    if (pendingFrameUnlock) {
+      showFrameUnlockModal(pendingFrameUnlock.frameData);
+      pendingFrameUnlock = null;
+      updateUI();
+    }
+  }
+
+  function showFrameUnlockModal(frameData) {
+    frameUnlockName.textContent = frameData.name;
+    frameUnlockDesc.textContent = `${frameData.desc}\n\nKamu bisa memakainya sekarang!`;
+    frameUnlockBtn.dataset.frameId = frameData.id;
+    frameUnlockBackdrop.classList.remove('hidden');
+    // Confetti
+    spawnWBConfetti();
+  }
+
+  function hideFrameUnlockModal() {
+    frameUnlockBackdrop.classList.add('hidden');
+  }
+
+  async function equipFrame(frameId) {
+    if (!state.ownedFrames.includes(frameId)) {
+      showToast('❌ Frame belum dimiliki');
+      return;
+    }
+    state.activeFrame = frameId;
+    updateUI();
+    await saveToCloud();
+    const f = FRAMES[frameId];
+    if (frameId === 'none') {
+      showToast('🖼️ Frame dilepas');
+    } else {
+      showToast(`🖼️ Frame aktif: ${f.name}`, 2000);
+    }
+    closeFrameSelector();
+  }
+
+  function renderFrameSelector() {
+    let html = '';
+    for (const frameId of Object.keys(FRAMES)) {
+      const f = FRAMES[frameId];
+      const isOwned = state.ownedFrames.includes(frameId);
+      const isActive = state.activeFrame === frameId;
+      const isUnlockable = isFrameUnlockable(frameId);
+
+      // Skip 'none' dari list (nanti ditambah manual)
+      if (frameId === 'none') continue;
+
+      let status = '';
+      let statusClass = '';
+      let clickable = false;
+
+      if (isActive) {
+        status = 'AKTIF';
+        statusClass = 'active';
+      } else if (isOwned) {
+        status = 'PAKAI';
+        statusClass = 'owned';
+        clickable = true;
+      } else if (isUnlockable) {
+        status = 'BUKA';
+        statusClass = 'owned';
+        clickable = true;
+      } else if (f.priceMoney || f.priceDiamond) {
+        status = 'BELI';
+        statusClass = 'buy';
+        clickable = false;
+      } else {
+        status = '🔒 LOCKED';
+        statusClass = 'locked';
+      }
+
+      // Requirements display
+      let reqHtml = '';
+      if (!isOwned && frameId !== 'none') {
+        const ppMet = state.planterPoints >= f.reqPP;
+        const expMet = state.totalExp >= f.reqExp;
+        const streakMet = !f.reqStreak || (state.dailyLogin && state.dailyLogin.daysClaimed.length >= f.reqStreak);
+        reqHtml = `<div class="frame-req">`;
+        reqHtml += `<span class="${ppMet ? 'met' : 'unmet'}">${ppMet ? '✅' : '❌'} ${formatNumber(state.planterPoints)}/${formatNumber(f.reqPP)} PP</span> · `;
+        reqHtml += `<span class="${expMet ? 'met' : 'unmet'}">${expMet ? '✅' : '❌'} ${formatNumber(state.totalExp)}/${formatNumber(f.reqExp)} Exp</span>`;
+        if (f.reqStreak) {
+          const curr = state.dailyLogin ? state.dailyLogin.daysClaimed.length : 0;
+          reqHtml += `<br><span class="${streakMet ? 'met' : 'unmet'}">${streakMet ? '✅' : '❌'} Streak ${curr}/${f.reqStreak} hari</span>`;
+        }
+        reqHtml += `</div>`;
+      } else if (isOwned) {
+        reqHtml = `<div class="frame-req" style="color: #a0f0a0;">✅ Dimiliki</div>`;
+      }
+
+      html += `
+        <div class="frame-item ${isActive ? 'active' : ''} ${!clickable && !isActive ? 'locked' : ''}"
+             data-frame-id="${frameId}" data-clickable="${clickable || isActive}">
+          <div class="frame-preview frame-prev-${frameId}">
+            ${f.id === 'none' ? '🚫' : getFrameEmoji(f.id)}
+          </div>
+          <div class="frame-info">
+            <div class="frame-name">${f.name}</div>
+            ${reqHtml}
+          </div>
+          <div class="frame-status ${statusClass}">${status}</div>
+        </div>
+      `;
+    }
+    frameListContainer.innerHTML = html;
+
+    // Attach handlers
+    frameListContainer.querySelectorAll('.frame-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const frameId = el.dataset.frameId;
+        const clickable = el.dataset.clickable === 'true';
+        if (clickable) {
+          equipFrame(frameId);
+        } else {
+          // Cek apakah bisa dibeli
+          const f = FRAMES[frameId];
+          if (f.priceMoney || f.priceDiamond) {
+            showBuyFrameModal(frameId, f);
+          } else {
+            showToast('🔒 Belum memenuhi syarat');
+          }
+        }
+      });
+    });
+  }
+
+  function getFrameEmoji(frameId) {
+    const emojis = {
+      silver: '🥈', gold: '🥇', platinum: '💎',
+      legendary: '⭐', harvest: '🌾'
+    };
+    return emojis[frameId] || '🖼️';
+  }
+
+  function showBuyFrameModal(frameId, f) {
+    showModal(`🛒 Beli ${f.name}`, '', 'Batal', null);
+    modalMessage.innerHTML = `
+      <div style="background: #0c180c; padding: 12px; border-radius: 12px; margin-bottom: 12px;">
+        <div style="color: #8fa88f; font-size: 0.85rem; margin-bottom: 6px;">${f.desc}</div>
+        <div style="color: #a0f0a0; font-size: 0.8rem;">💡 Atau capai syarat untuk dapat gratis!</div>
+      </div>
+      <div style="color: #ffd980; font-weight: 700;">Pilih mata uang pembayaran:</div>
+    `;
+    modalButtons.innerHTML = '';
+    const btnCancel = document.createElement('button');
+    btnCancel.className = 'modal-cancel';
+    btnCancel.textContent = 'Batal';
+    btnCancel.addEventListener('click', hideModal);
+    modalButtons.appendChild(btnCancel);
+
+    if (f.priceMoney) {
+      const btnMoney = document.createElement('button');
+      btnMoney.className = 'modal-confirm';
+      btnMoney.textContent = `💰 $${formatNumber(f.priceMoney)}`;
+      btnMoney.disabled = state.money < f.priceMoney;
+      btnMoney.addEventListener('click', async () => {
+        if (state.money < f.priceMoney) return;
+        state.money -= f.priceMoney;
+        state.ownedFrames.push(frameId);
+        hideModal();
+        updateUI();
+        await saveToCloud();
+        showToast(`🎉 ${f.name} dibeli!`, 2500, true);
+        spawnWBConfetti();
+      });
+      modalButtons.appendChild(btnMoney);
+    }
+    if (f.priceDiamond) {
+      const btnDia = document.createElement('button');
+      btnDia.className = 'modal-confirm';
+      btnDia.textContent = `💎 ${f.priceDiamond}`;
+      btnDia.style.background = '#2a4a6a';
+      btnDia.disabled = state.diamond < f.priceDiamond;
+      btnDia.addEventListener('click', async () => {
+        if (state.diamond < f.priceDiamond) return;
+        state.diamond -= f.priceDiamond;
+        state.ownedFrames.push(frameId);
+        hideModal();
+        updateUI();
+        await saveToCloud();
+        showToast(`🎉 ${f.name} dibeli!`, 2500, true);
+        spawnWBConfetti();
+      });
+      modalButtons.appendChild(btnDia);
+    }
+  }
+
+  function openFrameSelector() {
+    renderFrameSelector();
+    frameSelectorBackdrop.classList.remove('hidden');
+  }
+  function closeFrameSelector() {
+    frameSelectorBackdrop.classList.add('hidden');
+  }
+
+  function applyFrameToModal(frameId, modalEl) {
+    // Reset class
+    modalEl.className = 'profile-modal';
+    modalEl.style.animation = '';
+    // Remove existing badge
+    const oldBadge = modalEl.querySelector('.frame-badge');
+    if (oldBadge) oldBadge.remove();
+    // Remove existing particles
+    modalEl.querySelectorAll('.harvest-particle').forEach(p => p.remove());
+    // Reset name shimmer
+    const nameEl = modalEl.querySelector('.profile-modal-name');
+    if (nameEl) nameEl.classList.remove('shimmer-name');
+
+    if (!frameId || frameId === 'none') return;
+
+    modalEl.classList.add('frame-' + frameId);
+
+    const f = FRAMES[frameId];
+    if (f && f.badge) {
+      const badge = document.createElement('div');
+      badge.className = 'frame-badge ' + (f.badge === 'Legendary' ? 'legendary' : 'harvestman');
+      badge.textContent = f.badge;
+      modalEl.appendChild(badge);
+    }
+
+    // Special effects
+    if (frameId === 'harvest') {
+      // Shimmer name
+      if (nameEl) nameEl.classList.add('shimmer-name');
+      // Particles
+      for (let i = 0; i < 8; i++) {
+        const p = document.createElement('div');
+        p.className = 'harvest-particle';
+        p.style.left = (Math.random() * 100) + '%';
+        p.style.top = (Math.random() * 100) + '%';
+        const dx = (Math.random() - 0.5) * 100 + 'px';
+        const dy = (Math.random() - 0.5) * 100 + 'px';
+        p.style.setProperty('--dx', dx);
+        p.style.setProperty('--dy', dy);
+        const colors = ['#4ade80', '#ff64c8', '#64c8ff', '#ffd700'];
+        p.style.background = colors[i % colors.length];
+        p.style.boxShadow = `0 0 8px ${colors[i % colors.length]}`;
+        p.style.animationDuration = (2 + Math.random() * 2) + 's';
+        p.style.animationDelay = (Math.random() * 2) + 's';
+        modalEl.appendChild(p);
+      }
+    }
+  }
+
+  // ===== DAILY REWARD =====
   function checkAndResetDailyData() {
     const today = getTodayKey();
     const thisWeek = getWeekId();
@@ -1926,10 +2555,7 @@
   }
 
   async function claimDailyLogin() {
-    if (!canClaimTodayLogin()) {
-      showToast('❌ Sudah klaim hari ini. Coba besok!');
-      return;
-    }
+    if (!canClaimTodayLogin()) { showToast('❌ Sudah klaim hari ini. Coba besok!'); return; }
     const today = getTodayKey();
     const dl = state.dailyLogin;
     const nextDay = dl.daysClaimed.length + 1;
@@ -1938,6 +2564,8 @@
     dl.currentDay = nextDay + 1;
     dl.lastClaimDate = today;
     state.money += reward.amount;
+    // Cek frame unlock setelah streak update
+    checkFrameUnlocks();
     updateUI();
     await saveToCloud();
     showDailyClaimModal(nextDay, reward.amount);
@@ -1954,9 +2582,7 @@
     }
     dailyClaimBackdrop.classList.remove('hidden');
   }
-  function hideDailyClaimModal() {
-    dailyClaimBackdrop.classList.add('hidden');
-  }
+  function hideDailyClaimModal() { dailyClaimBackdrop.classList.add('hidden'); }
 
   function renderDailyPage() {
     if (!dailyList) return;
@@ -1966,17 +2592,11 @@
     dailyProgressValue.textContent = `${claimed}/7 hari`;
     dailyProgressFill.style.width = progressPct + '%';
 
-    // ===== FIX BUG v17.1: Tentukan status per hari =====
     const today = getTodayKey();
     const alreadyClaimedToday = dl.lastClaimDate === today;
-
-    // Hari yang bisa diklaim = hanya kalau BELUM klaim hari ini
-    // Kalau sudah klaim hari ini, semua card jadi claimed/next/locked
     const claimableDayNum = canClaimTodayLogin() ? (claimed + 1) : -1;
-    // Hari berikutnya = setelah hari yang bisa diklaim (kalau sudah klaim hari ini)
     const nextDayNum = alreadyClaimedToday && claimed < 7 ? (claimed + 1) : -1;
 
-    // Render 7 day cards
     let html = '';
     for (let i = 0; i < 7; i++) {
       const dayNum = i + 1;
@@ -1997,13 +2617,9 @@
       else if (isNext) status = '⏰ Besok';
       else status = '🔒 Terkunci';
 
-      // Tombol hanya muncul kalau isClaimable
       let btnHtml = '';
-      if (isClaimable) {
-        btnHtml = `<button class="daily-claim-btn" data-day="${dayNum}">KLAIM</button>`;
-      } else if (isNext) {
-        btnHtml = `<span class="daily-tomorrow-btn">Besok</span>`;
-      }
+      if (isClaimable) btnHtml = `<button class="daily-claim-btn" data-day="${dayNum}">KLAIM</button>`;
+      else if (isNext) btnHtml = `<span class="daily-tomorrow-btn">Besok</span>`;
 
       html += `
         <div class="${className}">
@@ -2017,13 +2633,10 @@
         </div>`;
     }
     dailyList.innerHTML = html;
-
-    // Attach claim handler (hanya 1 tombol)
     dailyList.querySelectorAll('.daily-claim-btn').forEach(btn => {
       btn.addEventListener('click', claimDailyLogin);
     });
 
-    // Update hint
     if (canClaimTodayLogin()) {
       const nextDay = getNextRewardDay();
       dailyNextHintText.innerHTML = `🎁 Klaim <b>Hari ${nextDay}</b> sekarang! ($${formatNumber(DAILY_REWARDS[nextDay - 1].amount)})`;
@@ -2115,18 +2728,18 @@
         <li><strong>Guest Login</strong>: Identifier anonim (UID) yang di-generate Firebase</li>
         <li><strong>Email Login</strong>: Email dan nama pengguna (display name)</li>
         <li><strong>GitHub Login</strong>: Username GitHub, nama tampilan, foto profil publik</li>
-        <li><strong>Password</strong>: Dienkripsi oleh Firebase Authentication (kami tidak bisa melihat password Anda)</li>
+        <li><strong>Password</strong>: Dienkripsi oleh Firebase Authentication</li>
       </ul>
       <h3>b) Informasi Game</h3>
       <ul>
-        <li>Progress permainan (uang, diamond, level, item, exp)</li>
+        <li>Progress permainan (uang, diamond, level, item, exp, frame)</li>
         <li>Statistik aktivitas (jumlah panen, jumlah siram, dan lainnya)</li>
-        <li>Wilayah (negara, provinsi, kabupaten, kecamatan) — <strong>opsional, diisi manual</strong></li>
+        <li>Wilayah (negara, provinsi, kabupaten, kecamatan) — opsional</li>
         <li>Waktu login terakhir & status online/offline</li>
       </ul>
       <h3>c) Informasi Teknis</h3>
       <ul>
-        <li>Jenis perangkat & browser (via user agent, tidak disimpan permanen)</li>
+        <li>Jenis perangkat & browser</li>
         <li>Firebase Analytics: statistik kunjungan anonim (opsional)</li>
         <li>Alamat IP (diproses oleh Firebase untuk keamanan)</li>
       </ul>
@@ -2139,7 +2752,6 @@
         <li>Informasi keuangan/pembayaran</li>
       </ul>
       <h2>3. Bagaimana Kami Menggunakan Informasi</h2>
-      <p>Informasi Anda digunakan untuk:</p>
       <ul>
         <li>Menyimpan progress permainan</li>
         <li>Menampilkan leaderboard (nama, total exp, wilayah)</li>
@@ -2154,7 +2766,6 @@
         <li>Profiling komersial</li>
       </ul>
       <h2>4. Berbagi Informasi dengan Pihak Ketiga</h2>
-      <p>Kami menggunakan layanan pihak ketiga:</p>
       <h3>a) Google Firebase (Google LLC)</h3>
       <ul>
         <li><strong>Firebase Authentication</strong>: Mengelola login</li>
@@ -2168,63 +2779,42 @@
       </ul>
       <h3>c) GitHub Pages (Hosting)</h3>
       <p>Game di-host di GitHub Pages (Microsoft).</p>
-      <p>Kami <strong>tidak menjual</strong> data Anda. Kami <strong>tidak membagikan</strong> data Anda ke pihak lain di luar yang tercantum.</p>
+      <p>Kami <strong>tidak menjual</strong> data Anda.</p>
       <h2>5. Penyimpanan Data</h2>
       <ul>
-        <li><strong>Lokasi</strong>: Data disimpan di server Google Firebase (region: Asia-Southeast1 / Singapore)</li>
-        <li><strong>Durasi</strong>: Selama akun aktif. Data akan dihapus jika Anda menghapus akun atau akun tidak aktif > 1 tahun</li>
-        <li><strong>Backup</strong>: Firebase otomatis membuat backup, tersimpan aman</li>
+        <li><strong>Lokasi</strong>: Firebase (region: Asia-Southeast1 / Singapore)</li>
+        <li><strong>Durasi</strong>: Selama akun aktif</li>
+        <li><strong>Backup</strong>: Firebase otomatis membuat backup</li>
       </ul>
       <h2>6. Hak Anda</h2>
-      <p>Anda berhak untuk:</p>
       <ul>
-        <li><strong>Mengakses</strong> data Anda — Buka halaman "Akun" di Game</li>
-        <li><strong>Memperbaiki</strong> data — Edit nama, wilayah di halaman "Akun"</li>
-        <li><strong>Menghapus</strong> akun & data — Tombol "Hapus Akun" di halaman "Akun"</li>
-        <li><strong>Portabilitas</strong> data — Hubungi kami untuk export data</li>
+        <li><strong>Mengakses</strong> data — Buka halaman "Akun"</li>
+        <li><strong>Memperbaiki</strong> data — Edit nama, wilayah</li>
+        <li><strong>Menghapus</strong> akun & data — Tombol "Hapus Akun"</li>
+        <li><strong>Portabilitas</strong> data — Hubungi kami</li>
         <li><strong>Menolak</strong> pengumpulan data — Berhenti gunakan Game</li>
       </ul>
       <p>Untuk permintaan khusus, hubungi: <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>
       <h2>7. Keamanan Data</h2>
-      <p>Kami berkomitmen melindungi data Anda:</p>
       <ul>
-        <li><strong>Enkripsi</strong>: HTTPS untuk semua komunikasi</li>
+        <li><strong>Enkripsi</strong>: HTTPS</li>
         <li><strong>Authentication</strong>: Firebase Auth dengan password hashing</li>
         <li><strong>Database Rules</strong>: Hanya pemilik akun yang bisa akses data pribadi</li>
       </ul>
-      <div class="highlight-box"><strong>Catatan</strong>: Tidak ada sistem yang 100% aman. Jika ada pelanggaran data, kami akan menginformasikan Anda dalam 72 jam.</div>
+      <div class="highlight-box"><strong>Catatan</strong>: Tidak ada sistem yang 100% aman.</div>
       <h2>8. Cookie & Local Storage</h2>
-      <p>Kami menggunakan:</p>
-      <ul>
-        <li><strong>localStorage</strong>: Menyimpan session & cache lokal (wajib untuk fungsi game)</li>
-        <li><strong>Firebase session</strong>: Menyimpan status login</li>
-      </ul>
-      <p>Kami <strong>tidak pakai cookie tracking</strong> pihak ketiga. Anda bisa menghapus data lokal ini kapan saja via pengaturan browser.</p>
+      <p>Kami menggunakan localStorage & Firebase session. Tidak pakai cookie tracking pihak ketiga.</p>
       <h2>9. Anak-Anak di Bawah Umur</h2>
-      <p>Game ini <strong>tidak ditujukan untuk anak di bawah 13 tahun</strong>. Kami tidak dengan sengaja mengumpulkan data anak-anak. Jika Anda orang tua dan mengetahui anak Anda menggunakan Game, hubungi kami untuk menghapus akun.</p>
+      <p>Game ini <strong>tidak ditujukan untuk anak di bawah 13 tahun</strong>.</p>
       <h2>10. Perubahan Kebijakan</h2>
-      <p>Kami dapat memperbarui Kebijakan Privasi ini. Perubahan signifikan akan:</p>
-      <ul>
-        <li>Diumumkan di Game</li>
-        <li>Notifikasi ke user aktif</li>
-        <li>Tanggal "Terakhir diperbarui" akan diubah</li>
-      </ul>
-      <p>Penggunaan lanjutan setelah perubahan = <strong>persetujuan Anda</strong>.</p>
+      <p>Kami dapat memperbarui Kebijakan Privasi ini. Perubahan signifikan akan diumumkan di Game.</p>
       <h2>11. Kontak</h2>
-      <p>Untuk pertanyaan, keluhan, atau permintaan terkait privasi:</p>
       <div class="contact-box">
         <p>📧 <strong>Email</strong>: <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>
         <p>🐙 <strong>GitHub</strong>: <a href="https://github.com/kelvinkudus" target="_blank">github.com/kelvinkudus</a></p>
-        <p>🌐 <strong>Game</strong>: <a href="https://kelvinkudus.github.io/compound-harvest.game/" target="_blank">kelvinkudus.github.io/compound-harvest.game</a></p>
       </div>
       <h2>12. Dasar Hukum (UU PDP Indonesia)</h2>
-      <p>Sesuai UU Perlindungan Data Pribadi No. 27 Tahun 2022:</p>
-      <ul>
-        <li>Kami adalah <strong>Pengendali Data</strong> (Data Controller)</li>
-        <li>Anda adalah <strong>Subjek Data</strong> (Data Subject)</li>
-        <li>Anda berhak mengajukan <strong>keberatan</strong> dan <strong>penghapusan</strong></li>
-        <li>Pengaduan dapat diajukan ke <strong>Lembaga Perlindungan Data Pribadi</strong></li>
-      </ul>
+      <p>Sesuai UU Perlindungan Data Pribadi No. 27 Tahun 2022, Anda berhak mengajukan keberatan dan penghapusan.</p>
       <div class="highlight-box" style="margin-top: 20px; text-align: center;">
         <strong>Dengan menggunakan Compound Harvest, Anda menyatakan telah membaca dan menyetujui Kebijakan Privasi ini.</strong>
       </div>
@@ -2328,20 +2918,20 @@
 
   function spawnWBConfetti() {
     const colors = ['#ffd700', '#ffe08a', '#d0a8ff', '#b980ff', '#ff8c40', '#ffffc0'];
-    const wbModalEl = wbModal;
-    if (!wbModalEl) return;
-    const rect = wbModalEl.getBoundingClientRect();
+    const targetEl = document.body;
+    const rect = { width: window.innerWidth, height: window.innerHeight };
     for (let i = 0; i < 24; i++) {
       const particle = document.createElement('div');
       particle.className = 'confetti-particle';
+      particle.style.position = 'fixed';
       particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-      particle.style.left = (rect.width / 2) + 'px';
-      particle.style.top = (rect.height / 2) + 'px';
+      particle.style.left = '50%';
+      particle.style.top = '40%';
       const angle = (Math.PI * 2 * i) / 24 + Math.random() * 0.5;
-      const dist = 100 + Math.random() * 150;
+      const dist = 100 + Math.random() * 200;
       particle.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
       particle.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
-      wbModalEl.appendChild(particle);
+      targetEl.appendChild(particle);
       setTimeout(() => { if (particle.parentNode) particle.parentNode.removeChild(particle); }, 1400);
     }
   }
@@ -2415,9 +3005,12 @@
   function openProfile(uid, fallbackData) {
     currentProfileUid = uid;
     profileModalBackdrop.classList.remove('hidden');
+    // Reset frame dulu
+    applyFrameToModal('none', profileModalEl);
     if (fallbackData) {
       pmName.textContent = fallbackData.name || 'Petani';
       pmType.textContent = '-';
+      pmFrame.textContent = '-';
       pmAvatar.textContent = '👤';
     }
     pmStatus.innerHTML = `<span class="status-dot status-offline"></span><span>Memuat...</span>`;
@@ -2437,6 +3030,16 @@
         } else {
           pmAvatar.textContent = getProviderBadge(provider);
         }
+        // Frame display
+        const frameId = data.activeFrame || 'none';
+        const frameData = FRAMES[frameId];
+        if (frameId !== 'none' && frameData) {
+          pmFrame.textContent = frameData.name;
+          applyFrameToModal(frameId, profileModalEl);
+        } else {
+          pmFrame.textContent = 'Tanpa Frame';
+        }
+        // Status online
         const now = Date.now();
         const lastSeen = data.lastSeen || 0;
         const onlineFlag = data.online === true;
@@ -2470,6 +3073,8 @@
   function closeProfileModal() {
     profileModalBackdrop.classList.add('hidden');
     currentProfileUid = null;
+    // Reset frame
+    applyFrameToModal('none', profileModalEl);
   }
 
   // ===== LOCAL =====
@@ -2851,6 +3456,9 @@
       profileType.textContent = '🎮 Guest'; profileAvatar.textContent = '👤';
     }
     profileTotalExp.textContent = formatNumber(state.totalExp);
+    profilePlanterPoints.textContent = formatNumber(state.planterPoints);
+    const activeFrameData = FRAMES[state.activeFrame];
+    profileFrame.textContent = activeFrameData && state.activeFrame !== 'none' ? activeFrameData.name : 'Tanpa Frame';
     profileStreak.textContent = `${dl.daysClaimed.length}/7 hari`;
 
     if (state.provider === 'guest') {
@@ -2878,6 +3486,7 @@
     else adminCleanupBtn.classList.add('hidden');
     renderRegionSection();
     renderShop();
+    renderShopFrames();
     renderInventory();
     renderDailyPage();
     updateMenuDot();
@@ -2922,6 +3531,8 @@
         lastLogin: Date.now(),
         dailyLogin: state.dailyLogin,
         dailyHelpTask: state.dailyHelpTask,
+        ownedFrames: state.ownedFrames,
+        activeFrame: state.activeFrame,
         lastUpdated: Date.now(),
       });
       setCloudStatus('saved');
@@ -2963,7 +3574,11 @@
           lastLogin: data.lastLogin || 0,
           dailyLogin: data.dailyLogin || { weekId: '', daysClaimed: [], currentDay: 1, lastClaimDate: '' },
           dailyHelpTask: data.dailyHelpTask || { date: '', helpedToday: 0, claimed: false },
+          ownedFrames: data.ownedFrames || ['none'],
+          activeFrame: data.activeFrame || 'none',
         });
+        // Pastikan 'none' selalu ada
+        if (!state.ownedFrames.includes('none')) state.ownedFrames.unshift('none');
         const lastLogin = data.lastLogin || 0;
         if (lastLogin > 0) {
           const daysSince = Math.floor((Date.now() - lastLogin) / (1000 * 60 * 60 * 24));
@@ -2984,6 +3599,8 @@
         showToast(`🌱 Selamat datang, ${state.name}!`);
       }
       checkAndResetDailyData();
+      // Cek frame unlock
+      checkFrameUnlocks();
       updateUI();
       updateLeaderboardEntries().catch(() => {});
       startHeartbeat();
@@ -3202,6 +3819,8 @@
       state.skipUsedThisLevel = false;
       showToast(`🌟 Naik ke Lv.${state.level} ${getLevelData(state.exp).name}!`);
     }
+    // Cek frame unlock setiap exp bertambah
+    checkFrameUnlocks();
     updateUI();
     debouncedSave();
   }
@@ -3232,6 +3851,8 @@
     state.planterPoints += 50;
     state.exp = 0; state.level = 1;
     state.waterSinceFertilizer = 0; state.skipUsedThisLevel = false;
+    // Cek frame unlock (Planter Points naik!)
+    checkFrameUnlocks();
     updateUI();
     debouncedSave();
     showToast('🎉 Panen! +$5.000 · +1000L · +30💎 · +50PP');
@@ -3270,6 +3891,39 @@
       btn.addEventListener('click', e => buyItem(e.currentTarget.dataset.id));
     });
   }
+
+  function renderShopFrames() {
+    if (!shopFramesContainer) return;
+    const silverFrame = FRAMES.silver;
+    const isOwned = state.ownedFrames.includes('silver');
+    let html = '';
+    if (isOwned) {
+      html = `<div class="shop-item" style="opacity: 0.7;">
+        <div class="item-info">
+          <div class="item-name">🥈 Silver Frame</div>
+          <div class="item-price" style="color: #a0f0a0;">✅ Sudah dimiliki</div>
+        </div>
+        <button class="buy-btn" disabled>DIMILIKI</button>
+      </div>`;
+    } else {
+      html = `<div class="shop-item">
+        <div class="item-info">
+          <div class="item-name">🥈 Silver Frame</div>
+          <div class="item-price">$100.000 / 💎50</div>
+          <div class="small-note" style="text-align: left; margin-top: 2px; font-size: 0.7rem;">Abu-abu dengan corak garis</div>
+        </div>
+        <button class="buy-btn" data-frame-id="silver">Beli</button>
+      </div>`;
+    }
+    shopFramesContainer.innerHTML = html;
+    const buyBtn = shopFramesContainer.querySelector('[data-frame-id="silver"]');
+    if (buyBtn) {
+      buyBtn.addEventListener('click', () => {
+        showBuyFrameModal('silver', silverFrame);
+      });
+    }
+  }
+
   function buyItem(id) {
     const item = shopCatalog.find(i => i.id === id);
     if (!item) return;
@@ -3315,7 +3969,7 @@
     else if (pageId === 'privacy') { pagePrivacy.classList.add('active'); renderPrivacyContent(); }
     else if (pageId === 'akun') pageAkun.classList.add('active');
     navItems.forEach(item => item.classList.toggle('active', item.dataset.page === pageId));
-    if (pageId === 'toko') renderShop();
+    if (pageId === 'toko') { renderShop(); renderShopFrames(); }
     if (pageId === 'leaderboard') loadLeaderboard();
     if (pageId !== 'leaderboard' && lbView.unsubscribe) {
       lbView.unsubscribe(); lbView.unsubscribe = null;
@@ -3344,6 +3998,7 @@
     modal.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; overflow-y: auto; padding: 20px;`;
     const content = document.createElement('div');
     content.style.cssText = `max-width: 500px; margin: 0 auto; background: #162316; border-radius: 20px; padding: 20px; border: 1px solid #3a5a3a; color: #d0e8c0; font-size: 0.88rem; line-height: 1.7; font-family: system-ui, sans-serif;`;
+    renderPrivacyContent();
     content.innerHTML = privacyContent.innerHTML;
     content.querySelectorAll('h2').forEach(h => h.style.cssText = 'color: #a0d0ff; font-size: 1.05rem; margin-top: 20px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #3a5a3a;');
     content.querySelectorAll('h3').forEach(h => h.style.cssText = 'color: #c0e0ff; font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;');
@@ -3363,6 +4018,21 @@
 
   dailyClaimOkBtn.addEventListener('click', hideDailyClaimModal);
   dailyHelpBtn.addEventListener('click', claimDailyHelp);
+  changeFrameBtn.addEventListener('click', openFrameSelector);
+  frameSelectorClose.addEventListener('click', closeFrameSelector);
+  frameSelectorBackdrop.addEventListener('click', e => {
+    if (e.target === frameSelectorBackdrop) closeFrameSelector();
+  });
+  frameUnlockBtn.addEventListener('click', () => {
+    const frameId = frameUnlockBtn.dataset.frameId;
+    hideFrameUnlockModal();
+    if (frameId) {
+      equipFrame(frameId);
+    }
+  });
+  frameUnlockBackdrop.addEventListener('click', e => {
+    if (e.target === frameUnlockBackdrop) hideFrameUnlockModal();
+  });
 
   let modalCallback = null;
   function showModal(title, message, confirmText, callback, requireWord, danger) {
@@ -3878,7 +4548,7 @@
   showWelcomeBannerOnLogin();
 
   setCloudStatus('saved');
-  console.log('🌳 Compound Harvest v17.1 ready — Daily UI Fix');
+  console.log('🌳 Compound Harvest v18.0 ready — Frame Premium');
 </script>
 </body>
 </html>
