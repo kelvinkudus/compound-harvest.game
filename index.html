@@ -1,870 +1,470 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zona Waktu Gamma - Atheria Universe</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #5C9BCB;
-            font-family: 'Montserrat', sans-serif;
-            color: #FFFFFF;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 30px 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* --- Header & Dropdown --- */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-top: 10px;
-            position: relative;
-            z-index: 100;
-        }
-
-        .header-text h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-            line-height: 1.1;
-        }
-
-        .header-text h2 {
-            font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            opacity: 0.95;
-        }
-
-        .custom-select-wrapper {
-            position: relative;
-            user-select: none;
-            width: 150px;
-        }
-
-        .custom-select-trigger {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 12px;
-            padding: 10px 14px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .custom-select-trigger:hover { background: rgba(255, 255, 255, 0.25); }
-
-        .arrow {
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 6px solid #FFFFFF;
-            transition: transform 0.3s ease;
-        }
-
-        .custom-select-wrapper.open .arrow { transform: rotate(180deg); }
-
-        .custom-options {
-            position: absolute;
-            top: 110%;
-            right: 0;
-            width: 180px;
-            background: rgba(65, 115, 155, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .custom-options::-webkit-scrollbar { width: 6px; }
-        .custom-options::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
-
-        .custom-select-wrapper.open .custom-options {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .custom-option {
-            padding: 12px 15px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .custom-option:last-child { border-bottom: none; }
-        .custom-option:hover { background: rgba(255, 255, 255, 0.2); }
-        .custom-option.selected { background: #FFE07D; color: #333; font-weight: 700; }
-
-        /* --- Bagian Tengah (Jam & Menit) --- */
-        .time-section {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .time-block {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            position: relative;
-        }
-
-        .label-group {
-            width: 90px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            text-align: right;
-            padding-right: 20px;
-            z-index: 2;
-        }
-
-        .label-id { font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; line-height: 1.2; }
-        .label-en { font-size: 1rem; font-weight: 400; letter-spacing: 0.5px; }
-
-        .number-container {
-            overflow: hidden;
-            height: 9rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .number {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 11rem;
-            font-weight: 800;
-            line-height: 0.9;
-            letter-spacing: -2px;
-            color: #FFFFFF;
-            font-variant-numeric: tabular-nums;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-        }
-
-        .number.minute { color: #FFE07D; }
-
-        .animate-out { transform: translateY(-20px); opacity: 0; }
-        .animate-in { transform: translateY(20px); opacity: 0; }
-
-        .divider {
-            width: 100%;
-            height: 2px;
-            background-color: #FFFFFF;
-            margin: 10px 0 20px 0;
-            opacity: 0.9;
-        }
-
-        /* --- Bagian Bawah (Hari & Tanggal) --- */
-        .date-section {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .date-box {
-            border: 2px solid #FFFFFF;
-            padding: 10px 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer; 
-            transition: background 0.2s;
-        }
-
-        .date-box:hover { background: rgba(255, 255, 255, 0.2); }
-
-        .date-box.hari { flex: 1; font-size: 1.2rem; font-weight: 700; }
-        .date-box.tanggal { flex: 2.5; font-size: 1.2rem; font-weight: 700; }
-
-        .status-indicator {
-            text-align: center;
-            font-size: 0.75rem;
-            margin-top: 15px;
-            opacity: 0.8;
-            letter-spacing: 0.1em;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* --- FITUR KALKULATOR (Tombol) --- */
-        .calc-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 55px;
-            height: 55px;
-            background-color: #FFE07D;
-            color: #333;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 999;
-            transition: transform 0.2s;
-        }
-
-        .calc-btn:hover { transform: scale(1.1); }
-
-        /* --- OVERLAY MODALS --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-
-        .modal-content {
-            background: #5C9BCB;
-            border: 2px solid #FFFFFF;
-            border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-            position: relative;
-        }
-
-        .modal-overlay.active .modal-content { transform: translateY(0); }
-
-        .modal-content h3 { margin-bottom: 15px; text-align: center; font-size: 1.2rem; letter-spacing: 1px; }
-
-        /* --- STYLING KALKULATOR --- */
-        .calc-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #FFFFFF;
-        }
-
-        .calc-tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            background: transparent;
-            transition: background 0.2s;
-        }
-
-        .calc-tab.active { background: #FFFFFF; color: #5C9BCB; }
-        .calc-form { display: none; flex-direction: column; gap: 15px; }
-        .calc-form.active { display: flex; }
-        .input-group { display: flex; flex-direction: column; gap: 5px; }
-        .input-group label { font-size: 0.8rem; font-weight: 600; }
-        .calc-input-row { display: flex; gap: 10px; }
-
-        .calc-input-row input, .calc-input-row select {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #FFFFFF;
-            background: rgba(255, 255, 255, 0.2);
-            color: #FFFFFF;
-            font-family: 'Montserrat', sans-serif;
-            outline: none;
-        }
-
-        .calc-input-row select { background: #4a81ab; cursor: pointer; }
-        .calc-input-row input { flex: 1; }
-
-        .calc-btn-submit {
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: #FFE07D;
-            color: #333;
-            font-weight: 800;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background 0.2s;
-        }
-
-        .calc-btn-submit:hover { background: #ffd54f; }
-
-        .calc-result {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            text-align: center;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            display: none;
-        }
-
-        .calc-result.show { display: block; }
-        .calc-result strong { color: #FFE07D; font-size: 1.2rem; }
-
-        /* --- STYLING KALENDER --- */
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .calendar-header button { background: none; border: none; color: #FFFFFF; font-size: 1.5rem; cursor: pointer; padding: 0 10px; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
-        .cal-day-name { font-size: 0.7rem; font-weight: 700; color: #FFE07D; margin-bottom: 5px; }
-        .cal-day { padding: 10px 0; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
-        .cal-day:hover { background: rgba(255, 255, 255, 0.3); }
-        .cal-day.empty { cursor: default; }
-        .cal-day.empty:hover { background: transparent; }
-        .cal-day.today { background: #FFE07D; color: #333; font-weight: 800; }
-
-        .cal-info-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            text-align: center;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            display: none;
-            border-left: 4px solid #FFE07D;
-        }
-        .cal-info-box.show { display: block; }
-        .cal-info-box strong { color: #FFE07D; font-size: 1.1rem; }
-
-        @media (max-width: 420px) {
-            .container { padding: 20px; }
-            .header-text h1 { font-size: 1.4rem; }
-            .header-text h2 { font-size: 0.8rem; }
-            .label-group { width: 70px; padding-right: 10px; }
-            .label-id { font-size: 0.9rem; }
-            .label-en { font-size: 0.75rem; }
-            .date-box.hari, .date-box.tanggal { font-size: 1rem; padding: 8px; }
-            .custom-select-wrapper { width: 140px; }
-            .number-container { height: 6rem; }
-            .number { font-size: 8rem; }
-            .calc-btn { bottom: 20px; right: 20px; width: 45px; height: 45px; font-size: 1.2rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1e2b1e">
+  <title>Compound Harvest 1 · v18.0</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <div class="header-text">
-                <h1>ZONA WAKTU GAMMA</h1>
-                <h2 id="negara-label">HEBON</h2>
-            </div>
-            
-            <div class="custom-select-wrapper" id="dropdown-wrapper">
-                <div class="custom-select-trigger" id="dropdown-trigger">
-                    <span id="selected-text">Hebon</span>
-                    <div class="arrow"></div>
-                </div>
-                <div class="custom-options" id="dropdown-options">
-                    <!-- Offset -2 -->
-                    <div class="custom-option" data-value="-2">Big Land</div>
-                    <div class="custom-option" data-value="-2">Etinal Barat</div>
-                    
-                    <!-- Offset -1 -->
-                    <div class="custom-option" data-value="-1">Etinal Timur</div>
-                    
-                    <!-- Offset +0 -->
-                    <div class="custom-option selected" data-value="0">Hebon</div>
-                    <div class="custom-option" data-value="0">Abkozia</div>
-                    <div class="custom-option" data-value="0">Sarta (Daratan)</div>
-                    <div class="custom-option" data-value="0">Sarta (Ekslave)</div>
-                    
-                    <!-- Offset +1 -->
-                    <div class="custom-option" data-value="1">Hensand</div>
-                    <div class="custom-option" data-value="1">Mosvoire</div>
-                    <div class="custom-option" data-value="1">Casenia</div>
-                    <div class="custom-option" data-value="1">Lespyia</div>
-                    
-                    <!-- Offset +2 -->
-                    <div class="custom-option" data-value="2">Aljazar</div>
-                    <div class="custom-option" data-value="2">Aljazar Utara</div>
-                    <div class="custom-option" data-value="2">Tritinia</div>
-                    <div class="custom-option" data-value="2">Trebisi</div>
-                </div>
-            </div>
-        </div>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-logo">
+    <div class="icon">🌳</div>
+    <h1>Compound Harvest</h1>
+    <p>v18.0 · Frame Premium</p>
+  </div>
+  <div class="login-form">
+    <div class="tab-switch">
+      <button class="active" id="tabLoginBtn">🔑 Login</button>
+      <button id="tabRegisterBtn">📝 Daftar</button>
+    </div>
+    <div id="errorMsg" class="error-msg hidden"></div>
+    <div id="loginForm">
+      <input type="email" class="form-input" id="loginEmail" placeholder="📧 Email" autocomplete="email">
+      <input type="password" class="form-input" id="loginPassword" placeholder="🔒 Password" autocomplete="current-password" style="margin-top: 12px;">
+      <button class="btn-login" id="loginSubmitBtn" style="margin-top: 16px;">🔑 Masuk</button>
+      <button class="btn-link" id="forgotBtn" style="margin-top: 4px;">Lupa password?</button>
+    </div>
+    <div id="registerForm" class="hidden">
+      <input type="text" class="form-input" id="regName" placeholder="👤 Nama Petani" maxlength="15">
+      <input type="email" class="form-input" id="regEmail" placeholder="📧 Email" autocomplete="email" style="margin-top: 12px;">
+      <input type="password" class="form-input" id="regPassword" placeholder="🔒 Password (min 6)" autocomplete="new-password" style="margin-top: 12px;">
+      <input type="password" class="form-input" id="regPassword2" placeholder="🔒 Ulangi Password" autocomplete="new-password" style="margin-top: 12px;">
+      <button class="btn-login" id="registerSubmitBtn" style="margin-top: 16px;">📝 Daftar</button>
+    </div>
+    <div class="divider">atau</div>
+    <button class="btn-login btn-guest" id="guestBtn">🎮 Main sebagai Guest</button>
+    <div class="guest-info-box">
+      <span class="info-icon">💡</span>
+      Akun Guest bersifat <b>sementara</b>.<br>
+      Daftar dengan Email/GitHub untuk simpan permanen.
+    </div>
+    <button class="btn-login btn-github" id="githubLoginBtn" style="margin-top: 10px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+      Masuk dengan GitHub
+    </button>
+  </div>
 
-        <div class="time-section">
-            <div class="time-block">
-                <div class="label-group">
-                    <span class="label-id">JAM</span>
-                    <span class="label-en">HOURS</span>
-                </div>
-                <div class="number-container">
-                    <div class="number" id="jam">00</div>
-                </div>
-            </div>
+  <div class="welcome-banner" id="welcomeBanner">
+    <span class="wb-icon">🌱</span>
+    <div class="wb-text" id="welcomeBannerText">Kebunmu menunggumu...</div>
+  </div>
 
-            <div class="divider"></div>
+  <div class="login-privacy-link">
+    Dengan masuk, Anda menyetujui <a id="loginPrivacyLink">Kebijakan Privasi</a> kami.
+  </div>
+</div>
 
-            <div class="time-block">
-                <div class="label-group">
-                    <span class="label-id">MENIT</span>
-                    <span class="label-en">MINUTE</span>
-                </div>
-                <div class="number-container">
-                    <div class="number minute" id="menit">00</div>
-                </div>
-            </div>
-        </div>
+<!-- GAME -->
+<div id="gameContainer">
+  <div class="status-bar">
+    <div class="status-left">
+      <div class="currency">
+        <span>💰 $<span id="moneyDisplay">1500</span></span>
+        <span>💎 <span id="diamondDisplay">0</span></span>
+      </div>
+      <div class="points" id="planterPointsDisplay">🌱 0 PP</div>
+      <div class="cloud-status" id="cloudStatus">☁️ Sync</div>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">⋮
+      <span class="menu-dot hidden" id="menuDot"></span>
+    </button>
+    <div class="dropdown-menu" id="dropdownMenu">
+      <div class="dropdown-label">Menu</div>
+      <button class="dropdown-item" id="menuDailyBtn">
+        <span class="icon">📅</span>
+        <span>Daily Reward</span>
+        <span class="item-dot hidden" id="menuDailyDot"></span>
+      </button>
+      <button class="dropdown-item" id="menuHelpBtn"><span class="icon">💧</span><span>Bantu Siram</span></button>
+      <div class="dropdown-divider"></div>
+      <button class="dropdown-item" id="menuPrivacyBtn"><span class="icon">📜</span><span>Kebijakan Privasi</span></button>
+      <button class="dropdown-item" id="menuCloseBtn"><span class="icon">✖️</span><span>Tutup Menu</span></button>
+    </div>
+  </div>
 
-        <div class="status-indicator" id="status">MENUNGGU WAKTU MULAI...</div>
-
-        <!-- KOTAK TANGGAL (Bisa Diklik) -->
-        <div class="date-section" id="date-click-area" title="Klik untuk buka kalender">
-            <div class="date-box hari" id="hari">Minggu</div>
-            <div class="date-box tanggal" id="tanggal">1 November 2026</div>
-        </div>
+  <main id="mainContent">
+    <!-- TANAM -->
+    <div id="pageTanam" class="page active">
+      <div class="tree-card">
+        <div class="tree-icon" id="treeIcon">🌰</div>
+        <div class="level-badge" id="levelBadge">Lv.1 Benih</div>
+        <div class="exp-bar-container"><div class="exp-fill" id="expFill"></div></div>
+        <div class="exp-text" id="expText">0 / 499 Exp</div>
+        <div class="reward-badge">🎁 $5.000 · 💧1000 · 💎30 · 50 PP</div>
+        <div><span class="total-exp-badge" id="totalExpBadge">🌟 Total Exp: 0</span></div>
+        <div><span class="daily-badge" id="dailyBadge">📅 Streak: 0/7</span></div>
+      </div>
+      <div class="inventory-row">
+        <span>💧 <span id="waterDisplay">0</span> L</span>
+        <span>🧪 <span id="fertilizerDisplay">0</span> kg</span>
+      </div>
+      <div class="action-grid">
+        <button class="btn" id="waterBtn">💧 Siram (1L)</button>
+        <button class="btn" id="fertilizeBtn">🧪 Beri Pupuk (1kg)</button>
+        <button class="btn btn-harvest hidden" id="harvestBtn" style="grid-column: span 2;">🎁 PANEN</button>
+      </div>
+      <div class="small-note" id="pupukNote">Beri pupuk tiap 10 siram agar efek tetap 10 exp/L</div>
     </div>
 
-    <!-- TOMBOL KALKULATOR -->
-    <div class="calc-btn" id="btn-open-calc">🧮</div>
-
-    <!-- MODAL KALKULATOR -->
-    <div class="modal-overlay" id="calc-modal">
-        <div class="modal-content">
-            <h3>KALKULATOR WAKTU</h3>
-            <div class="calc-tabs">
-                <div class="calc-tab active" id="tab-nyata">Nyata ➔ Gamma</div>
-                <div class="calc-tab" id="tab-gamma">Gamma ➔ Nyata</div>
-            </div>
-            <div class="calc-form active" id="form-nyata">
-                <div class="input-group">
-                    <label>Waktu di Dunia Nyata</label>
-                    <div class="calc-input-row">
-                        <input type="number" id="input-nyata" placeholder="Angka..." min="1" oninput="hitungKonversi()">
-                        <select id="satuan-nyata" onchange="hitungKonversi()">
-                            <option value="detik">Detik</option>
-                            <option value="menit" selected>Menit</option>
-                            <option value="jam">Jam</option>
-                            <option value="hari">Hari</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="calc-result" id="result-nyata"></div>
-            </div>
-            <div class="calc-form" id="form-gamma">
-                <div class="input-group">
-                    <label>Waktu di Planet Gamma</label>
-                    <div class="calc-input-row">
-                        <input type="number" id="input-gamma" placeholder="Angka..." min="1" oninput="hitungKonversi()">
-                        <select id="satuan-gamma" onchange="hitungKonversi()">
-                            <option value="menit" selected>Menit</option>
-                            <option value="jam">Jam</option>
-                            <option value="hari">Hari</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="calc-result" id="result-gamma"></div>
-            </div>
-            <button class="calc-btn-submit" id="btn-close-calc">TUTUP</button>
+    <!-- DAILY REWARD -->
+    <div id="pageDaily" class="page">
+      <div class="daily-header">
+        <div class="title">📅 Daily Reward</div>
+        <div class="subtitle">
+          Login tiap hari untuk <b>streak mingguan</b>.<br>
+          Reset setiap <b>Senin 00:00</b>.
         </div>
+        <div class="daily-progress">
+          <div class="label">
+            <span>Progress Minggu Ini</span>
+            <span class="value" id="dailyProgressValue">0/7 hari</span>
+          </div>
+          <div class="daily-progress-bar">
+            <div class="daily-progress-fill" id="dailyProgressFill" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="daily-next-hint" id="dailyNextHint">
+        <span class="hint-icon">⏰</span>
+        <span id="dailyNextHintText">Klaim Hari 1 sekarang!</span>
+      </div>
+
+      <div class="inv-section-title">🎁 Login Harian</div>
+      <div class="daily-list" id="dailyList"></div>
+
+      <div class="inv-section-title">💧 Bantu Siram</div>
+      <div class="daily-help-card" id="dailyHelpCard">
+        <div class="help-icon" id="dailyHelpIcon">💧</div>
+        <div class="help-info">
+          <div class="help-title" id="dailyHelpTitle">Bantu Siram 1x</div>
+          <div class="help-desc" id="dailyHelpDesc">Bantu siram pemain lain hari ini</div>
+          <div class="help-reward">Reward: $1.000</div>
+        </div>
+        <button class="daily-help-claim-btn" id="dailyHelpBtn">Belum</button>
+      </div>
+
+      <div class="small-note">💡 Login tiap hari untuk reward lebih besar. Streak reset setiap Senin.</div>
     </div>
 
-    <!-- MODAL KALENDER -->
-    <div class="modal-overlay" id="calendar-modal">
-        <div class="modal-content">
-            <h3 id="cal-month-year">November 2026</h3>
-            <div class="calendar-header">
-                <button id="cal-prev">❮</button>
-                <span style="font-size: 0.8rem; opacity: 0.7;">Pilih Tanggal</span>
-                <button id="cal-next">❯</button>
-            </div>
-            <div class="calendar-grid" id="cal-grid">
-                <div class="cal-day-name">Min</div>
-                <div class="cal-day-name">Sen</div>
-                <div class="cal-day-name">Sel</div>
-                <div class="cal-day-name">Rab</div>
-                <div class="cal-day-name">Kam</div>
-                <div class="cal-day-name">Jum</div>
-                <div class="cal-day-name">Sab</div>
-            </div>
-            <div class="cal-info-box" id="cal-info"></div>
-            <button class="calc-btn-submit" id="btn-close-cal" style="width: 100%;">TUTUP</button>
+    <!-- LEADERBOARD -->
+    <div id="pageLeaderboard" class="page">
+      <div class="lb-controls">
+        <div>
+          <div class="lb-section-label">📊 Kategori</div>
+          <div class="lb-chips" id="lbCategoryChips">
+            <div class="chip active" data-cat="exp">🌟 Exp</div>
+            <div class="chip" data-cat="points">🌱 Planter Points</div>
+          </div>
         </div>
+        <div>
+          <div class="lb-section-label">🌍 Wilayah</div>
+          <div class="lb-chips" id="lbRegionChips">
+            <div class="chip active" data-region="global">🌍 Global</div>
+            <div class="chip" data-region="negara">🇮🇩 Negara</div>
+            <div class="chip" data-region="provinsi">🏙️ Provinsi</div>
+            <div class="chip" data-region="kabupaten">🏘️ Kabupaten</div>
+            <div class="chip" data-region="kecamatan">🏡 Kecamatan</div>
+          </div>
+        </div>
+        <div class="lb-region-info" id="lbRegionInfo">🌍 Menampilkan peringkat global</div>
+      </div>
+      <div class="lb-list" id="lbList">
+        <div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat peringkat...</div></div>
+      </div>
+      <div class="small-note">👆 Tap nama untuk lihat profil</div>
     </div>
 
-    <script>
-        (function() {
-            'use strict';
+    <!-- INVENTORI -->
+    <div id="pageInventori" class="page">
+      <div class="inv-header">
+        <div class="title">🎒 Inventori</div>
+        <div class="count" id="invItemCount">0 item</div>
+      </div>
+      <div class="inv-section-title">📦 Item Aktif</div>
+      <div class="inv-grid" id="invGrid"></div>
+      <div class="inv-tip">💡 Item bertambah dari pembelian di Toko & hadiah panen</div>
+    </div>
 
-            // ============================================
-            // LOGIKA JAM UTAMA
-            // ============================================
-            const START_YEAR = 2026;
-            const START_MONTH = 11;
-            const START_DAY = 1;
-            
-            const REAL_START_DATE = new Date(2026, 9, 18, 12, 0, 0); 
-            const REAL_START_TIMESTAMP = REAL_START_DATE.getTime();
+    <!-- TOKO -->
+    <div id="pageToko" class="page">
+      <h3 style="color:#c0e0b0; margin-bottom: 8px;">🛒 Toko</h3>
+      <div class="inv-section-title">🖼️ Frame Premium</div>
+      <div id="shopFramesContainer"></div>
+      <div class="inv-section-title">📦 Item Lain</div>
+      <div id="shopItemsContainer"></div>
+    </div>
 
-            const REAL_MS_PER_FICTIONAL_MINUTE = 8000; 
+    <!-- BANTU SIRAM -->
+    <div id="pageHelp" class="page">
+      <div class="help-header">
+        <div class="title">💧 Bantu Siram</div>
+        <div class="help-stats">
+          <div class="help-stat">
+            <div class="label">Dibantu Hari Ini</div>
+            <div class="value" id="helpPlayersCount">0<small>/10</small></div>
+          </div>
+          <div class="help-stat">
+            <div class="label">Total Air</div>
+            <div class="value" id="helpTotalWater">0<small>L</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="help-cooldown hidden" id="helpCooldown">⏱️ Tunggu <b id="helpCooldownTime">10</b> detik sebelum bantu lagi</div>
+      <div class="help-list" id="helpList">
+        <div class="lb-loading"><span class="loading-spinner"></span><div style="margin-top: 8px;">Memuat daftar pemain...</div></div>
+      </div>
+      <div class="small-note">💡 Daftar di-refresh otomatis tiap 24 jam</div>
+    </div>
 
-            const startDateUTC = new Date(Date.UTC(START_YEAR, START_MONTH - 1, START_DAY, 0, 0, 0, 0));
-            const startTimestampUTC = startDateUTC.getTime();
+    <!-- PRIVACY -->
+    <div id="pagePrivacy" class="page">
+      <div class="privacy-header">
+        <button class="privacy-back-btn" id="privacyBackBtn">←</button>
+        <div>
+          <div class="title">📜 Kebijakan Privasi</div>
+          <div class="subtitle">Compound Harvest</div>
+        </div>
+      </div>
+      <div class="privacy-content" id="privacyContent"></div>
+    </div>
 
-            const elJam = document.getElementById('jam');
-            const elMenit = document.getElementById('menit');
-            const elHari = document.getElementById('hari');
-            const elTanggal = document.getElementById('tanggal');
-            const elStatus = document.getElementById('status');
-            const elNegaraLabel = document.getElementById('negara-label');
+    <!-- AKUN -->
+    <div id="pageAkun" class="page">
+      <div class="profile-card">
+        <div class="profile-avatar" id="profileAvatar">👤</div>
+        <div class="profile-row">
+          <span class="profile-label">👤 Nama</span>
+          <span class="profile-value" id="profileName">-</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">📧 Email</span>
+          <span class="profile-value" id="profileEmail">-</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">🆔 User ID</span>
+          <span class="profile-value" id="profileUid" style="font-size: 0.7rem;">-</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">🏷️ Tipe</span>
+          <span class="profile-value" id="profileType">Guest</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">🌟 Total Exp</span>
+          <span class="profile-value" id="profileTotalExp">0</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">🌱 Planter Points</span>
+          <span class="profile-value" id="profilePlanterPoints">0</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">🖼️ Frame Aktif</span>
+          <span class="profile-value" id="profileFrame">-</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">📅 Streak Login</span>
+          <span class="profile-value" id="profileStreak">0/7</span>
+        </div>
 
-            const dropdownWrapper = document.getElementById('dropdown-wrapper');
-            const dropdownTrigger = document.getElementById('dropdown-trigger');
-            const dropdownOptions = document.getElementById('dropdown-options');
-            const selectedText = document.getElementById('selected-text');
+        <div class="guest-info-card hidden" id="guestInfoCard">
+          <div class="title">⚠️ Akun Guest Sementara</div>
+          <div class="body">
+            Akun Guest tidak bisa login ulang setelah keluar dari device ini.<br>
+            <b>Upgrade ke Email/GitHub</b> untuk menyimpan progress permanen!
+          </div>
+        </div>
 
-            let currentOffset = 0;
-            let prevJamStr = "";
-            let prevMenitStr = "";
-            
-            let currentFictionalDate = new Date(startTimestampUTC);
+        <button class="edit-btn frame-btn" id="changeFrameBtn" style="width:100%;">🖼️ Ganti Frame Premium</button>
+        <button class="upgrade-cta-btn hidden" id="upgradeCtaBtn">🔗 Upgrade ke Email / GitHub</button>
 
-            const namaHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const namaBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="edit-btn" id="editNameBtn" style="flex:1;">✏️ Edit Nama</button>
+          <button class="edit-btn hidden" id="upgradeBtn" style="flex:1;">🔗 Upgrade</button>
+        </div>
 
-            function animateValue(element, newValue) {
-                if (element.innerText === newValue) return;
-                element.classList.add('animate-out');
-                setTimeout(() => {
-                    element.innerText = newValue;
-                    element.classList.remove('animate-out');
-                    element.classList.add('animate-in');
-                    requestAnimationFrame(() => {
-                        requestAnimationFrame(() => {
-                            element.classList.remove('animate-in');
-                        });
-                    });
-                }, 300); 
-            }
+        <div id="regionSection"></div>
 
-            dropdownTrigger.addEventListener('click', function(e) {
-                e.stopPropagation();
-                dropdownWrapper.classList.toggle('open');
-            });
+        <div class="received-section" id="receivedSection">
+          <div class="title">💧 Bantuan Diterima Hari Ini</div>
+          <div id="receivedList"><div class="small-note">Belum ada bantuan hari ini</div></div>
+        </div>
 
-            const options = dropdownOptions.querySelectorAll('.custom-option');
-            options.forEach(option => {
-                option.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    options.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    
-                    const text = this.innerText;
-                    const val = parseInt(this.getAttribute('data-value'));
-                    
-                    selectedText.innerText = text;
-                    elNegaraLabel.innerText = text.toUpperCase();
-                    currentOffset = val;
-                    
-                    dropdownWrapper.classList.remove('open');
-                    prevJamStr = ""; 
-                    prevMenitStr = "";
-                    updateClock(true);
-                });
-            });
+        <button class="edit-btn hidden" id="logoutBtn" style="width:100%;">🚪 Logout</button>
+        <button class="edit-btn delete-btn" id="deleteAccountBtn" style="width:100%;">🗑️ Hapus Akun</button>
+        <button class="edit-btn admin-btn hidden" id="adminCleanupBtn" style="width:100%;">🧹 Bersihkan Data Bot/Test (Admin)</button>
 
-            document.addEventListener('click', function() {
-                dropdownWrapper.classList.remove('open');
-            });
+        <div style="text-align:center; margin-top: 8px;">
+          <span style="color: #8fa88f; font-size: 0.78rem;">📜 <a id="privacyLinkAccount" style="color:#a0d0a0; text-decoration: underline; cursor: pointer;">Kebijakan Privasi</a></span>
+        </div>
+      </div>
+      <div class="small-note">Compound Harvest 1 · v18.0</div>
+    </div>
+  </main>
 
-            function updateClock(forceUpdate = false) {
-                const nowReal = Date.now();
-                let hour = 0, minute = 0;
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="tanam"><span class="nav-icon">🌳</span><span class="nav-label">Tanam</span></button>
+    <button class="nav-item" data-page="leaderboard"><span class="nav-icon">🥇</span><span class="nav-label">Rank</span></button>
+    <button class="nav-item" data-page="inventori"><span class="nav-icon">🎒</span><span class="nav-label">Invent</span></button>
+    <button class="nav-item" data-page="toko"><span class="nav-icon">🛒</span><span class="nav-label">Toko</span></button>
+    <button class="nav-item" data-page="akun"><span class="nav-icon">👤</span><span class="nav-label">Akun</span></button>
+  </nav>
+</div>
 
-                if (nowReal < REAL_START_TIMESTAMP) {
-                    elStatus.textContent = "MENUNGGU 18 OKT 2026 12:00...";
-                    elStatus.style.color = "#FFFFFF";
-                    
-                    const offsetMs = currentOffset * 60 * 60 * 1000;
-                    currentFictionalDate = new Date(startTimestampUTC + offsetMs);
-                    
-                    elHari.textContent = namaHari[currentFictionalDate.getUTCDay()];
-                    elTanggal.textContent = `${currentFictionalDate.getUTCDate()} ${namaBulan[currentFictionalDate.getUTCMonth()]} ${currentFictionalDate.getUTCFullYear()}`;
-                    
-                    hour = currentFictionalDate.getUTCHours();
-                    minute = currentFictionalDate.getUTCMinutes();
-                } else {
-                    elStatus.textContent = "SISTEM BERJALAN (8s = 1m)";
-                    elStatus.style.color = "#a0ffb0";
+<!-- MODAL: Konfirmasi Umum -->
+<div class="modal-backdrop hidden" id="modalBackdrop">
+  <div class="modal">
+    <h3 id="modalTitle">⚠️ Konfirmasi</h3>
+    <p id="modalMessage">Yakin?</p>
+    <input type="text" class="modal-input hidden" id="modalInput" placeholder="Ketik HAPUS">
+    <div class="modal-buttons" id="modalButtons">
+      <button class="modal-cancel" id="modalCancel">Batal</button>
+      <button class="modal-confirm" id="modalConfirm">Ya, Lanjut</button>
+    </div>
+  </div>
+</div>
 
-                    const elapsedRealMs = nowReal - REAL_START_TIMESTAMP;
-                    const fictionalMinutesTotal = elapsedRealMs / REAL_MS_PER_FICTIONAL_MINUTE;
-                    const fictionalMs = fictionalMinutesTotal * 60000;
-                    
-                    const offsetMs = currentOffset * 60 * 60 * 1000;
-                    currentFictionalDate = new Date(startTimestampUTC + fictionalMs + offsetMs);
+<!-- MODAL: Wilayah -->
+<div class="modal-backdrop hidden" id="regionModalBackdrop">
+  <div class="modal" style="max-width: 460px;">
+    <h3>🌍 Atur Wilayah</h3>
+    <div id="regionModalStep1">
+      <div class="region-warning" style="margin-bottom: 14px;">⚠️ Wilayah hanya bisa diatur <b>SEKALI</b>.</div>
+      <div class="region-form" style="border: none; padding: 0; background: transparent;">
+        <div class="field"><div class="label">🌍 Negara</div><input type="text" class="form-input" id="regCountry" placeholder="Indonesia" maxlength="30"></div>
+        <div class="field" style="margin-top: 10px;"><div class="label">🏙️ Provinsi</div><input type="text" class="form-input" id="regProvince" placeholder="Jawa Tengah" maxlength="30"></div>
+        <div class="field" style="margin-top: 10px;"><div class="label">🏘️ Kabupaten / Kota</div><input type="text" class="form-input" id="regRegency" placeholder="Kudus" maxlength="30"></div>
+        <div class="field" style="margin-top: 10px;"><div class="label">🏡 Kecamatan</div><input type="text" class="form-input" id="regDistrict" placeholder="Kota Kudus" maxlength="30"></div>
+      </div>
+      <div class="modal-buttons" style="margin-top: 16px;">
+        <button class="modal-cancel" id="regionModalCancel">Batal</button>
+        <button class="modal-confirm" id="regionModalNext">Lanjut →</button>
+      </div>
+    </div>
+    <div id="regionModalStep2" class="hidden">
+      <p style="color: #d0e8c0; font-size: 0.95rem; margin-bottom: 12px; text-align: center;">Apakah wilayah berikut sudah sesuai?</p>
+      <div class="region-preview" id="regionPreview"></div>
+      <div class="warning-box">⚠️ Setelah dikonfirmasi, wilayah <b>TIDAK BISA DIUBAH</b> sendiri.</div>
+      <div class="modal-buttons">
+        <button class="modal-cancel" id="regionModalBack">← Kembali</button>
+        <button class="modal-confirm" id="regionModalConfirm" disabled>Ya (3)</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-                    hour = currentFictionalDate.getUTCHours();
-                    minute = currentFictionalDate.getUTCMinutes();
-                    
-                    elHari.textContent = namaHari[currentFictionalDate.getUTCDay()];
-                    elTanggal.textContent = `${currentFictionalDate.getUTCDate()} ${namaBulan[currentFictionalDate.getUTCMonth()]} ${currentFictionalDate.getUTCFullYear()}`;
-                }
+<!-- MODAL: Daily Claim -->
+<div class="modal-backdrop hidden" id="dailyClaimBackdrop">
+  <div class="daily-claim-modal">
+    <div class="gift-icon">🎁</div>
+    <h2 id="dailyClaimTitle">Reward Diklaim!</h2>
+    <div class="day-label" id="dailyClaimDay">HARI 1</div>
+    <div class="reward-amount" id="dailyClaimAmount">+$500</div>
+    <div class="reward-sub" id="dailyClaimSub">Login besok untuk dapat lebih besar!</div>
+    <button class="claim-ok-btn" id="dailyClaimOkBtn">✅ OK, Lanjut</button>
+  </div>
+</div>
 
-                const hStr = String(hour).padStart(2, '0');
-                const mStr = String(minute).padStart(2, '0');
-                
-                if (forceUpdate || prevJamStr !== hStr) {
-                    animateValue(elJam, hStr);
-                    prevJamStr = hStr;
-                }
-                
-                if (forceUpdate || prevMenitStr !== mStr) {
-                    animateValue(elMenit, mStr);
-                    prevMenitStr = mStr;
-                }
-            }
+<!-- MODAL: Frame Selector -->
+<div class="modal-backdrop hidden" id="frameSelectorBackdrop">
+  <div class="frame-selector-modal">
+    <button class="close-btn" id="frameSelectorClose" style="position: absolute; top: 12px; right: 12px; background: #3a5a3a; border: 1px solid #7fa07f; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; touch-action: manipulation;">✕</button>
+    <h3>🖼️ Frame Premium</h3>
+    <div class="subtitle">Pilih frame untuk profilmu. Klik "Pakai" untuk mengaktifkan.</div>
+    <div class="frame-list" id="frameListContainer"></div>
+  </div>
+</div>
 
-            elJam.innerText = "00";
-            elMenit.innerText = "00";
+<!-- MODAL: Frame Unlock -->
+<div class="modal-backdrop hidden" id="frameUnlockBackdrop">
+  <div class="frame-unlock-modal">
+    <div class="unlock-icon">🎉</div>
+    <h2>FRAME BARU!</h2>
+    <div class="unlock-name" id="frameUnlockName">Silver Frame</div>
+    <div class="unlock-desc" id="frameUnlockDesc">Selamat! Kamu berhasil membuka frame baru!</div>
+    <button class="unlock-btn" id="frameUnlockBtn">🌟 Pakai Sekarang</button>
+  </div>
+</div>
 
-            updateClock(true);
-            setInterval(updateClock, 100); 
+<!-- MODAL: Welcome Back -->
+<div class="modal-backdrop hidden" id="wbBackdrop">
+  <div class="wb-modal" id="wbModal">
+    <div class="wb-icon" id="wbIcon">🌱</div>
+    <div class="wb-title" id="wbTitle">Selamat Datang Kembali</div>
+    <div class="wb-divider"></div>
+    <div class="wb-body" id="wbBody"><p>...</p></div>
+    <div class="wb-reward-box">
+      <div class="wb-tier-badge" id="wbTierBadge">TIER 1</div>
+      <div id="wbRewardsList"></div>
+    </div>
+    <div class="wb-footer-quote" id="wbFooterQuote">...</div>
+    <button class="wb-claim-btn" id="wbClaimBtn">🌱 Kembali ke Kebun</button>
+  </div>
+</div>
 
-            document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) updateClock(true);
-            });
+<!-- MODAL: Profil -->
+<div class="modal-backdrop hidden" id="profileModalBackdrop">
+  <div class="profile-modal" id="profileModalEl">
+    <button class="close-btn" id="profileModalClose">✕</button>
+    <div class="profile-modal-avatar" id="pmAvatar">👤</div>
+    <div class="profile-modal-name" id="pmName">-</div>
+    <div class="profile-modal-status" id="pmStatus">
+      <span class="status-dot status-offline"></span>
+      <span>Memuat...</span>
+    </div>
+    <div class="profile-modal-rows">
+      <div class="profile-modal-row">
+        <span class="label">🆔 UID</span>
+        <span class="value"><span id="pmUid">-</span><button class="copy-btn" id="pmCopyBtn">📋</button></span>
+      </div>
+      <div class="profile-modal-row">
+        <span class="label">🏷️ Tipe</span>
+        <span class="value" id="pmType">-</span>
+      </div>
+      <div class="profile-modal-row">
+        <span class="label">🖼️ Frame</span>
+        <span class="value" id="pmFrame">-</span>
+      </div>
+    </div>
+    <button class="profile-modal-help-btn" id="pmHelpBtn">💧 Bantu Siram</button>
+    <button class="profile-modal-close-full" id="profileModalCloseFull">Tutup</button>
+  </div>
+</div>
 
+<!-- MODAL: Bantu Siram -->
+<div class="modal-backdrop hidden" id="helpModalBackdrop">
+  <div class="help-modal">
+    <h3>💧 Bantu Siram</h3>
+    <div class="target-info" id="helpTargetInfo">Anda akan membantu <b>-</b></div>
+    <div class="input-section">
+      <div class="label">Jumlah Air (1-10 L)</div>
+      <input type="number" id="helpWaterInput" min="1" max="10" value="1" step="1">
+      <div class="quick-select">
+        <button class="quick-btn" data-amount="1">1L</button>
+        <button class="quick-btn" data-amount="3">3L</button>
+        <button class="quick-btn" data-amount="5">5L</button>
+        <button class="quick-btn" data-amount="10">10L</button>
+      </div>
+    </div>
+    <div class="info-box">
+      ℹ️ Air gratis dari game, tidak mengurangi air Anda.<br>
+      📊 Sisa kuota hari ini: <b id="helpRemainingQuota">-</b> pemain
+    </div>
+    <div class="help-modal-buttons">
+      <button class="help-cancel" id="helpModalCancel">Batal</button>
+      <button class="help-confirm" id="helpModalConfirm">💧 Bantu Sekarang</button>
+    </div>
+  </div>
+</div>
 
-            // ============================================
-            // FITUR KALKULATOR
-            // ============================================
-            const calcModal = document.getElementById('calc-modal');
-            const btnOpenCalc = document.getElementById('btn-open-calc');
-            const btnCloseCalc = document.getElementById('btn-close-calc');
-            const tabNyata = document.getElementById('tab-nyata');
-            const tabGamma = document.getElementById('tab-gamma');
-            const formNyata = document.getElementById('form-nyata');
-            const formGamma = document.getElementById('form-gamma');
+<div id="toast" class="toast"></div>
+<div id="rankToast" class="rank-toast"></div>
 
-            btnOpenCalc.addEventListener('click', () => {
-                calcModal.classList.add('active');
-                window.hitungKonversi();
-            });
-            btnCloseCalc.addEventListener('click', () => calcModal.classList.remove('active'));
-            
-            tabNyata.addEventListener('click', () => {
-                tabNyata.classList.add('active'); tabGamma.classList.remove('active');
-                formNyata.classList.add('active'); formGamma.classList.remove('active');
-                window.hitungKonversi();
-            });
-            tabGamma.addEventListener('click', () => {
-                tabGamma.classList.add('active'); tabNyata.classList.remove('active');
-                formGamma.classList.add('active'); formNyata.classList.remove('active');
-                window.hitungKonversi();
-            });
-
-            function formatHasil(totalMinutes) {
-                const days = Math.floor(totalMinutes / 1440);
-                const hours = Math.floor((totalMinutes % 1440) / 60);
-                const minutes = Math.floor(totalMinutes % 60);
-                let hasil = [];
-                if (days > 0) hasil.push(`${days} Hari`);
-                if (hours > 0) hasil.push(`${hours} Jam`);
-                if (minutes > 0) hasil.push(`${minutes} Menit`);
-                return hasil.length ? hasil.join(" ") : "0 Menit";
-            }
-
-            window.hitungKonversi = function() {
-                const valNyata = parseFloat(document.getElementById('input-nyata').value);
-                const satuanNyata = document.getElementById('satuan-nyata').value;
-                const resNyata = document.getElementById('result-nyata');
-
-                if (!isNaN(valNyata) && valNyata > 0) {
-                    let totalDetikNyata = valNyata;
-                    if (satuanNyata === 'menit') totalDetikNyata *= 60;
-                    if (satuanNyata === 'jam') totalDetikNyata *= 3600;
-                    if (satuanNyata === 'hari') totalDetikNyata *= 86400;
-
-                    const totalMenitFiksi = totalDetikNyata / 8;
-                    resNyata.innerHTML = `Di Planet Gamma:<br><strong>${formatHasil(totalMenitFiksi)}</strong>`;
-                    resNyata.classList.add('show');
-                } else { resNyata.classList.remove('show'); }
-
-                const valGamma = parseFloat(document.getElementById('input-gamma').value);
-                const satuanGamma = document.getElementById('satuan-gamma').value;
-                const resGamma = document.getElementById('result-gamma');
-
-                if (!isNaN(valGamma) && valGamma > 0) {
-                    let totalMenitFiksi = valGamma;
-                    if (satuanGamma === 'jam') totalMenitFiksi *= 60;
-                    if (satuanGamma === 'hari') totalMenitFiksi *= 1440;
-
-                    const totalDetikNyata = totalMenitFiksi * 8;
-                    
-                    const days = Math.floor(totalDetikNyata / 86400);
-                    const hours = Math.floor((totalDetikNyata % 86400) / 3600);
-                    const minutes = Math.floor((totalDetikNyata % 3600) / 60);
-                    const seconds = Math.floor(totalDetikNyata % 60);
-
-                    let hasil = [];
-                    if (days > 0) hasil.push(`${days} Hari`);
-                    if (hours > 0) hasil.push(`${hours} Jam`);
-                    if (minutes > 0) hasil.push(`${minutes} Menit`);
-                    if (seconds > 0) hasil.push(`${seconds} Detik`);
-
-                    resGamma.innerHTML = `Di Dunia Nyata:<br><strong>${hasil.length ? hasil.join(" ") : "0 Detik"}</strong>`;
-                    resGamma.classList.add('show');
-                } else { resGamma.classList.remove('show'); }
-            }
-
-
-            // ============================================
-            // FITUR KALENDER
-            // ============================================
-            const calendarModal = document.getElementById('calendar-modal');
-            const dateClickArea = document.getElementById('date-click-area');
-            const btnCloseCal = document.getElementById('btn-close-cal');
-            const calMonthYear = document.getElementById('cal-month-year');
-            const calGrid = document.getElementById('cal-grid');
-            const calInfo = document.getElementById('cal-info');
-            const btnPrev = document.getElementById('cal-prev');
-            const btnNext = document.getElementById('cal-next');
-
-            let calViewDate = new Date(); 
-
-            dateClickArea.addEventListener('click', () => {
-                calendarModal.classList.add('active');
-                calViewDate = new Date(currentFictionalDate.getTime());
-                renderCalendar();
-            });
-
-            btnCloseCal.addEventListener('click', () => calendarModal.classList.remove('active'));
-
-            btnPrev.addEventListener('click', () => {
-                calViewDate.setUTCMonth(calViewDate.getUTCMonth() - 1);
-                renderCalendar();
-            });
-
-            btnNext.addEventListener('click', () => {
-                calViewDate.setUTCMonth(calViewDate.getUTCMonth() + 1);
-                renderCalendar();
-            });
-
-            function renderCalendar() {
-                const viewMonth = calViewDate.getUTCMonth();
-                const viewYear = calViewDate.getUTCFullYear();
-                calMonthYear.innerText = `${namaBulan[viewMonth]} ${viewYear}`;
-
-                while (calGrid.children.length > 7) {
-                    calGrid.removeChild(calGrid.lastChild);
-                }
-
-                const firstDay = new Date(Date.UTC(viewYear, viewMonth, 1)).getUTCDay();
-                const daysInMonth = new Date(Date.UTC(viewYear, viewMonth + 1, 0)).getUTCDate();
-
-                for (let i = 0; i < firstDay; i++) {
-                    const emptyDiv = document.createElement('div');
-                    emptyDiv.className = 'cal-day empty';
-                    calGrid.appendChild(emptyDiv);
-                }
-
-                const todayDate = currentFictionalDate.getUTCDate();
-                const todayMonth = currentFictionalDate.getUTCMonth();
-                const todayYear = currentFictionalDate.getUTCFullYear();
-
-                for (let i = 1; i <= daysInMonth; i++) {
-                    const dayDiv = document.createElement('div');
-                    dayDiv.className = 'cal-day';
-                    dayDiv.innerText = i;
-
-                    if (i === todayDate && viewMonth === todayMonth && viewYear === todayYear) {
-                        dayDiv.classList.add('today');
-                    }
-
-                    dayDiv.addEventListener('click', () => hitungWaktuTunggu(viewYear, viewMonth, i));
-                    calGrid.appendChild(dayDiv);
-                }
-            }
-
-            function hitungWaktuTunggu(year, month, day) {
-                const targetDate = new Date(Date.UTC(year, month, day, 0, 0, 0));
-                const diffFiksiMs = targetDate.getTime() - currentFictionalDate.getTime();
-
-                if (diffFiksiMs <= 0) {
-                    calInfo.innerHTML = `Tanggal ini sudah terlewati di Planet Gamma.`;
-                    calInfo.classList.add('show');
-                    return;
-                }
-
-                const diffNyataMs = diffFiksiMs / 7.5;
-                const totalSeconds = Math.floor(diffNyataMs / 1000);
-                
-                const d = Math.floor(totalSeconds / 86400);
-                const h = Math.floor((totalSeconds % 86400) / 3600);
-                const m = Math.floor((totalSeconds % 3600) / 60);
-                const s = totalSeconds % 60;
-
-                let resultStr = [];
-                if (d > 0) resultStr.push(`${d} Hari`);
-                if (h > 0) resultStr.push(`${h} Jam`);
-                if (m > 0) resultStr.push(`${m} Menit`);
-                if (s > 0 && d === 0) resultStr.push(`${s} Detik`); 
-
-                const tanggalStr = `${day} ${namaBulan[month]} ${year}`;
-                calInfo.innerHTML = `Untuk mencapai <b>${tanggalStr}</b> di Gamma,<br>kamu harus menunggu:<br><strong>${resultStr.join(" ")}</strong><br><span style="font-size:0.7rem;opacity:0.7;">(Waktu Dunia Nyata)</span>`;
-                calInfo.classList.add('show');
-            }
-
-        })();
-    </script>
+<script type="module" src="app-init.js"></script>
 </body>
 </html>
